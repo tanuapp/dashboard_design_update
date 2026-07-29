@@ -69,7 +69,9 @@ export function Services({ categoryFilter }: { categoryFilter: string | null }) 
   );
 }
 
-function ServiceCard({ s, i, fav, onFav }: any) {
+type Service = (typeof services)[number];
+
+function ServiceCard({ s, i, fav, onFav }: { s: Service; i: number; fav: boolean; onFav: () => void }) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 16 }}

@@ -30,7 +30,12 @@ export function UserHero({ onSearch, onOpenBooking }: { onSearch: () => void; on
             <Button size="lg" onClick={onSearch} className="bg-gradient-brand text-white shadow-glow hover:opacity-90">
               <Search className="mr-1.5 h-4 w-4" /> Үйлчилгээ хайх
             </Button>
-            <Button size="lg" variant="outline" className="gap-1.5">
+            <Button
+              size="lg"
+              variant="outline"
+              className="gap-1.5"
+              onClick={() => document.getElementById("app")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            >
               <Download className="h-4 w-4" /> Tanu апп татах
             </Button>
           </div>

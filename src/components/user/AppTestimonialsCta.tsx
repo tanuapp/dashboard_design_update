@@ -1,13 +1,18 @@
 import { motion } from "motion/react";
-import { Apple, Play, QrCode, CheckCircle2 } from "lucide-react";
+import { Apple, Play, QrCode, CheckCircle2, Star } from "lucide-react";
+import { toast } from "sonner";
 import { testimonials } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "./Categories";
-import { Star } from "lucide-react";
+
+const notifyDownload = (store: string) =>
+  toast.info(`${store} — удахгүй!`, {
+    description: "Tanu апп-ын албан ёсны хувилбар удахгүй нээгдэнэ.",
+  });
 
 export function MobileAppSection() {
   return (
-    <section className="py-20">
+    <section id="app" className="py-20">
       <div className="mx-auto max-w-7xl px-5 grid gap-10 lg:grid-cols-2 items-center">
         <motion.div initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
           <span className="text-xs font-semibold uppercase tracking-widest text-[var(--brand)]">Tanu апп</span>
@@ -28,10 +33,10 @@ export function MobileAppSection() {
             ))}
           </ul>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Button size="lg" className="bg-foreground text-background hover:opacity-90 gap-2">
+            <Button size="lg" onClick={() => notifyDownload("App Store")} className="bg-foreground text-background hover:opacity-90 gap-2">
               <Apple className="h-4 w-4" /> App Store
             </Button>
-            <Button size="lg" variant="outline" className="gap-2">
+            <Button size="lg" variant="outline" className="gap-2" onClick={() => notifyDownload("Google Play")}>
               <Play className="h-4 w-4" /> Google Play
             </Button>
             <div className="flex items-center gap-2 rounded-xl border border-border bg-surface px-3 py-2 text-xs">
@@ -73,7 +78,7 @@ export function Testimonials() {
               className="rounded-2xl border border-border bg-surface p-5"
             >
               <div className="flex items-center gap-1 text-yellow-500">
-                {Array.from({ length: t.rating }).map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
+                {Array.from({ length: t.rating }).map((_, j) => <Star key={j} className="h-4 w-4 fill-current" />)}
               </div>
               <p className="mt-3 text-sm">"{t.text}"</p>
               <div className="mt-5 flex items-center gap-3">
@@ -104,7 +109,14 @@ export function UserCta({ onOpenBooking }: { onOpenBooking: () => void }) {
             <p className="mt-3 text-white/85 max-w-xl mx-auto">Гоо сайхан, эрүүл мэнд, спорт, сургалт — хэрэгтэй бүгд нэг дор.</p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Button size="lg" onClick={onOpenBooking} className="bg-white text-[var(--brand)] hover:opacity-90">Үйлчилгээ хайх</Button>
-              <Button size="lg" variant="outline" className="bg-white/10 border-white/40 text-white hover:bg-white/20">Апп татах</Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="bg-white/10 border-white/40 text-white hover:bg-white/20"
+                onClick={() => document.getElementById("app")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+              >
+                Апп татах
+              </Button>
             </div>
           </div>
         </div>

@@ -172,6 +172,13 @@
   * {
     border-color: var(--color-border);
   }
+  html {
+    scroll-behavior: smooth;
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
   html,
   body {
     background-color: var(--color-background);
@@ -179,6 +186,7 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
   h1,
   h2,
@@ -186,6 +194,9 @@
   h4 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
+  }
+  section[id] {
+    scroll-margin-top: 88px;
   }
   ::selection {
     background: color-mix(in oklch, var(--brand) 30%, transparent);
@@ -234,7 +245,7 @@
     0 10px 40px -10px color-mix(in oklch, var(--brand) 45%, transparent);
 }
 
-/* ---- Marquee ---- */
+/* ---- Marquee — seamless loop (no gap; per-item margin ensures identical halves) ---- */
 @keyframes marquee-l {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -246,8 +257,11 @@
 .marquee-track {
   display: flex;
   width: max-content;
-  gap: 3rem;
   animation: marquee-l 40s linear infinite;
+  will-change: transform;
+}
+.marquee-track > * {
+  margin-right: 3rem;
 }
 .marquee-track.reverse { animation-name: marquee-r; }
 .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
@@ -282,6 +296,14 @@
 }
 .float-y { animation: float-y 6s ease-in-out infinite; }
 
+/* Reduce motion on small screens */
+@media (max-width: 640px) {
+  .float-y { animation: none; }
+  .marquee-track { animation-duration: 60s; }
+  .orbit-slow { animation-duration: 180s; }
+  .orbit-slower { animation-duration: 240s; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .marquee-track,
   .orbit-slow,
@@ -289,4 +311,5 @@
   .float-y {
     animation: none !important;
   }
+  html { scroll-behavior: auto; }
 }

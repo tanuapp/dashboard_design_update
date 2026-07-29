@@ -11,6 +11,11 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Toaster } from "../components/ui/sonner";
+
+// Inline pre-hydration script: apply persisted theme + mode BEFORE React paints
+// so we never briefly flash the wrong theme/mode during navigation or reload.
+const themeBootScript = `(function(){try{var t=localStorage.getItem('tanu-theme');var m=localStorage.getItem('tanu-mode');var prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;var isDark=t?t==='dark':prefersDark;var root=document.documentElement;if(isDark)root.classList.add('dark');root.dataset.mode=(m==='business'?'business':'user');}catch(e){}})();`;
 
 function NotFoundComponent() {
   return (
@@ -87,6 +92,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
+    scripts: [{ children: themeBootScript }],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -115,6 +121,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <Toaster position="top-center" richColors />
     </QueryClientProvider>
   );
 }

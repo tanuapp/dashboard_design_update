@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, Moon, Sun, X, LogIn } from "lucide-react";
+import { toast } from "sonner";
 import { useApp } from "@/lib/app-context";
 import { BrandLogo } from "@/components/brand/Logo";
 import { userNav, businessNav } from "@/lib/mock-data";
@@ -12,8 +13,18 @@ interface NavbarProps {
   onOpenBooking: () => void;
 }
 
+function smoothScrollTo(hash: string) {
+  const id = hash.replace(/^#/, "");
+  if (!id || id === "top") {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 export function Navbar({ onOpenBusinessSignup, onOpenBooking }: NavbarProps) {
-  const { mode, setMode, theme, toggleTheme } = useApp();
+  const { mode, theme, toggleTheme } = useApp();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const nav = mode === "business" ? businessNav : userNav;
@@ -24,6 +35,38 @@ export function Navbar({ onOpenBusinessSignup, onOpenBooking }: NavbarProps) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (!open) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [open]);
+
+  // Close mobile menu on Escape
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const handleNav = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setOpen(false);
+    setTimeout(() => smoothScrollTo(href), 50);
+  };
+
+  const handleLogin = () => {
+    toast.info("Нэвтрэх хэсэг удахгүй нэмэгдэнэ", {
+      description: "Энэ бол демо интерфейс — жинхэнэ бүртгэлийн систем хараахан идэвхжээгүй байна.",
+    });
+  };
 
   return (
     <header
@@ -37,7 +80,12 @@ export function Navbar({ onOpenBusinessSignup, onOpenBooking }: NavbarProps) {
       <div className={cn("mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 transition-all",
         scrolled ? "h-14" : "h-18 py-3")}
       >
-        <a href="#top" className="flex items-center gap-2 shrink-0" aria-label="Tanu home">
+        <a
+          href="#top"
+          onClick={(e) => handleNav(e, "#top")}
+          className="flex items-center gap-2 shrink-0"
+          aria-label="Tanu home"
+        >
           <AnimatePresence mode="wait">
             <motion.span
               key={mode}
@@ -57,6 +105,7 @@ export function Navbar({ onOpenBusinessSignup, onOpenBooking }: NavbarProps) {
             <a
               key={n.href}
               href={n.href}
+              onClick={(e) => handleNav(e, n.href)}
               className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground hover:bg-secondary"
             >
               {n.label}
@@ -67,7 +116,13 @@ export function Navbar({ onOpenBusinessSignup, onOpenBooking }: NavbarProps) {
         <div className="flex items-center gap-2">
           <ModeSwitch />
           <ThemeToggle theme={theme} toggle={toggleTheme} />
-          <Button variant="ghost" size="sm" className="hidden md:inline-flex gap-1.5" aria-label="Нэвтрэх">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="hidden md:inline-flex gap-1.5"
+            aria-label="Нэвтрэх"
+            onClick={handleLogin}
+          >
             <LogIn className="h-4 w-4" />
             <span>Нэвтрэх</span>
           </Button>
@@ -114,7 +169,7 @@ export function Navbar({ onOpenBusinessSignup, onOpenBooking }: NavbarProps) {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 26, stiffness: 240 }}
-              className="fixed inset-y-0 right-0 z-50 w-[86vw] max-w-sm bg-background border-l border-border p-5 flex flex-col"
+              className="fixed inset-y-0 right-0 z-50 w-[86vw] max-w-sm bg-background border-l border-border p-5 flex flex-col overflow-y-auto"
             >
               <div className="flex items-center justify-between">
                 <BrandLogo mode={mode} invert={theme === "dark"} />
@@ -128,15 +183,15 @@ export function Navbar({ onOpenBusinessSignup, onOpenBooking }: NavbarProps) {
                   <a
                     key={n.href}
                     href={n.href}
-                    onClick={() => setOpen(false)}
+                    onClick={(e) => handleNav(e, n.href)}
                     className="rounded-md px-3 py-3 text-base font-medium hover:bg-secondary"
                   >
                     {n.label}
                   </a>
                 ))}
               </nav>
-              <div className="mt-auto grid gap-2">
-                <Button variant="outline" className="w-full gap-2">
+              <div className="mt-auto grid gap-2 pt-6">
+                <Button variant="outline" className="w-full gap-2" onClick={() => { setOpen(false); handleLogin(); }}>
                   <LogIn className="h-4 w-4" /> Нэвтрэх
                 </Button>
                 {mode === "user" ? (
