@@ -28,7 +28,12 @@ export function BusinessHero({ onOpenSignup }: { onOpenSignup: () => void }) {
             <Button size="lg" onClick={onOpenSignup} className="bg-primary text-primary-foreground hover:opacity-90 shadow-soft">
               Байгууллага бүртгүүлэх <ArrowRight className="ml-1.5 h-4 w-4" />
             </Button>
-            <Button size="lg" variant="outline" className="gap-1.5">
+            <Button
+              size="lg"
+              variant="outline"
+              className="gap-1.5"
+              onClick={() => document.getElementById("solutions")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            >
               <LayoutDashboard className="h-4 w-4" /> Dashboard үзэх
             </Button>
           </div>
