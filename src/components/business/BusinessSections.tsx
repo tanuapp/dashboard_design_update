@@ -1,9 +1,10 @@
+import { Fragment, useState } from "react";
 import { motion } from "motion/react";
 import * as Icons from "lucide-react";
+import { toast } from "sonner";
 import { bizFeatures, bizTypes, revenueSeries } from "@/lib/mock-data";
 import { SectionHeader } from "@/components/user/Categories";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { CalendarClock, Plus, Filter, ChevronLeft, ChevronRight, TrendingUp, Users, Wallet, XCircle } from "lucide-react";
 
 export function BusinessFeatures() {
@@ -68,8 +69,8 @@ export function BookingCalendar() {
                 <button onClick={() => setView("day")} className={`px-3 py-1.5 ${view === "day" ? "bg-gradient-brand text-white" : ""}`}>Өдөр</button>
                 <button onClick={() => setView("week")} className={`px-3 py-1.5 ${view === "week" ? "bg-gradient-brand text-white" : ""}`}>Долоо хоног</button>
               </div>
-              <Button size="sm" variant="outline" className="gap-1.5"><Filter className="h-3.5 w-3.5" /> Шүүх</Button>
-              <Button size="sm" className="bg-gradient-brand text-white gap-1.5"><Plus className="h-3.5 w-3.5" /> Захиалга нэмэх</Button>
+              <Button size="sm" variant="outline" className="gap-1.5" onClick={() => toast.info("Шүүлтүүр удахгүй нээгдэнэ")}><Filter className="h-3.5 w-3.5" /> Шүүх</Button>
+              <Button size="sm" className="bg-gradient-brand text-white gap-1.5" onClick={() => toast.success("Шинэ захиалга нэмэх маягт удахгүй нээгдэнэ")}><Plus className="h-3.5 w-3.5" /> Захиалга нэмэх</Button>
             </div>
           </div>
           <div className="p-4 overflow-x-auto">
@@ -82,8 +83,8 @@ export function BookingCalendar() {
                   </div>
                 ))}
                 {employees.map((emp, ei) => (
-                  <>
-                    <div key={`emp-${ei}`} className="flex items-center justify-end pr-2 font-medium text-muted-foreground">{emp}</div>
+                  <Fragment key={`emp-${ei}`}>
+                    <div className="flex items-center justify-end pr-2 font-medium text-muted-foreground">{emp}</div>
                     {days.map((_, di) => {
                       const b = bookings.find((x) => x.d === di && x.e === ei);
                       return (
@@ -102,7 +103,7 @@ export function BookingCalendar() {
                         </div>
                       );
                     })}
-                  </>
+                  </Fragment>
                 ))}
               </div>
             ) : (
@@ -110,8 +111,8 @@ export function BookingCalendar() {
                 <div />
                 {employees.map((e) => <div key={e} className="text-center font-semibold py-2 border border-border rounded-md bg-surface-muted">{e}</div>)}
                 {["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"].map((t, ti) => (
-                  <>
-                    <div key={t} className="text-right pr-2 py-3 text-muted-foreground font-mono">{t}</div>
+                  <Fragment key={t}>
+                    <div className="text-right pr-2 py-3 text-muted-foreground font-mono">{t}</div>
                     {employees.map((_, ei) => {
                       const has = (ti + ei) % 4 === 0;
                       return (
@@ -120,7 +121,7 @@ export function BookingCalendar() {
                         </div>
                       );
                     })}
-                  </>
+                  </Fragment>
                 ))}
               </div>
             )}
@@ -252,7 +253,7 @@ export function BusinessCta({ onOpenSignup }: { onOpenSignup: () => void }) {
             <p className="mt-3 text-muted-foreground max-w-2xl">Хуваарь, захиалга, ажилтан болон хэрэглэгчээ нэг системээс удирдаж, шинэ хэрэглэгчдэд хүрээрэй.</p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Button size="lg" onClick={onOpenSignup} className="bg-primary text-primary-foreground">Үнэгүй эхлүүлэх</Button>
-              <Button size="lg" variant="outline">Demo үзэх</Button>
+              <Button size="lg" variant="outline" onClick={() => document.getElementById("solutions")?.scrollIntoView({ behavior: "smooth", block: "start" })}>Demo үзэх</Button>
             </div>
           </div>
         </div>
