@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { AppProvider, useApp } from "@/lib/app-context";
+import { useApp } from "@/lib/app-context";
 import { Background } from "@/components/effects/Background";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -21,16 +21,21 @@ import {
   BusinessTypes,
   BusinessCta,
 } from "@/components/business/BusinessSections";
-import { BookingModal } from "@/components/modals/BookingModal";
-import { BusinessSignupModal } from "@/components/modals/BusinessSignupModal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Tanu — Үйлчилгээ захиалах болон бизнесээ удирдах платформ" },
-      { name: "description", content: "Гоо сайхан, эрүүл мэнд, сургалт, спорт болон өдөр тутмын үйлчилгээг Tanu-аас нэг дороос захиал. Байгууллагууд Tanu Business-ээр үйл ажиллагаагаа удирд." },
-      { property: "og:title", content: "Tanu — Үйлчилгээ, цаг захиалга нэг дороос" },
-      { property: "og:description", content: "Tanu — үйлчилгээ хайх, цаг захиалах, бизнесээ удирдах нэгдсэн платформ." },
+      { title: "Tanu — Үйлчилгээ хайх болон бизнесээ удирдах платформ" },
+      {
+        name: "description",
+        content:
+          "Гоо сайхан, эрүүл мэнд, сургалт, спорт болон өдөр тутмын үйлчилгээг web-ээр хайж, Tanu апп-аар цаг захиалаарай. Байгууллагууд Tanu Business-ээр үйл ажиллагаагаа удирдана.",
+      },
+      { property: "og:title", content: "Tanu — Үйлчилгээгээ олоод апп-аар захиалаарай" },
+      {
+        property: "og:description",
+        content: "Tanu web-ээр үйлчилгээ хайж, харьцуулаад, мобайл апп-аар цаг захиалах боломжтой.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -39,30 +44,27 @@ export const Route = createFileRoute("/")({
 });
 
 function Page() {
-  return (
-    <AppProvider>
-      <Shell />
-    </AppProvider>
-  );
+  return <Shell />;
 }
 
 function Shell() {
   const { mode } = useApp();
-  const [bookingOpen, setBookingOpen] = useState(false);
-  const [signupOpen, setSignupOpen] = useState(false);
+  const navigate = useNavigate();
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const openBusinessSignup = () => navigate({ to: "/business/register" });
 
   const scrollToServices = () => {
-    setTimeout(() => document.getElementById("services")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+    setTimeout(
+      () =>
+        document.getElementById("services")?.scrollIntoView({ behavior: "smooth", block: "start" }),
+      50,
+    );
   };
 
   return (
     <div className="relative min-h-screen">
       <Background />
-      <Navbar
-        onOpenBooking={() => setBookingOpen(true)}
-        onOpenBusinessSignup={() => setSignupOpen(true)}
-      />
+      <Navbar onOpenBusinessSignup={openBusinessSignup} />
 
       <AnimatePresence mode="wait">
         <motion.main
@@ -74,26 +76,32 @@ function Shell() {
         >
           {mode === "user" ? (
             <>
-              <UserHero onSearch={scrollToServices} onOpenBooking={() => setBookingOpen(true)} />
+              <UserHero onSearch={scrollToServices} />
               <PartnerMarquee />
-              <Categories selected={categoryFilter} onSelect={(c) => { setCategoryFilter(c); scrollToServices(); }} />
+              <Categories
+                selected={categoryFilter}
+                onSelect={(c) => {
+                  setCategoryFilter(c);
+                  scrollToServices();
+                }}
+              />
               <Services categoryFilter={categoryFilter} />
               <HowItWorks />
               <Benefits />
               <MobileAppSection />
               <Testimonials />
-              <UserCta onOpenBooking={() => setBookingOpen(true)} />
+              <UserCta />
             </>
           ) : (
             <>
-              <BusinessHero onOpenSignup={() => setSignupOpen(true)} />
+              <BusinessHero onOpenSignup={openBusinessSignup} />
               <PartnerMarquee />
               <BusinessFeatures />
               <BookingCalendar />
               <BusinessAnalytics />
               <BusinessWorkflow />
               <BusinessTypes />
-              <BusinessCta onOpenSignup={() => setSignupOpen(true)} />
+              <BusinessCta onOpenSignup={openBusinessSignup} />
             </>
           )}
         </motion.main>
@@ -101,9 +109,6 @@ function Shell() {
 
       <Footer />
       <BackToTop />
-
-      <BookingModal open={bookingOpen} onOpenChange={setBookingOpen} />
-      <BusinessSignupModal open={signupOpen} onOpenChange={setSignupOpen} />
     </div>
   );
 }

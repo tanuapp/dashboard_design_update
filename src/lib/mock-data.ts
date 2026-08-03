@@ -107,26 +107,82 @@ export const services = [
 ];
 
 export const partners = [
-  "Aura Beauty", "Meditech", "Peak Fitness", "Lingua Center", "AutoCare+",
-  "Nordic Nails", "Zaya Salon", "Dental Plus", "Health Hub", "SkyGym",
-  "Kids Academy", "Prime Clinic", "Studio Nine", "UB Wellness", "Bright Learn",
+  "Aura Beauty",
+  "Meditech",
+  "Peak Fitness",
+  "Lingua Center",
+  "AutoCare+",
+  "Nordic Nails",
+  "Zaya Salon",
+  "Dental Plus",
+  "Health Hub",
+  "SkyGym",
+  "Kids Academy",
+  "Prime Clinic",
+  "Studio Nine",
+  "UB Wellness",
+  "Bright Learn",
 ];
 
 export const testimonials = [
-  { name: "Оюунтуяа Б.", rating: 5, text: "Хайж байсан гоо сайхны үйлчилгээгээ маш хурдан олж, тав тухтайгаар цаг захиалж чадсан.", category: "Гоо сайхан" },
-  { name: "Түвшинбаяр Д.", rating: 5, text: "Эмнэлэгт очих цагаа маргаашгүй захиалдаг болсон. Сануулга нь маш тохиромжтой.", category: "Эрүүл мэнд" },
-  { name: "Мөнхзул Ц.", rating: 5, text: "Дасгалжуулагчийн хичээлийн хуваарийг нэг дороос харах боломж супер.", category: "Спорт" },
-  { name: "Батбаяр Х.", rating: 4, text: "Авто үйлчилгээний цагаа урьдчилан авах нь маш их цаг хэмнэсэн.", category: "Авто үйлчилгээ" },
+  {
+    name: "Оюунтуяа Б.",
+    rating: 5,
+    text: "Хайж байсан гоо сайхны үйлчилгээгээ маш хурдан олж, тав тухтайгаар цаг захиалж чадсан.",
+    category: "Гоо сайхан",
+  },
+  {
+    name: "Түвшинбаяр Д.",
+    rating: 5,
+    text: "Эмнэлэгт очих цагаа маргаашгүй захиалдаг болсон. Сануулга нь маш тохиромжтой.",
+    category: "Эрүүл мэнд",
+  },
+  {
+    name: "Мөнхзул Ц.",
+    rating: 5,
+    text: "Дасгалжуулагчийн хичээлийн хуваарийг нэг дороос харах боломж супер.",
+    category: "Спорт",
+  },
+  {
+    name: "Батбаяр Х.",
+    rating: 4,
+    text: "Авто үйлчилгээний цагаа урьдчилан авах нь маш их цаг хэмнэсэн.",
+    category: "Авто үйлчилгээ",
+  },
 ];
 
 export const bizFeatures = [
-  { icon: "CalendarClock", title: "Захиалгын удирдлага", desc: "Бүх цаг захиалгаа нэг календарь дээрээс удирдана." },
-  { icon: "Users", title: "Ажилтны хуваарь", desc: "Ажилтны ажлын цаг, амралтыг хялбар хуваарилна." },
-  { icon: "LayoutList", title: "Үйлчилгээний удирдлага", desc: "Үнэ, үргэлжлэх хугацаа, багцаа зохицуулна." },
-  { icon: "IdCard", title: "Хэрэглэгчийн мэдээлэл", desc: "Үйлчлүүлэгчийн түүх, тэмдэглэлийг хадгална." },
+  {
+    icon: "CalendarClock",
+    title: "Захиалгын удирдлага",
+    desc: "Бүх цаг захиалгаа нэг календарь дээрээс удирдана.",
+  },
+  {
+    icon: "Users",
+    title: "Ажилтны хуваарь",
+    desc: "Ажилтны ажлын цаг, амралтыг хялбар хуваарилна.",
+  },
+  {
+    icon: "LayoutList",
+    title: "Үйлчилгээний удирдлага",
+    desc: "Үнэ, үргэлжлэх хугацаа, багцаа зохицуулна.",
+  },
+  {
+    icon: "IdCard",
+    title: "Хэрэглэгчийн мэдээлэл",
+    desc: "Үйлчлүүлэгчийн түүх, тэмдэглэлийг хадгална.",
+  },
   { icon: "Building2", title: "Салбарын удирдлага", desc: "Олон салбарыг нэг эрхээр удирдана." },
-  { icon: "BarChart3", title: "Борлуулалтын тайлан", desc: "Орлого, ачаалал, чиг хандлагын тайлан." },
-  { icon: "BellRing", title: "Сануулга, мэдэгдэл", desc: "SMS болон push мэдэгдлээр цаг сануулна." },
+  {
+    icon: "BarChart3",
+    title: "Борлуулалтын тайлан",
+    desc: "Орлого, ачаалал, чиг хандлагын тайлан.",
+  },
+  {
+    icon: "BellRing",
+    title: "Сануулга, мэдэгдэл",
+    desc: "SMS болон push мэдэгдлээр цаг сануулна.",
+  },
   { icon: "Store", title: "Tanu marketplace", desc: "Шинэ үйлчлүүлэгчид Tanu-аас шууд ирнэ." },
 ];
 
@@ -148,8 +204,73 @@ export const bizStats = [
   { label: "Цуцлагдсан", value: "3", delta: "-2" },
 ];
 
-export const revenueSeries = [
-  4, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 18, 17,
-];
+export const revenueSeries = [4, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 18, 17];
 
 export const bookingSlots = ["10:00", "11:30", "13:00", "14:30", "16:00", "18:00"];
+
+// ===== Auth (mock only — no backend) =====
+export type BusinessRole = "owner" | "admin" | "employee";
+
+import type { GovernmentPermissionPreset } from "@/lib/government/types";
+import type { OrganizationType } from "@/lib/organization";
+
+export interface MockBusinessAccount {
+  role: BusinessRole;
+  name: string;
+  org: string;
+  email: string;
+  phone: string;
+  password: string;
+  organizationType: OrganizationType;
+  permissionPreset?: GovernmentPermissionPreset;
+}
+
+export const mockBusinessAccounts: MockBusinessAccount[] = [
+  {
+    role: "owner",
+    name: "Б. Ганбаяр",
+    org: "Aura Beauty Studio",
+    email: "owner@tanu.mn",
+    phone: "88010101",
+    password: "tanu123",
+    organizationType: "private",
+  },
+  {
+    role: "admin",
+    name: "Ц. Одгэрэл",
+    org: "Aura Beauty Studio",
+    email: "admin@tanu.mn",
+    phone: "88020202",
+    password: "tanu123",
+    organizationType: "private",
+  },
+  {
+    role: "employee",
+    name: "Саруул",
+    org: "Aura Beauty Studio",
+    email: "employee@tanu.mn",
+    phone: "88010101",
+    password: "tanu123",
+    organizationType: "private",
+  },
+  {
+    role: "admin",
+    name: "Б. Энхтөр",
+    org: "Нийслэлийн Цахим хөгжил, мэдээллийн технологийн газар",
+    email: "government@tanu.mn",
+    phone: "77001234",
+    password: "tanu123",
+    organizationType: "government",
+    permissionPreset: "organization-admin",
+  },
+  {
+    role: "employee",
+    name: "Н. Саруул",
+    org: "Нийслэлийн Цахим хөгжил, мэдээллийн технологийн газар",
+    email: "gov.employee@tanu.mn",
+    phone: "77005678",
+    password: "tanu123",
+    organizationType: "government",
+    permissionPreset: "employee",
+  },
+];

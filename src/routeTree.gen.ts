@@ -10,33 +10,406 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as BusinessChatRouteImport } from './routes/business.chat'
+import { Route as BusinessDashboardRouteImport } from './routes/business.dashboard'
+import { Route as BusinessRegisterRouteImport } from './routes/business.register'
+import { Route as BusinessDashboardIndexRouteImport } from './routes/business.dashboard.index'
+import { Route as BusinessDashboardBillingRouteImport } from './routes/business.dashboard.billing'
+import { Route as BusinessDashboardBookingsRouteImport } from './routes/business.dashboard.bookings'
+import { Route as BusinessDashboardBranchesRouteImport } from './routes/business.dashboard.branches'
+import { Route as BusinessDashboardCalendarRouteImport } from './routes/business.dashboard.calendar'
+import { Route as BusinessDashboardChatRouteImport } from './routes/business.dashboard.chat'
+import { Route as BusinessDashboardCustomersRouteImport } from './routes/business.dashboard.customers'
+import { Route as BusinessDashboardEmployeeScheduleRouteImport } from './routes/business.dashboard.employee-schedule'
+import { Route as BusinessDashboardEmployeesRouteImport } from './routes/business.dashboard.employees'
+import { Route as BusinessDashboardFinanceRouteImport } from './routes/business.dashboard.finance'
+import { Route as BusinessDashboardNotificationsRouteImport } from './routes/business.dashboard.notifications'
+import { Route as BusinessDashboardOrgProfileRouteImport } from './routes/business.dashboard.org-profile'
+import { Route as BusinessDashboardPerformanceRouteImport } from './routes/business.dashboard.performance'
+import { Route as BusinessDashboardProfileRouteImport } from './routes/business.dashboard.profile'
+import { Route as BusinessDashboardQrPromotionRouteImport } from './routes/business.dashboard.qr-promotion'
+import { Route as BusinessDashboardReportsRouteImport } from './routes/business.dashboard.reports'
+import { Route as BusinessDashboardScheduleRouteImport } from './routes/business.dashboard.schedule'
+import { Route as BusinessDashboardServicesRouteImport } from './routes/business.dashboard.services'
+import { Route as BusinessDashboardSettingsRouteImport } from './routes/business.dashboard.settings'
+import { Route as BusinessDashboardTodayClientsRouteImport } from './routes/business.dashboard.today-clients'
+import { Route as BusinessDashboardBranchesIndexRouteImport } from './routes/business.dashboard.branches.index'
+import { Route as BusinessDashboardBranchesBranchIdRouteImport } from './routes/business.dashboard.branches.$branchId'
+import { Route as BusinessDashboardEmployeesIndexRouteImport } from './routes/business.dashboard.employees.index'
+import { Route as BusinessDashboardEmployeesEmployeeIdRouteImport } from './routes/business.dashboard.employees.$employeeId'
+import { Route as BusinessDashboardGovernmentModuleRouteImport } from './routes/business.dashboard.government.$module'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BusinessChatRoute = BusinessChatRouteImport.update({
+  id: '/business/chat',
+  path: '/business/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BusinessDashboardRoute = BusinessDashboardRouteImport.update({
+  id: '/business/dashboard',
+  path: '/business/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BusinessRegisterRoute = BusinessRegisterRouteImport.update({
+  id: '/business/register',
+  path: '/business/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BusinessDashboardIndexRoute = BusinessDashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BusinessDashboardRoute,
+} as any)
+const BusinessDashboardBillingRoute =
+  BusinessDashboardBillingRouteImport.update({
+    id: '/billing',
+    path: '/billing',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardBookingsRoute =
+  BusinessDashboardBookingsRouteImport.update({
+    id: '/bookings',
+    path: '/bookings',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardBranchesRoute =
+  BusinessDashboardBranchesRouteImport.update({
+    id: '/branches',
+    path: '/branches',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardCalendarRoute =
+  BusinessDashboardCalendarRouteImport.update({
+    id: '/calendar',
+    path: '/calendar',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardChatRoute = BusinessDashboardChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => BusinessDashboardRoute,
+} as any)
+const BusinessDashboardCustomersRoute =
+  BusinessDashboardCustomersRouteImport.update({
+    id: '/customers',
+    path: '/customers',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardEmployeeScheduleRoute =
+  BusinessDashboardEmployeeScheduleRouteImport.update({
+    id: '/employee-schedule',
+    path: '/employee-schedule',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardEmployeesRoute =
+  BusinessDashboardEmployeesRouteImport.update({
+    id: '/employees',
+    path: '/employees',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardFinanceRoute =
+  BusinessDashboardFinanceRouteImport.update({
+    id: '/finance',
+    path: '/finance',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardNotificationsRoute =
+  BusinessDashboardNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardOrgProfileRoute =
+  BusinessDashboardOrgProfileRouteImport.update({
+    id: '/org-profile',
+    path: '/org-profile',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardPerformanceRoute =
+  BusinessDashboardPerformanceRouteImport.update({
+    id: '/performance',
+    path: '/performance',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardProfileRoute =
+  BusinessDashboardProfileRouteImport.update({
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardQrPromotionRoute =
+  BusinessDashboardQrPromotionRouteImport.update({
+    id: '/qr-promotion',
+    path: '/qr-promotion',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardReportsRoute =
+  BusinessDashboardReportsRouteImport.update({
+    id: '/reports',
+    path: '/reports',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardScheduleRoute =
+  BusinessDashboardScheduleRouteImport.update({
+    id: '/schedule',
+    path: '/schedule',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardServicesRoute =
+  BusinessDashboardServicesRouteImport.update({
+    id: '/services',
+    path: '/services',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardSettingsRoute =
+  BusinessDashboardSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardTodayClientsRoute =
+  BusinessDashboardTodayClientsRouteImport.update({
+    id: '/today-clients',
+    path: '/today-clients',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardBranchesIndexRoute =
+  BusinessDashboardBranchesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => BusinessDashboardBranchesRoute,
+  } as any)
+const BusinessDashboardBranchesBranchIdRoute =
+  BusinessDashboardBranchesBranchIdRouteImport.update({
+    id: '/$branchId',
+    path: '/$branchId',
+    getParentRoute: () => BusinessDashboardBranchesRoute,
+  } as any)
+const BusinessDashboardEmployeesIndexRoute =
+  BusinessDashboardEmployeesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => BusinessDashboardEmployeesRoute,
+  } as any)
+const BusinessDashboardEmployeesEmployeeIdRoute =
+  BusinessDashboardEmployeesEmployeeIdRouteImport.update({
+    id: '/$employeeId',
+    path: '/$employeeId',
+    getParentRoute: () => BusinessDashboardEmployeesRoute,
+  } as any)
+const BusinessDashboardGovernmentModuleRoute =
+  BusinessDashboardGovernmentModuleRouteImport.update({
+    id: '/government/$module',
+    path: '/government/$module',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/business/chat': typeof BusinessChatRoute
+  '/business/dashboard': typeof BusinessDashboardRouteWithChildren
+  '/business/register': typeof BusinessRegisterRoute
+  '/business/dashboard/billing': typeof BusinessDashboardBillingRoute
+  '/business/dashboard/bookings': typeof BusinessDashboardBookingsRoute
+  '/business/dashboard/branches': typeof BusinessDashboardBranchesRouteWithChildren
+  '/business/dashboard/calendar': typeof BusinessDashboardCalendarRoute
+  '/business/dashboard/chat': typeof BusinessDashboardChatRoute
+  '/business/dashboard/customers': typeof BusinessDashboardCustomersRoute
+  '/business/dashboard/employee-schedule': typeof BusinessDashboardEmployeeScheduleRoute
+  '/business/dashboard/employees': typeof BusinessDashboardEmployeesRouteWithChildren
+  '/business/dashboard/finance': typeof BusinessDashboardFinanceRoute
+  '/business/dashboard/notifications': typeof BusinessDashboardNotificationsRoute
+  '/business/dashboard/org-profile': typeof BusinessDashboardOrgProfileRoute
+  '/business/dashboard/performance': typeof BusinessDashboardPerformanceRoute
+  '/business/dashboard/profile': typeof BusinessDashboardProfileRoute
+  '/business/dashboard/qr-promotion': typeof BusinessDashboardQrPromotionRoute
+  '/business/dashboard/reports': typeof BusinessDashboardReportsRoute
+  '/business/dashboard/schedule': typeof BusinessDashboardScheduleRoute
+  '/business/dashboard/services': typeof BusinessDashboardServicesRoute
+  '/business/dashboard/settings': typeof BusinessDashboardSettingsRoute
+  '/business/dashboard/today-clients': typeof BusinessDashboardTodayClientsRoute
+  '/business/dashboard/': typeof BusinessDashboardIndexRoute
+  '/business/dashboard/branches/$branchId': typeof BusinessDashboardBranchesBranchIdRoute
+  '/business/dashboard/employees/$employeeId': typeof BusinessDashboardEmployeesEmployeeIdRoute
+  '/business/dashboard/government/$module': typeof BusinessDashboardGovernmentModuleRoute
+  '/business/dashboard/branches/': typeof BusinessDashboardBranchesIndexRoute
+  '/business/dashboard/employees/': typeof BusinessDashboardEmployeesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/business/chat': typeof BusinessChatRoute
+  '/business/register': typeof BusinessRegisterRoute
+  '/business/dashboard/billing': typeof BusinessDashboardBillingRoute
+  '/business/dashboard/bookings': typeof BusinessDashboardBookingsRoute
+  '/business/dashboard/calendar': typeof BusinessDashboardCalendarRoute
+  '/business/dashboard/chat': typeof BusinessDashboardChatRoute
+  '/business/dashboard/customers': typeof BusinessDashboardCustomersRoute
+  '/business/dashboard/employee-schedule': typeof BusinessDashboardEmployeeScheduleRoute
+  '/business/dashboard/finance': typeof BusinessDashboardFinanceRoute
+  '/business/dashboard/notifications': typeof BusinessDashboardNotificationsRoute
+  '/business/dashboard/org-profile': typeof BusinessDashboardOrgProfileRoute
+  '/business/dashboard/performance': typeof BusinessDashboardPerformanceRoute
+  '/business/dashboard/profile': typeof BusinessDashboardProfileRoute
+  '/business/dashboard/qr-promotion': typeof BusinessDashboardQrPromotionRoute
+  '/business/dashboard/reports': typeof BusinessDashboardReportsRoute
+  '/business/dashboard/schedule': typeof BusinessDashboardScheduleRoute
+  '/business/dashboard/services': typeof BusinessDashboardServicesRoute
+  '/business/dashboard/settings': typeof BusinessDashboardSettingsRoute
+  '/business/dashboard/today-clients': typeof BusinessDashboardTodayClientsRoute
+  '/business/dashboard': typeof BusinessDashboardIndexRoute
+  '/business/dashboard/branches/$branchId': typeof BusinessDashboardBranchesBranchIdRoute
+  '/business/dashboard/employees/$employeeId': typeof BusinessDashboardEmployeesEmployeeIdRoute
+  '/business/dashboard/government/$module': typeof BusinessDashboardGovernmentModuleRoute
+  '/business/dashboard/branches': typeof BusinessDashboardBranchesIndexRoute
+  '/business/dashboard/employees': typeof BusinessDashboardEmployeesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/business/chat': typeof BusinessChatRoute
+  '/business/dashboard': typeof BusinessDashboardRouteWithChildren
+  '/business/register': typeof BusinessRegisterRoute
+  '/business/dashboard/billing': typeof BusinessDashboardBillingRoute
+  '/business/dashboard/bookings': typeof BusinessDashboardBookingsRoute
+  '/business/dashboard/branches': typeof BusinessDashboardBranchesRouteWithChildren
+  '/business/dashboard/calendar': typeof BusinessDashboardCalendarRoute
+  '/business/dashboard/chat': typeof BusinessDashboardChatRoute
+  '/business/dashboard/customers': typeof BusinessDashboardCustomersRoute
+  '/business/dashboard/employee-schedule': typeof BusinessDashboardEmployeeScheduleRoute
+  '/business/dashboard/employees': typeof BusinessDashboardEmployeesRouteWithChildren
+  '/business/dashboard/finance': typeof BusinessDashboardFinanceRoute
+  '/business/dashboard/notifications': typeof BusinessDashboardNotificationsRoute
+  '/business/dashboard/org-profile': typeof BusinessDashboardOrgProfileRoute
+  '/business/dashboard/performance': typeof BusinessDashboardPerformanceRoute
+  '/business/dashboard/profile': typeof BusinessDashboardProfileRoute
+  '/business/dashboard/qr-promotion': typeof BusinessDashboardQrPromotionRoute
+  '/business/dashboard/reports': typeof BusinessDashboardReportsRoute
+  '/business/dashboard/schedule': typeof BusinessDashboardScheduleRoute
+  '/business/dashboard/services': typeof BusinessDashboardServicesRoute
+  '/business/dashboard/settings': typeof BusinessDashboardSettingsRoute
+  '/business/dashboard/today-clients': typeof BusinessDashboardTodayClientsRoute
+  '/business/dashboard/': typeof BusinessDashboardIndexRoute
+  '/business/dashboard/branches/$branchId': typeof BusinessDashboardBranchesBranchIdRoute
+  '/business/dashboard/employees/$employeeId': typeof BusinessDashboardEmployeesEmployeeIdRoute
+  '/business/dashboard/government/$module': typeof BusinessDashboardGovernmentModuleRoute
+  '/business/dashboard/branches/': typeof BusinessDashboardBranchesIndexRoute
+  '/business/dashboard/employees/': typeof BusinessDashboardEmployeesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/business/chat'
+    | '/business/dashboard'
+    | '/business/register'
+    | '/business/dashboard/billing'
+    | '/business/dashboard/bookings'
+    | '/business/dashboard/branches'
+    | '/business/dashboard/calendar'
+    | '/business/dashboard/chat'
+    | '/business/dashboard/customers'
+    | '/business/dashboard/employee-schedule'
+    | '/business/dashboard/employees'
+    | '/business/dashboard/finance'
+    | '/business/dashboard/notifications'
+    | '/business/dashboard/org-profile'
+    | '/business/dashboard/performance'
+    | '/business/dashboard/profile'
+    | '/business/dashboard/qr-promotion'
+    | '/business/dashboard/reports'
+    | '/business/dashboard/schedule'
+    | '/business/dashboard/services'
+    | '/business/dashboard/settings'
+    | '/business/dashboard/today-clients'
+    | '/business/dashboard/'
+    | '/business/dashboard/branches/$branchId'
+    | '/business/dashboard/employees/$employeeId'
+    | '/business/dashboard/government/$module'
+    | '/business/dashboard/branches/'
+    | '/business/dashboard/employees/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/business/chat'
+    | '/business/register'
+    | '/business/dashboard/billing'
+    | '/business/dashboard/bookings'
+    | '/business/dashboard/calendar'
+    | '/business/dashboard/chat'
+    | '/business/dashboard/customers'
+    | '/business/dashboard/employee-schedule'
+    | '/business/dashboard/finance'
+    | '/business/dashboard/notifications'
+    | '/business/dashboard/org-profile'
+    | '/business/dashboard/performance'
+    | '/business/dashboard/profile'
+    | '/business/dashboard/qr-promotion'
+    | '/business/dashboard/reports'
+    | '/business/dashboard/schedule'
+    | '/business/dashboard/services'
+    | '/business/dashboard/settings'
+    | '/business/dashboard/today-clients'
+    | '/business/dashboard'
+    | '/business/dashboard/branches/$branchId'
+    | '/business/dashboard/employees/$employeeId'
+    | '/business/dashboard/government/$module'
+    | '/business/dashboard/branches'
+    | '/business/dashboard/employees'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/business/chat'
+    | '/business/dashboard'
+    | '/business/register'
+    | '/business/dashboard/billing'
+    | '/business/dashboard/bookings'
+    | '/business/dashboard/branches'
+    | '/business/dashboard/calendar'
+    | '/business/dashboard/chat'
+    | '/business/dashboard/customers'
+    | '/business/dashboard/employee-schedule'
+    | '/business/dashboard/employees'
+    | '/business/dashboard/finance'
+    | '/business/dashboard/notifications'
+    | '/business/dashboard/org-profile'
+    | '/business/dashboard/performance'
+    | '/business/dashboard/profile'
+    | '/business/dashboard/qr-promotion'
+    | '/business/dashboard/reports'
+    | '/business/dashboard/schedule'
+    | '/business/dashboard/services'
+    | '/business/dashboard/settings'
+    | '/business/dashboard/today-clients'
+    | '/business/dashboard/'
+    | '/business/dashboard/branches/$branchId'
+    | '/business/dashboard/employees/$employeeId'
+    | '/business/dashboard/government/$module'
+    | '/business/dashboard/branches/'
+    | '/business/dashboard/employees/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
+  BusinessChatRoute: typeof BusinessChatRoute
+  BusinessDashboardRoute: typeof BusinessDashboardRouteWithChildren
+  BusinessRegisterRoute: typeof BusinessRegisterRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,12 +421,316 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/business/chat': {
+      id: '/business/chat'
+      path: '/business/chat'
+      fullPath: '/business/chat'
+      preLoaderRoute: typeof BusinessChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/business/dashboard': {
+      id: '/business/dashboard'
+      path: '/business/dashboard'
+      fullPath: '/business/dashboard'
+      preLoaderRoute: typeof BusinessDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/business/register': {
+      id: '/business/register'
+      path: '/business/register'
+      fullPath: '/business/register'
+      preLoaderRoute: typeof BusinessRegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/business/dashboard/': {
+      id: '/business/dashboard/'
+      path: '/'
+      fullPath: '/business/dashboard/'
+      preLoaderRoute: typeof BusinessDashboardIndexRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/billing': {
+      id: '/business/dashboard/billing'
+      path: '/billing'
+      fullPath: '/business/dashboard/billing'
+      preLoaderRoute: typeof BusinessDashboardBillingRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/bookings': {
+      id: '/business/dashboard/bookings'
+      path: '/bookings'
+      fullPath: '/business/dashboard/bookings'
+      preLoaderRoute: typeof BusinessDashboardBookingsRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/branches': {
+      id: '/business/dashboard/branches'
+      path: '/branches'
+      fullPath: '/business/dashboard/branches'
+      preLoaderRoute: typeof BusinessDashboardBranchesRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/calendar': {
+      id: '/business/dashboard/calendar'
+      path: '/calendar'
+      fullPath: '/business/dashboard/calendar'
+      preLoaderRoute: typeof BusinessDashboardCalendarRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/chat': {
+      id: '/business/dashboard/chat'
+      path: '/chat'
+      fullPath: '/business/dashboard/chat'
+      preLoaderRoute: typeof BusinessDashboardChatRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/customers': {
+      id: '/business/dashboard/customers'
+      path: '/customers'
+      fullPath: '/business/dashboard/customers'
+      preLoaderRoute: typeof BusinessDashboardCustomersRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/employee-schedule': {
+      id: '/business/dashboard/employee-schedule'
+      path: '/employee-schedule'
+      fullPath: '/business/dashboard/employee-schedule'
+      preLoaderRoute: typeof BusinessDashboardEmployeeScheduleRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/employees': {
+      id: '/business/dashboard/employees'
+      path: '/employees'
+      fullPath: '/business/dashboard/employees'
+      preLoaderRoute: typeof BusinessDashboardEmployeesRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/finance': {
+      id: '/business/dashboard/finance'
+      path: '/finance'
+      fullPath: '/business/dashboard/finance'
+      preLoaderRoute: typeof BusinessDashboardFinanceRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/notifications': {
+      id: '/business/dashboard/notifications'
+      path: '/notifications'
+      fullPath: '/business/dashboard/notifications'
+      preLoaderRoute: typeof BusinessDashboardNotificationsRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/org-profile': {
+      id: '/business/dashboard/org-profile'
+      path: '/org-profile'
+      fullPath: '/business/dashboard/org-profile'
+      preLoaderRoute: typeof BusinessDashboardOrgProfileRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/performance': {
+      id: '/business/dashboard/performance'
+      path: '/performance'
+      fullPath: '/business/dashboard/performance'
+      preLoaderRoute: typeof BusinessDashboardPerformanceRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/profile': {
+      id: '/business/dashboard/profile'
+      path: '/profile'
+      fullPath: '/business/dashboard/profile'
+      preLoaderRoute: typeof BusinessDashboardProfileRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/qr-promotion': {
+      id: '/business/dashboard/qr-promotion'
+      path: '/qr-promotion'
+      fullPath: '/business/dashboard/qr-promotion'
+      preLoaderRoute: typeof BusinessDashboardQrPromotionRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/reports': {
+      id: '/business/dashboard/reports'
+      path: '/reports'
+      fullPath: '/business/dashboard/reports'
+      preLoaderRoute: typeof BusinessDashboardReportsRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/schedule': {
+      id: '/business/dashboard/schedule'
+      path: '/schedule'
+      fullPath: '/business/dashboard/schedule'
+      preLoaderRoute: typeof BusinessDashboardScheduleRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/services': {
+      id: '/business/dashboard/services'
+      path: '/services'
+      fullPath: '/business/dashboard/services'
+      preLoaderRoute: typeof BusinessDashboardServicesRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/settings': {
+      id: '/business/dashboard/settings'
+      path: '/settings'
+      fullPath: '/business/dashboard/settings'
+      preLoaderRoute: typeof BusinessDashboardSettingsRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/today-clients': {
+      id: '/business/dashboard/today-clients'
+      path: '/today-clients'
+      fullPath: '/business/dashboard/today-clients'
+      preLoaderRoute: typeof BusinessDashboardTodayClientsRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/branches/': {
+      id: '/business/dashboard/branches/'
+      path: '/'
+      fullPath: '/business/dashboard/branches/'
+      preLoaderRoute: typeof BusinessDashboardBranchesIndexRouteImport
+      parentRoute: typeof BusinessDashboardBranchesRoute
+    }
+    '/business/dashboard/branches/$branchId': {
+      id: '/business/dashboard/branches/$branchId'
+      path: '/$branchId'
+      fullPath: '/business/dashboard/branches/$branchId'
+      preLoaderRoute: typeof BusinessDashboardBranchesBranchIdRouteImport
+      parentRoute: typeof BusinessDashboardBranchesRoute
+    }
+    '/business/dashboard/employees/': {
+      id: '/business/dashboard/employees/'
+      path: '/'
+      fullPath: '/business/dashboard/employees/'
+      preLoaderRoute: typeof BusinessDashboardEmployeesIndexRouteImport
+      parentRoute: typeof BusinessDashboardEmployeesRoute
+    }
+    '/business/dashboard/employees/$employeeId': {
+      id: '/business/dashboard/employees/$employeeId'
+      path: '/$employeeId'
+      fullPath: '/business/dashboard/employees/$employeeId'
+      preLoaderRoute: typeof BusinessDashboardEmployeesEmployeeIdRouteImport
+      parentRoute: typeof BusinessDashboardEmployeesRoute
+    }
+    '/business/dashboard/government/$module': {
+      id: '/business/dashboard/government/$module'
+      path: '/government/$module'
+      fullPath: '/business/dashboard/government/$module'
+      preLoaderRoute: typeof BusinessDashboardGovernmentModuleRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
   }
 }
 
+interface BusinessDashboardBranchesRouteChildren {
+  BusinessDashboardBranchesBranchIdRoute: typeof BusinessDashboardBranchesBranchIdRoute
+  BusinessDashboardBranchesIndexRoute: typeof BusinessDashboardBranchesIndexRoute
+}
+
+const BusinessDashboardBranchesRouteChildren: BusinessDashboardBranchesRouteChildren =
+  {
+    BusinessDashboardBranchesBranchIdRoute:
+      BusinessDashboardBranchesBranchIdRoute,
+    BusinessDashboardBranchesIndexRoute: BusinessDashboardBranchesIndexRoute,
+  }
+
+const BusinessDashboardBranchesRouteWithChildren =
+  BusinessDashboardBranchesRoute._addFileChildren(
+    BusinessDashboardBranchesRouteChildren,
+  )
+
+interface BusinessDashboardEmployeesRouteChildren {
+  BusinessDashboardEmployeesEmployeeIdRoute: typeof BusinessDashboardEmployeesEmployeeIdRoute
+  BusinessDashboardEmployeesIndexRoute: typeof BusinessDashboardEmployeesIndexRoute
+}
+
+const BusinessDashboardEmployeesRouteChildren: BusinessDashboardEmployeesRouteChildren =
+  {
+    BusinessDashboardEmployeesEmployeeIdRoute:
+      BusinessDashboardEmployeesEmployeeIdRoute,
+    BusinessDashboardEmployeesIndexRoute: BusinessDashboardEmployeesIndexRoute,
+  }
+
+const BusinessDashboardEmployeesRouteWithChildren =
+  BusinessDashboardEmployeesRoute._addFileChildren(
+    BusinessDashboardEmployeesRouteChildren,
+  )
+
+interface BusinessDashboardRouteChildren {
+  BusinessDashboardBillingRoute: typeof BusinessDashboardBillingRoute
+  BusinessDashboardBookingsRoute: typeof BusinessDashboardBookingsRoute
+  BusinessDashboardBranchesRoute: typeof BusinessDashboardBranchesRouteWithChildren
+  BusinessDashboardCalendarRoute: typeof BusinessDashboardCalendarRoute
+  BusinessDashboardChatRoute: typeof BusinessDashboardChatRoute
+  BusinessDashboardCustomersRoute: typeof BusinessDashboardCustomersRoute
+  BusinessDashboardEmployeeScheduleRoute: typeof BusinessDashboardEmployeeScheduleRoute
+  BusinessDashboardEmployeesRoute: typeof BusinessDashboardEmployeesRouteWithChildren
+  BusinessDashboardFinanceRoute: typeof BusinessDashboardFinanceRoute
+  BusinessDashboardNotificationsRoute: typeof BusinessDashboardNotificationsRoute
+  BusinessDashboardOrgProfileRoute: typeof BusinessDashboardOrgProfileRoute
+  BusinessDashboardPerformanceRoute: typeof BusinessDashboardPerformanceRoute
+  BusinessDashboardProfileRoute: typeof BusinessDashboardProfileRoute
+  BusinessDashboardQrPromotionRoute: typeof BusinessDashboardQrPromotionRoute
+  BusinessDashboardReportsRoute: typeof BusinessDashboardReportsRoute
+  BusinessDashboardScheduleRoute: typeof BusinessDashboardScheduleRoute
+  BusinessDashboardServicesRoute: typeof BusinessDashboardServicesRoute
+  BusinessDashboardSettingsRoute: typeof BusinessDashboardSettingsRoute
+  BusinessDashboardTodayClientsRoute: typeof BusinessDashboardTodayClientsRoute
+  BusinessDashboardIndexRoute: typeof BusinessDashboardIndexRoute
+  BusinessDashboardGovernmentModuleRoute: typeof BusinessDashboardGovernmentModuleRoute
+}
+
+const BusinessDashboardRouteChildren: BusinessDashboardRouteChildren = {
+  BusinessDashboardBillingRoute: BusinessDashboardBillingRoute,
+  BusinessDashboardBookingsRoute: BusinessDashboardBookingsRoute,
+  BusinessDashboardBranchesRoute: BusinessDashboardBranchesRouteWithChildren,
+  BusinessDashboardCalendarRoute: BusinessDashboardCalendarRoute,
+  BusinessDashboardChatRoute: BusinessDashboardChatRoute,
+  BusinessDashboardCustomersRoute: BusinessDashboardCustomersRoute,
+  BusinessDashboardEmployeeScheduleRoute:
+    BusinessDashboardEmployeeScheduleRoute,
+  BusinessDashboardEmployeesRoute: BusinessDashboardEmployeesRouteWithChildren,
+  BusinessDashboardFinanceRoute: BusinessDashboardFinanceRoute,
+  BusinessDashboardNotificationsRoute: BusinessDashboardNotificationsRoute,
+  BusinessDashboardOrgProfileRoute: BusinessDashboardOrgProfileRoute,
+  BusinessDashboardPerformanceRoute: BusinessDashboardPerformanceRoute,
+  BusinessDashboardProfileRoute: BusinessDashboardProfileRoute,
+  BusinessDashboardQrPromotionRoute: BusinessDashboardQrPromotionRoute,
+  BusinessDashboardReportsRoute: BusinessDashboardReportsRoute,
+  BusinessDashboardScheduleRoute: BusinessDashboardScheduleRoute,
+  BusinessDashboardServicesRoute: BusinessDashboardServicesRoute,
+  BusinessDashboardSettingsRoute: BusinessDashboardSettingsRoute,
+  BusinessDashboardTodayClientsRoute: BusinessDashboardTodayClientsRoute,
+  BusinessDashboardIndexRoute: BusinessDashboardIndexRoute,
+  BusinessDashboardGovernmentModuleRoute:
+    BusinessDashboardGovernmentModuleRoute,
+}
+
+const BusinessDashboardRouteWithChildren =
+  BusinessDashboardRoute._addFileChildren(BusinessDashboardRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
+  BusinessChatRoute: BusinessChatRoute,
+  BusinessDashboardRoute: BusinessDashboardRouteWithChildren,
+  BusinessRegisterRoute: BusinessRegisterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

@@ -47,27 +47,31 @@ export function Background() {
 function UserBg({ pos }: { pos: { x: number; y: number } }) {
   return (
     <>
+      <div className="user-pattern absolute inset-0 opacity-60 dark:opacity-20" />
       {/* Soft radial glows */}
       <div
-        className="absolute h-[70vh] w-[70vh] rounded-full blur-3xl opacity-70"
+        className="absolute h-[70vh] w-[70vh] rounded-full blur-3xl opacity-60"
         style={{
           left: `${pos.x * 100}%`,
           top: `${pos.y * 100}%`,
           transform: "translate(-50%,-50%)",
-          background: "radial-gradient(circle, color-mix(in oklch, var(--brand) 45%, transparent), transparent 70%)",
+          background:
+            "radial-gradient(circle, color-mix(in oklch, var(--brand) 28%, transparent), transparent 70%)",
           transition: "left 1200ms ease, top 1200ms ease",
         }}
       />
       <div
-        className="absolute -top-40 -right-40 h-[60vh] w-[60vh] rounded-full blur-3xl opacity-60"
+        className="absolute -top-40 -right-40 h-[60vh] w-[60vh] rounded-full blur-3xl opacity-55"
         style={{
-          background: "radial-gradient(circle, color-mix(in oklch, var(--brand-2) 45%, transparent), transparent 70%)",
+          background:
+            "radial-gradient(circle, color-mix(in oklch, var(--brand-2) 26%, transparent), transparent 70%)",
         }}
       />
       <div
         className="absolute -bottom-40 -left-20 h-[50vh] w-[50vh] rounded-full blur-3xl opacity-50"
         style={{
-          background: "radial-gradient(circle, color-mix(in oklch, var(--brand) 35%, transparent), transparent 70%)",
+          background:
+            "radial-gradient(circle, color-mix(in oklch, var(--brand) 22%, transparent), transparent 70%)",
         }}
       />
       {/* Floating dots */}
@@ -97,7 +101,8 @@ function BusinessBg({ pos }: { pos: { x: number; y: number } }) {
           left: `${pos.x * 100}%`,
           top: `${pos.y * 100}%`,
           transform: "translate(-50%,-50%)",
-          background: "radial-gradient(circle, color-mix(in oklch, var(--brand-2) 35%, transparent), transparent 70%)",
+          background:
+            "radial-gradient(circle, color-mix(in oklch, var(--brand-2) 35%, transparent), transparent 70%)",
           transition: "left 1500ms ease, top 1500ms ease",
         }}
       />
@@ -126,9 +131,11 @@ function FloatingDots({ count, muted = false }: { count: number; muted?: boolean
               height: size,
               background: muted
                 ? "color-mix(in oklch, var(--foreground) 25%, transparent)"
-                : "color-mix(in oklch, var(--brand) 55%, transparent)",
+                : "color-mix(in oklch, var(--brand) 34%, transparent)",
               animationDelay: `${delay}s`,
-              boxShadow: muted ? "none" : "0 0 12px color-mix(in oklch, var(--brand) 40%, transparent)",
+              boxShadow: muted
+                ? "none"
+                : "0 0 10px color-mix(in oklch, var(--brand) 24%, transparent)",
             }}
           />
         );
