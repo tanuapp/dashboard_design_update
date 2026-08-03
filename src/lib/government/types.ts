@@ -23,7 +23,8 @@ export type GovernmentModuleKey =
   | "reports"
   | "directory"
   | "training"
-  | "notifications";
+  | "notifications"
+  | "settings";
 
 export const governmentPermissionLabel: Record<GovernmentPermissionPreset, string> = {
   "system-admin": "Системийн админ",
@@ -52,6 +53,7 @@ const ALL_MODULES: GovernmentModuleKey[] = [
   "directory",
   "training",
   "notifications",
+  "settings",
 ];
 
 export const governmentPermissionModules: Record<
@@ -60,7 +62,7 @@ export const governmentPermissionModules: Record<
 > = {
   "system-admin": ALL_MODULES,
   "organization-admin": ALL_MODULES,
-  executive: ALL_MODULES,
+  executive: ALL_MODULES.filter((module) => module !== "settings"),
   "department-head": [
     "dashboard",
     "documents",

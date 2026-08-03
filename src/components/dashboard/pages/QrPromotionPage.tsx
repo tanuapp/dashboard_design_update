@@ -36,11 +36,32 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useDashboardData } from "@/lib/dashboard/store";
+import type { OrganizationType } from "@/lib/organization";
 import { cn } from "@/lib/utils";
 import { FormRow, PageHeader } from "../ui";
 
 type QrPosition = "center-bottom" | "bottom-right" | "middle-right" | "lower-center";
 type ThemeStyle = "modern" | "elegant" | "editorial" | "bold";
+type MaterialFormatId =
+  | "a5-stand"
+  | "a4-poster"
+  | "table-tent"
+  | "brochure-cover"
+  | "counter-sign"
+  | "social-post"
+  | "story"
+  | "window-sticker"
+  | "qr-card";
+
+interface MaterialFormat {
+  id: MaterialFormatId;
+  name: string;
+  sizeLabel: string;
+  description: string;
+  previewClassName: string;
+  printWidthMm: number;
+  printHeightMm: number;
+}
 
 interface PromotionForm {
   materialName: string;
@@ -71,6 +92,90 @@ interface TemplateConfig {
   visual:
     "minimal" | "premium" | "beauty" | "medical" | "education" | "brochure" | "stand" | "poster";
 }
+
+const materialFormats: MaterialFormat[] = [
+  {
+    id: "a5-stand",
+    name: "A5 stand",
+    sizeLabel: "148 × 210 мм",
+    description: "Ресепшн, үйлчилгээний ширээ",
+    previewClassName: "aspect-[148/210] max-w-[500px]",
+    printWidthMm: 148,
+    printHeightMm: 210,
+  },
+  {
+    id: "a4-poster",
+    name: "A4 poster",
+    sizeLabel: "210 × 297 мм",
+    description: "Хана, мэдээллийн самбар",
+    previewClassName: "aspect-[210/297] max-w-[500px]",
+    printWidthMm: 210,
+    printHeightMm: 297,
+  },
+  {
+    id: "table-tent",
+    name: "Table tent",
+    sizeLabel: "210 × 148 мм",
+    description: "Ширээний хэвтээ байршуулалт",
+    previewClassName: "aspect-[210/148] max-w-[620px]",
+    printWidthMm: 210,
+    printHeightMm: 148,
+  },
+  {
+    id: "brochure-cover",
+    name: "Brochure cover",
+    sizeLabel: "148 × 210 мм",
+    description: "Товхимлын нүүр, танилцуулга",
+    previewClassName: "aspect-[148/210] max-w-[500px]",
+    printWidthMm: 148,
+    printHeightMm: 210,
+  },
+  {
+    id: "counter-sign",
+    name: "Counter sign",
+    sizeLabel: "200 × 150 мм",
+    description: "Касс, хүлээн авах хэсэг",
+    previewClassName: "aspect-[4/3] max-w-[620px]",
+    printWidthMm: 200,
+    printHeightMm: 150,
+  },
+  {
+    id: "social-post",
+    name: "Social media post",
+    sizeLabel: "1080 × 1080 px",
+    description: "Facebook, Instagram пост",
+    previewClassName: "aspect-square max-w-[540px]",
+    printWidthMm: 148,
+    printHeightMm: 148,
+  },
+  {
+    id: "story",
+    name: "Story format",
+    sizeLabel: "1080 × 1920 px",
+    description: "Story, reel cover",
+    previewClassName: "aspect-[9/16] max-w-[400px]",
+    printWidthMm: 112,
+    printHeightMm: 199,
+  },
+  {
+    id: "window-sticker",
+    name: "Window sticker",
+    sizeLabel: "150 × 150 мм",
+    description: "Хаалга, шилэн гадаргуу",
+    previewClassName: "aspect-square max-w-[540px]",
+    printWidthMm: 150,
+    printHeightMm: 150,
+  },
+  {
+    id: "qr-card",
+    name: "Simple QR-only card",
+    sizeLabel: "85 × 55 мм",
+    description: "Жижиг, шууд уншуулах карт",
+    previewClassName: "aspect-[85/55] max-w-[620px]",
+    printWidthMm: 85,
+    printHeightMm: 55,
+  },
+];
 
 const templates: TemplateConfig[] = [
   {
@@ -185,35 +290,75 @@ const themeStyleLabels: Record<ThemeStyle, string> = {
   bold: "Bold",
 };
 
-function initialForm(organizationName: string, phone: string, address: string): PromotionForm {
+function initialForm(
+  organizationName: string,
+  phone: string,
+  address: string,
+  website: string,
+  organizationType: OrganizationType,
+  qrLink?: string,
+): PromotionForm {
+  const government = organizationType === "government";
   return {
-    materialName: "Цаг захиалгын A5 постер",
+    materialName: government ? "Нийтийн мэдээллийн A5 постер" : "Цаг захиалгын A5 постер",
     organizationName,
-    headline: "Таны гоо үзэсгэлэн, бидний ур чадвар",
-    subtitle: "Өөрт тохирох үйлчилгээгээ сонгоод хүссэн цагаа хэдхэн секундэд захиалаарай.",
-    cta: "QR уншуулж цаг захиалаарай",
+    headline: government
+      ? "Нийтийн мэдээлэл, үйлчилгээг нэг дороос"
+      : "Таны гоо үзэсгэлэн, бидний ур чадвар",
+    subtitle: government
+      ? "QR кодыг уншуулж байгууллагын мэдээлэл, үйлчилгээ болон хүсэлтийн маягтад хандаарай."
+      : "Өөрт тохирох үйлчилгээгээ сонгоод хүссэн цагаа хэдхэн секундэд захиалаарай.",
+    cta: government ? "QR уншуулж мэдээлэл аваарай" : "QR уншуулж цаг захиалаарай",
     phone,
     address,
     branch: "",
-    website: "aurabeauty.mn",
-    qrLink: "https://tanu.mn/book/aura-beauty",
+    website: website.replace(/^https?:\/\//, "") || "tanu.mn",
+    qrLink:
+      qrLink ??
+      (government
+        ? "https://tanu.mn/government/public/information"
+        : "https://tanu.mn/book/aura-beauty"),
     accentColor: "#175CD3",
     themeStyle: "modern",
     qrPosition: "center-bottom",
   };
 }
 
-export function QrPromotionPage() {
+export function QrPromotionPage({
+  embedded = false,
+  organizationType = "private",
+  availableQrCodes = [],
+}: {
+  embedded?: boolean;
+  organizationType?: OrganizationType;
+  availableQrCodes?: Array<{ id: string; name: string; destinationUrl: string }>;
+} = {}) {
   const { orgProfile, branches, selectedBranchId } = useDashboardData();
   const defaultBranch = branches.find((branch) => branch.id === selectedBranchId) ?? branches[0];
   const baseForm = useMemo(
-    () => initialForm(orgProfile.name, orgProfile.phone, orgProfile.address),
-    [orgProfile.address, orgProfile.name, orgProfile.phone],
+    () =>
+      initialForm(
+        orgProfile.name,
+        orgProfile.phone,
+        orgProfile.address,
+        orgProfile.website,
+        organizationType,
+        availableQrCodes[0]?.destinationUrl,
+      ),
+    [
+      availableQrCodes,
+      orgProfile.address,
+      orgProfile.name,
+      orgProfile.phone,
+      orgProfile.website,
+      organizationType,
+    ],
   );
   const [form, setForm] = useState<PromotionForm>(() => ({
     ...baseForm,
     branch: defaultBranch?.name ?? "Үндсэн салбар",
   }));
+  const [selectedFormatId, setSelectedFormatId] = useState<MaterialFormatId>("a5-stand");
   const [selectedTemplateId, setSelectedTemplateId] = useState(templates[0].id);
   const [logoData, setLogoData] = useState("");
   const [logoName, setLogoName] = useState("");
@@ -229,6 +374,8 @@ export function QrPromotionPage() {
 
   const selectedTemplate =
     templates.find((template) => template.id === selectedTemplateId) ?? templates[0];
+  const selectedFormat =
+    materialFormats.find((format) => format.id === selectedFormatId) ?? materialFormats[0];
   const qrPayload = `${form.qrLink}${form.qrLink.includes("?") ? "&" : "?"}qr=${qrVersion}`;
 
   useEffect(() => {
@@ -327,6 +474,7 @@ export function QrPromotionPage() {
 
   const resetMaterial = () => {
     setForm({ ...baseForm, branch: defaultBranch?.name ?? "Үндсэн салбар" });
+    setSelectedFormatId("a5-stand");
     setSelectedTemplateId(templates[0].id);
     setLogoData("");
     setLogoName("");
@@ -352,7 +500,7 @@ export function QrPromotionPage() {
   };
 
   const printPreview = () => {
-    toast.info("A5 print preview нээгдэж байна");
+    toast.info(`${selectedFormat.name} print preview нээгдэж байна`);
     window.setTimeout(() => window.print(), 100);
   };
 
@@ -371,17 +519,17 @@ export function QrPromotionPage() {
   };
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className={cn("space-y-6", !embedded && "pb-12")}>
       <style>{`
         @media print {
-          @page { size: A5 portrait; margin: 0; }
+          @page { size: ${selectedFormat.printWidthMm}mm ${selectedFormat.printHeightMm}mm; margin: 0; }
           body * { visibility: hidden !important; }
           #qr-promo-print-area, #qr-promo-print-area * { visibility: visible !important; }
           #qr-promo-print-area {
             position: fixed !important;
             inset: 0 auto auto 0 !important;
-            width: 148mm !important;
-            height: 210mm !important;
+            width: ${selectedFormat.printWidthMm}mm !important;
+            height: ${selectedFormat.printHeightMm}mm !important;
             max-width: none !important;
             box-shadow: none !important;
             border: 0 !important;
@@ -391,27 +539,29 @@ export function QrPromotionPage() {
         }
       `}</style>
 
-      <PageHeader
-        title="QR сурталчилгаа"
-        description="Байгууллагынхаа цаг захиалгын QR кодыг ашиглан A5 хэмжээтэй сурталчилгааны материал бэлтгээрэй."
-        actions={
-          <>
-            <Button variant="outline" className="rounded-lg" onClick={resetMaterial}>
-              <Plus className="h-4 w-4" /> Шинэ материал үүсгэх
-            </Button>
-            <Button
-              variant="outline"
-              className="rounded-lg"
-              onClick={() => downloadDataUrl(qrPng, "tanu-booking-qr.png")}
-            >
-              <Download className="h-4 w-4" /> QR татах
-            </Button>
-            <Button className="rounded-lg" onClick={printPreview}>
-              <Printer className="h-4 w-4" /> Хэвлэх
-            </Button>
-          </>
-        }
-      />
+      {!embedded && (
+        <PageHeader
+          title="QR сурталчилгаа"
+          description="Байгууллагынхаа цаг захиалгын QR кодыг ашиглан A5 хэмжээтэй сурталчилгааны материал бэлтгээрэй."
+          actions={
+            <>
+              <Button variant="outline" className="rounded-lg" onClick={resetMaterial}>
+                <Plus className="h-4 w-4" /> Шинэ материал үүсгэх
+              </Button>
+              <Button
+                variant="outline"
+                className="rounded-lg"
+                onClick={() => downloadDataUrl(qrPng, "tanu-booking-qr.png")}
+              >
+                <Download className="h-4 w-4" /> QR татах
+              </Button>
+              <Button className="rounded-lg" onClick={printPreview}>
+                <Printer className="h-4 w-4" /> Хэвлэх
+              </Button>
+            </>
+          }
+        />
+      )}
 
       <section className="rounded-2xl border border-border/80 bg-surface/85 p-4 shadow-sm sm:p-5">
         <div className="grid gap-5 lg:grid-cols-[150px_minmax(0,1fr)_auto] lg:items-center">
@@ -560,6 +710,32 @@ export function QrPromotionPage() {
                   onChange={(event) => updateField("website", event.target.value)}
                 />
               </FormRow>
+              {availableQrCodes.length > 0 && (
+                <FormRow label="Үүсгэсэн QR код сонгох">
+                  <Select
+                    value={
+                      availableQrCodes.find((record) => record.destinationUrl === form.qrLink)
+                        ?.id ?? "custom"
+                    }
+                    onValueChange={(value) => {
+                      const record = availableQrCodes.find((item) => item.id === value);
+                      if (record) updateField("qrLink", record.destinationUrl);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableQrCodes.map((record) => (
+                        <SelectItem key={record.id} value={record.id}>
+                          {record.name}
+                        </SelectItem>
+                      ))}
+                      <SelectItem value="custom">Custom холбоос</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormRow>
+              )}
               <FormRow label="QR холбоос">
                 <Input
                   value={form.qrLink}
@@ -648,6 +824,44 @@ export function QrPromotionPage() {
 
           <section className="rounded-2xl border border-border/80 bg-surface/85 p-5 shadow-sm">
             <SectionHeading
+              icon={<Files />}
+              title="Материалын формат"
+              description="Хэвлэх эсвэл дижитал сувгийн зориулалтаа сонгоно уу. A5 stand болон brochure нь хэвлэхэд бэлэн харьцаатай."
+            />
+            <div className="mt-5 grid gap-2 sm:grid-cols-2">
+              {materialFormats.map((format) => {
+                const active = format.id === selectedFormatId;
+                return (
+                  <button
+                    key={format.id}
+                    type="button"
+                    onClick={() => setSelectedFormatId(format.id)}
+                    className={cn(
+                      "min-w-0 rounded-xl border p-3 text-left transition-colors",
+                      active
+                        ? "border-[var(--brand)] bg-brand-soft text-[var(--brand)] shadow-sm"
+                        : "border-border bg-background/55 hover:border-[color-mix(in_oklch,var(--brand)_35%,var(--border))] hover:bg-surface-muted",
+                    )}
+                  >
+                    <span className="flex items-start justify-between gap-3">
+                      <span className="min-w-0">
+                        <span className="block truncate text-xs font-bold">{format.name}</span>
+                        <span className="mt-1 block text-[10px] text-muted-foreground">
+                          {format.description}
+                        </span>
+                      </span>
+                      <span className="shrink-0 rounded-full border border-current/15 px-2 py-1 text-[9px] font-semibold">
+                        {format.sizeLabel}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-border/80 bg-surface/85 p-5 shadow-sm">
+            <SectionHeading
               icon={<Sparkles />}
               title="A5 загварууд"
               description="Бизнесийнхээ төрөл, сурталчилгааны орчинд тохирох загварыг сонгоно уу."
@@ -671,9 +885,9 @@ export function QrPromotionPage() {
           <div className="rounded-2xl border border-border/80 bg-surface/85 p-4 shadow-sm sm:p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <p className="text-sm font-bold">A5 live preview</p>
+                <p className="text-sm font-bold">{selectedFormat.name} live preview</p>
                 <p className="mt-0.5 text-[11px] text-muted-foreground">
-                  148 × 210 мм · Portrait · {selectedTemplate.name}
+                  {selectedFormat.sizeLabel} · {selectedTemplate.name}
                 </p>
               </div>
               <span className="rounded-full bg-brand-soft px-2.5 py-1 text-[10px] font-semibold text-[var(--brand)]">
@@ -688,6 +902,7 @@ export function QrPromotionPage() {
                 logoData={logoData}
                 coverData={coverData}
                 qrPng={qrPng}
+                format={selectedFormat}
               />
             </div>
 
@@ -1006,12 +1221,14 @@ function A5Preview({
   logoData,
   coverData,
   qrPng,
+  format,
 }: {
   template: TemplateConfig;
   form: PromotionForm;
   logoData: string;
   coverData: string;
   qrPng: string;
+  format: MaterialFormat;
 }) {
   const qrPositionClass: Record<QrPosition, string> = {
     "center-bottom": "bottom-[7%] left-1/2 -translate-x-1/2",
@@ -1037,7 +1254,10 @@ function A5Preview({
   return (
     <div
       id="qr-promo-print-area"
-      className="relative mx-auto aspect-[148/210] w-full max-w-[500px] overflow-hidden bg-white shadow-[0_24px_70px_-35px_rgba(8,24,55,0.55)] ring-1 ring-black/5"
+      className={cn(
+        "relative mx-auto w-full overflow-hidden bg-white shadow-[0_24px_70px_-35px_rgba(8,24,55,0.55)] ring-1 ring-black/5",
+        format.previewClassName,
+      )}
       style={previewStyle}
     >
       <TemplateDecoration visual={template.visual} accent={accent} />

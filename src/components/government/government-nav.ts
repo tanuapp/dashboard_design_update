@@ -14,6 +14,7 @@ import {
   MessageSquareMore,
   Network,
   UsersRound,
+  Settings,
 } from "lucide-react";
 import type { GovernmentModuleKey } from "@/lib/government/types";
 
@@ -23,7 +24,7 @@ export interface GovernmentNavItem {
   shortLabel: string;
   to: string;
   icon: ComponentType<{ className?: string }>;
-  group: "Үндсэн" | "Бичиг хэрэг" | "Хүний нөөц" | "Харилцаа";
+  group: "Үндсэн" | "Бичиг хэрэг" | "Хүний нөөц" | "Харилцаа" | "Систем";
 }
 
 export const GOVERNMENT_NAV: GovernmentNavItem[] = [
@@ -131,9 +132,23 @@ export const GOVERNMENT_NAV: GovernmentNavItem[] = [
     icon: Bell,
     group: "Харилцаа",
   },
+  {
+    key: "settings",
+    label: "Тохиргоо",
+    shortLabel: "Тохиргоо",
+    to: "/business/dashboard/settings",
+    icon: Settings,
+    group: "Систем",
+  },
 ];
 
-export const GOVERNMENT_GROUPS = ["Үндсэн", "Бичиг хэрэг", "Хүний нөөц", "Харилцаа"] as const;
+export const GOVERNMENT_GROUPS = [
+  "Үндсэн",
+  "Бичиг хэрэг",
+  "Хүний нөөц",
+  "Харилцаа",
+  "Систем",
+] as const;
 
 export const governmentModuleTitle: Record<GovernmentModuleKey, string> = {
   dashboard: "Төрийн байгууллагын хяналтын самбар",
@@ -149,6 +164,7 @@ export const governmentModuleTitle: Record<GovernmentModuleKey, string> = {
   directory: "Ажилтны лавлах",
   training: "Сургалт, хөгжил",
   notifications: "Мэдэгдэл",
+  settings: "Тохиргоо",
 };
 
 export const governmentModuleDescription: Record<GovernmentModuleKey, string> = {
@@ -165,8 +181,11 @@ export const governmentModuleDescription: Record<GovernmentModuleKey, string> = 
   directory: "Албан хаагчдын холбоо барих мэдээлэл, албан тушаал, харьяалал.",
   training: "Сургалтын төлөвлөгөө, бүртгэл, хамрагдалт болон хөгжлийн түүх.",
   notifications: "Системийн болон байгууллагын мэдэгдэл, зарлал, сануулга.",
+  settings: "Байгууллага, эрх, нийтийн холбоос, QR код болон системийн тохиргоо.",
 };
 
 export function isGovernmentModule(value: string): value is GovernmentModuleKey {
-  return GOVERNMENT_NAV.some((item) => item.key === value && item.key !== "dashboard");
+  return GOVERNMENT_NAV.some(
+    (item) => item.key === value && item.key !== "dashboard" && item.key !== "settings",
+  );
 }
