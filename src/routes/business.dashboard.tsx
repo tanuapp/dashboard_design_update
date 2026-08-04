@@ -7,6 +7,8 @@ import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { GovernmentShell } from "@/components/government/GovernmentShell";
 import { GovernmentDataProvider } from "@/lib/government/store";
 import { normalizeOrganizationType } from "@/lib/organization";
+import { OrganizationProvider, useOrganization } from "@/lib/organization-context";
+import { TicketDataProvider } from "@/features/ticket/data/TicketDataProvider";
 
 export const Route = createFileRoute("/business/dashboard")({
   head: () => ({
@@ -34,12 +36,30 @@ function BusinessDashboardLayout() {
   return (
     <DashboardDataProvider initialRole={session.role}>
       <GovernmentDataProvider initialPermission={session.permissionPreset}>
-        {normalizeOrganizationType(session.organizationType) === "government" ? (
-          <GovernmentShell session={session} />
-        ) : (
-          <DashboardShell session={session} />
-        )}
+        <OrganizationProvider>
+          <TicketDataProvider>
+            <SelectedOrganizationShell session={session} />
+          </TicketDataProvider>
+        </OrganizationProvider>
       </GovernmentDataProvider>
     </DashboardDataProvider>
+  );
+}
+
+function SelectedOrganizationShell({
+  session,
+}: {
+  session: NonNullable<ReturnType<typeof useAuth>["session"]>;
+}) {
+  const { businessType } = useOrganization();
+
+  // Keep the legacy value readable for old persisted sessions. The selected
+  // organization context is the workspace source of truth after login.
+  void normalizeOrganizationType(session.organizationType);
+
+  return businessType === "government" ? (
+    <GovernmentShell session={session} />
+  ) : (
+    <DashboardShell session={session} />
   );
 }

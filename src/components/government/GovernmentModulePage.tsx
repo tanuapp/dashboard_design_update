@@ -50,6 +50,7 @@ import { useGovernmentData } from "@/lib/government/store";
 import {
   governmentPermissionLabel,
   hasGovernmentModuleAccess,
+  type GovernmentEmployee,
   type GovernmentModuleKey,
   type GovernmentTask,
 } from "@/lib/government/types";
@@ -126,13 +127,15 @@ export function GovernmentModulePage({ module }: { module: GovernmentModuleKey }
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button
-            variant="outline"
-            className="gap-2 rounded-lg"
-            onClick={() => toast.success("Тайлан татахад бэлэн боллоо")}
-          >
-            <Download className="h-4 w-4" /> Экспорт
-          </Button>
+          {module !== "attendance" && (
+            <Button
+              variant="outline"
+              className="gap-2 rounded-lg"
+              onClick={() => toast.success("Тайлан татахад бэлэн боллоо")}
+            >
+              <Download className="h-4 w-4" /> Экспорт
+            </Button>
+          )}
           {canWrite && !["reports", "notifications"].includes(module) && (
             <Button className="gap-2 rounded-lg" onClick={() => setRequestOpen(true)}>
               <Plus className="h-4 w-4" /> {primaryActionLabel(module)}
@@ -143,7 +146,7 @@ export function GovernmentModulePage({ module }: { module: GovernmentModuleKey }
 
       <ModuleSummary module={module} />
 
-      {!["hr", "reports"].includes(module) && (
+      {!["hr", "reports", "attendance"].includes(module) && (
         <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/70 bg-surface/75 p-3 shadow-sm">
           <div className="relative min-w-0 flex-1 basis-64 sm:max-w-sm">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -263,9 +266,10 @@ function ModuleSummary({ module }: { module: GovernmentModuleKey }) {
             "success",
           ],
         ];
+      case "attendance":
+        return [];
       case "hr":
       case "directory":
-      case "attendance":
       case "training":
         return [
           ["Нийт албан хаагч", 86, UsersRound, "brand"],
@@ -668,46 +672,583 @@ function HumanResourcesView() {
   );
 }
 
+type GovernmentAttendancePeriod = "today" | "week" | "month";
+type GovernmentAttendanceStatus =
+  "present" | "late" | "remote" | "away" | "absent" | "off" | "pending";
+
+interface GovernmentAttendanceRow {
+  employee: GovernmentEmployee;
+  date: string;
+  departmentName: string;
+  status: GovernmentAttendanceStatus;
+  scheduleStart: string;
+  scheduleEnd: string;
+  checkIn?: string;
+  checkOut?: string;
+  plannedMinutes: number;
+  workedMinutes: number;
+  lateMinutes: number;
+  earlyMinutes: number;
+  overtimeMinutes: number;
+  breakMinutes: number;
+  source: string;
+  location: string;
+}
+
+const governmentAttendanceStatusLabel: Record<GovernmentAttendanceStatus, string> = {
+  present: "Хэвийн",
+  late: "Хоцорсон",
+  remote: "Зайнаас",
+  away: "Түр гарсан",
+  absent: "Тасалсан",
+  off: "Амралт",
+  pending: "Хүлээгдэж буй",
+};
+
+const governmentAttendanceStatusTone: Record<GovernmentAttendanceStatus, string> = {
+  present:
+    "border-[color-mix(in_oklch,var(--success)_24%,transparent)] bg-[color-mix(in_oklch,var(--success)_14%,transparent)] text-[var(--success)]",
+  late: "border-[color-mix(in_oklch,var(--warning)_24%,transparent)] bg-[color-mix(in_oklch,var(--warning)_14%,transparent)] text-[var(--warning)]",
+  remote:
+    "border-[color-mix(in_oklch,var(--brand-2)_24%,transparent)] bg-[color-mix(in_oklch,var(--brand-2)_14%,transparent)] text-[var(--brand-2)]",
+  away: "border-[color-mix(in_oklch,var(--warning)_24%,transparent)] bg-[color-mix(in_oklch,var(--warning)_14%,transparent)] text-[var(--warning)]",
+  absent: "border-destructive/25 bg-destructive/10 text-destructive",
+  off: "border-border bg-secondary text-muted-foreground",
+  pending: "border-border bg-surface-muted text-muted-foreground",
+};
+
 function AttendanceTable({ query }: { query: string }) {
   const { employees, departments } = useGovernmentData();
-  return (
-    <DataTable
-      headers={[
-        "Албан хаагч",
-        "Хэлтэс",
-        "Өнөөдрийн төлөв",
-        "Ирсэн",
-        "Гарсан",
-        "Ажилласан цаг",
-        "Бүртгэлийн төрөл",
-      ]}
-    >
-      {employees
-        .filter((item) => item.name.toLocaleLowerCase("mn-MN").includes(query))
-        .map((employee) => (
-          <tr
-            key={employee.id}
-            className="border-b border-border/60 last:border-0 hover:bg-surface-muted/35"
-          >
-            <Cell>
-              <p className="font-medium">{employee.name}</p>
-              <p className="text-[10px] text-muted-foreground">{employee.position}</p>
-            </Cell>
-            <Cell>{departments.find((item) => item.id === employee.departmentId)?.name}</Cell>
-            <Cell>
-              <StatusBadge
-                status={employee.attendanceStatus}
-                label={attendanceLabel(employee.attendanceStatus)}
-              />
-            </Cell>
-            <Cell>{employee.checkIn ?? "—"}</Cell>
-            <Cell>{employee.checkOut ?? "—"}</Cell>
-            <Cell>{employee.checkIn ? "7ц 42м" : "—"}</Cell>
-            <Cell>Цахим бүртгэл</Cell>
-          </tr>
-        ))}
-    </DataTable>
+  const [period, setPeriod] = useState<GovernmentAttendancePeriod>("week");
+  const [selectedDate, setSelectedDate] = useState(() => attendanceLocalIso(new Date()));
+  const [search, setSearch] = useState("");
+  const [departmentFilter, setDepartmentFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | GovernmentAttendanceStatus>("all");
+
+  const dates = useMemo(() => {
+    if (period === "today") return [selectedDate];
+    const start =
+      period === "week" ? attendanceAddDays(selectedDate, -6) : `${selectedDate.slice(0, 7)}-01`;
+    return attendanceInclusiveDates(start, selectedDate);
+  }, [period, selectedDate]);
+
+  const allRows = useMemo(
+    () =>
+      dates.flatMap((date) =>
+        employees.map((employee, employeeIndex) =>
+          buildGovernmentAttendanceRow(
+            employee,
+            employeeIndex,
+            date,
+            departments.find((department) => department.id === employee.departmentId)?.name ?? "—",
+          ),
+        ),
+      ),
+    [dates, departments, employees],
   );
+
+  const rows = useMemo(() => {
+    const normalizedSearch = `${query} ${search}`.trim().toLocaleLowerCase("mn-MN");
+    return allRows.filter((row) => {
+      if (departmentFilter !== "all" && row.employee.departmentId !== departmentFilter)
+        return false;
+      if (statusFilter !== "all" && row.status !== statusFilter) return false;
+      if (
+        normalizedSearch &&
+        !`${row.employee.name} ${row.employee.position} ${row.departmentName}`
+          .toLocaleLowerCase("mn-MN")
+          .includes(normalizedSearch)
+      )
+        return false;
+      return true;
+    });
+  }, [allRows, departmentFilter, query, search, statusFilter]);
+
+  const totals = useMemo(
+    () => ({
+      planned: rows.reduce((total, row) => total + row.plannedMinutes, 0),
+      worked: rows.reduce((total, row) => total + row.workedMinutes, 0),
+      present: rows.filter((row) => row.status === "present").length,
+      late: rows.filter((row) => row.lateMinutes > 0).length,
+      lateMinutes: rows.reduce((total, row) => total + row.lateMinutes, 0),
+      overtime: rows.reduce((total, row) => total + row.overtimeMinutes, 0),
+      absent: rows.filter((row) => row.status === "absent").length,
+      remote: rows.filter((row) => row.status === "remote").length,
+    }),
+    [rows],
+  );
+
+  const exportAttendance = () => {
+    const header = [
+      "Огноо",
+      "Албан хаагч",
+      "Албан тушаал",
+      "Хэлтэс",
+      "Ирцийн төлөв",
+      "Хуваарь",
+      "Ирсэн",
+      "Гарсан",
+      "Төлөвлөсөн",
+      "Ажилласан",
+      "Хоцролт",
+      "Эрт гарсан",
+      "Илүү цаг",
+      "Завсарлага",
+      "Бүртгэлийн суваг",
+      "Байршил",
+    ];
+    const data = rows.map((row) => [
+      row.date,
+      row.employee.name,
+      row.employee.position,
+      row.departmentName,
+      governmentAttendanceStatusLabel[row.status],
+      row.plannedMinutes ? `${row.scheduleStart}-${row.scheduleEnd}` : "—",
+      row.checkIn ?? "—",
+      row.checkOut ?? "—",
+      attendanceDuration(row.plannedMinutes),
+      attendanceDuration(row.workedMinutes),
+      attendanceDuration(row.lateMinutes),
+      attendanceDuration(row.earlyMinutes),
+      attendanceDuration(row.overtimeMinutes),
+      attendanceDuration(row.breakMinutes),
+      row.source,
+      row.location,
+    ]);
+    const csv = [header, ...data]
+      .map((line) => line.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(","))
+      .join("\n");
+    const url = URL.createObjectURL(new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8" }));
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `turiin-albanii-irts-${dates[0]}-${dates.at(-1)}.csv`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+    toast.success("Ирцийн дэлгэрэнгүй тайлан татагдлаа");
+  };
+
+  return (
+    <div className="space-y-4">
+      <section className="rounded-2xl border border-border/80 bg-surface/80 p-4 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="inline-grid grid-cols-3 rounded-xl bg-secondary/80 p-1 text-xs font-semibold">
+            {(
+              [
+                ["today", "Өнөөдөр"],
+                ["week", "7 хоног"],
+                ["month", "Сар"],
+              ] as const
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setPeriod(value)}
+                className={cn(
+                  "rounded-lg px-3 py-2 transition",
+                  period === value
+                    ? "bg-[var(--brand)] text-white shadow-sm"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Input
+              type="date"
+              value={selectedDate}
+              onChange={(event) => event.target.value && setSelectedDate(event.target.value)}
+              className="h-9 w-[150px] text-xs"
+              aria-label="Ирцийн огноо"
+            />
+            <Button size="sm" variant="outline" className="rounded-lg" onClick={exportAttendance}>
+              <Download className="h-4 w-4" /> CSV экспорт
+            </Button>
+          </div>
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-6">
+          <AttendanceMetric
+            icon={<CalendarDays />}
+            label="Төлөвлөсөн"
+            value={attendanceDuration(totals.planned)}
+          />
+          <AttendanceMetric
+            icon={<Clock3 />}
+            label="Ажилласан"
+            value={attendanceDuration(totals.worked)}
+            tone="success"
+          />
+          <AttendanceMetric
+            icon={<UserCheck />}
+            label="Хэвийн ирсэн"
+            value={`${totals.present} бүртгэл`}
+            tone="success"
+          />
+          <AttendanceMetric
+            icon={<CircleAlert />}
+            label="Хоцролт"
+            value={`${totals.late} · ${attendanceDuration(totals.lateMinutes)}`}
+            tone="warning"
+          />
+          <AttendanceMetric
+            icon={<Activity />}
+            label="Илүү цаг"
+            value={attendanceDuration(totals.overtime)}
+          />
+          <AttendanceMetric
+            icon={<UserMinus />}
+            label="Тасалсан / зайнаас"
+            value={`${totals.absent} / ${totals.remote}`}
+            tone="danger"
+          />
+        </div>
+      </section>
+
+      <section className="overflow-hidden rounded-2xl border border-border/80 bg-surface/80 shadow-sm">
+        <div className="flex flex-wrap items-end justify-between gap-3 border-b border-border/80 p-4">
+          <div>
+            <h2 className="text-sm font-bold">Албан хаагчдын ирцийн дэлгэрэнгүй</h2>
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
+              {dates[0]} — {dates.at(-1)} · {rows.length} бүртгэл
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Албан хаагч хайх..."
+                className="h-9 w-[210px] pl-9 text-xs"
+              />
+            </div>
+            <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
+              <SelectTrigger className="h-9 w-[210px] text-xs">
+                <SelectValue placeholder="Бүх хэлтэс" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Бүх хэлтэс, нэгж</SelectItem>
+                {departments.map((department) => (
+                  <SelectItem key={department.id} value={department.id}>
+                    {department.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              value={statusFilter}
+              onValueChange={(value) => setStatusFilter(value as typeof statusFilter)}
+            >
+              <SelectTrigger className="h-9 w-[165px] text-xs">
+                <SelectValue placeholder="Бүх төлөв" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Бүх төлөв</SelectItem>
+                {(Object.keys(governmentAttendanceStatusLabel) as GovernmentAttendanceStatus[]).map(
+                  (attendanceStatus) => (
+                    <SelectItem key={attendanceStatus} value={attendanceStatus}>
+                      {governmentAttendanceStatusLabel[attendanceStatus]}
+                    </SelectItem>
+                  ),
+                )}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {rows.length === 0 ? (
+          <div className="px-6 py-14 text-center">
+            <UserMinus className="mx-auto h-8 w-8 text-muted-foreground" />
+            <p className="mt-3 text-sm font-semibold">Ирцийн бүртгэл олдсонгүй</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Огноо эсвэл шүүлтүүрээ өөрчилнө үү.
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto overscroll-x-contain [scrollbar-gutter:stable]">
+            <table className="w-full min-w-[1760px] border-separate border-spacing-0 text-xs">
+              <thead className="sticky top-0 z-20 bg-surface-muted/95 text-left text-[11px] text-muted-foreground backdrop-blur">
+                <tr>
+                  <AttendanceHead className="sticky left-0 z-30 w-[115px] min-w-[115px] bg-surface-muted">
+                    Огноо
+                  </AttendanceHead>
+                  <AttendanceHead className="sticky left-[115px] z-30 w-[220px] min-w-[220px] border-r bg-surface-muted">
+                    Албан хаагч
+                  </AttendanceHead>
+                  <AttendanceHead className="min-w-[190px]">Хэлтэс, нэгж</AttendanceHead>
+                  <AttendanceHead className="min-w-[115px]">Төлөв</AttendanceHead>
+                  <AttendanceHead className="min-w-[120px]">Хуваарь</AttendanceHead>
+                  <AttendanceHead className="min-w-[85px]">Ирсэн</AttendanceHead>
+                  <AttendanceHead className="min-w-[85px]">Гарсан</AttendanceHead>
+                  <AttendanceHead className="min-w-[105px]">Төлөвлөсөн</AttendanceHead>
+                  <AttendanceHead className="min-w-[105px]">Ажилласан</AttendanceHead>
+                  <AttendanceHead className="min-w-[95px]">Хоцролт</AttendanceHead>
+                  <AttendanceHead className="min-w-[105px]">Эрт гарсан</AttendanceHead>
+                  <AttendanceHead className="min-w-[95px]">Илүү цаг</AttendanceHead>
+                  <AttendanceHead className="min-w-[100px]">Завсарлага</AttendanceHead>
+                  <AttendanceHead className="min-w-[150px]">Бүртгэлийн суваг</AttendanceHead>
+                  <AttendanceHead className="min-w-[200px]">Байршил</AttendanceHead>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row) => (
+                  <tr
+                    key={`${row.date}-${row.employee.id}`}
+                    className="group hover:bg-secondary/35"
+                  >
+                    <AttendanceCell className="sticky left-0 z-10 bg-surface font-semibold group-hover:bg-secondary">
+                      {formatDate(row.date)}
+                    </AttendanceCell>
+                    <AttendanceCell className="sticky left-[115px] z-10 border-r bg-surface group-hover:bg-secondary">
+                      <div className="flex items-center gap-2.5">
+                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gradient-brand text-[10px] font-bold text-white">
+                          {row.employee.name.charAt(0)}
+                        </span>
+                        <div className="min-w-0">
+                          <p className="truncate font-semibold">{row.employee.name}</p>
+                          <p className="truncate text-[10px] text-muted-foreground">
+                            {row.employee.position}
+                          </p>
+                        </div>
+                      </div>
+                    </AttendanceCell>
+                    <AttendanceCell>{row.departmentName}</AttendanceCell>
+                    <AttendanceCell>
+                      <span
+                        className={cn(
+                          "inline-flex whitespace-nowrap rounded-md border px-2 py-1 text-[10px] font-semibold",
+                          governmentAttendanceStatusTone[row.status],
+                        )}
+                      >
+                        {governmentAttendanceStatusLabel[row.status]}
+                      </span>
+                    </AttendanceCell>
+                    <AttendanceCell className="font-mono font-semibold">
+                      {row.plannedMinutes ? `${row.scheduleStart}–${row.scheduleEnd}` : "—"}
+                    </AttendanceCell>
+                    <AttendanceCell className="font-mono">{row.checkIn ?? "—"}</AttendanceCell>
+                    <AttendanceCell className="font-mono">{row.checkOut ?? "—"}</AttendanceCell>
+                    <AttendanceCell>
+                      {row.plannedMinutes ? attendanceDuration(row.plannedMinutes) : "—"}
+                    </AttendanceCell>
+                    <AttendanceCell className="font-semibold">
+                      {row.workedMinutes
+                        ? attendanceDuration(row.workedMinutes)
+                        : row.checkIn && !row.checkOut
+                          ? row.status === "away"
+                            ? "Түр гарсан"
+                            : "Үргэлжилж байна"
+                          : "—"}
+                    </AttendanceCell>
+                    <AttendanceCell
+                      className={row.lateMinutes ? "font-semibold text-[var(--warning)]" : ""}
+                    >
+                      {row.lateMinutes ? attendanceDuration(row.lateMinutes) : "—"}
+                    </AttendanceCell>
+                    <AttendanceCell className={row.earlyMinutes ? "text-destructive" : ""}>
+                      {row.earlyMinutes ? attendanceDuration(row.earlyMinutes) : "—"}
+                    </AttendanceCell>
+                    <AttendanceCell
+                      className={row.overtimeMinutes ? "font-semibold text-[var(--success)]" : ""}
+                    >
+                      {row.overtimeMinutes ? attendanceDuration(row.overtimeMinutes) : "—"}
+                    </AttendanceCell>
+                    <AttendanceCell>
+                      {row.breakMinutes ? attendanceDuration(row.breakMinutes) : "—"}
+                    </AttendanceCell>
+                    <AttendanceCell>{row.source}</AttendanceCell>
+                    <AttendanceCell>
+                      <span className="inline-flex items-center gap-1.5 rounded-lg bg-secondary/70 px-2 py-1.5 text-[10px] font-medium">
+                        <MapPin className="h-3 w-3 text-muted-foreground" /> {row.location}
+                      </span>
+                    </AttendanceCell>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}
+
+function AttendanceMetric({
+  icon,
+  label,
+  value,
+  tone = "brand",
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  tone?: "brand" | "success" | "warning" | "danger";
+}) {
+  return (
+    <div className="rounded-xl border border-border/70 bg-surface-muted/30 p-3">
+      <div className={cn("mb-2 [&_svg]:h-4 [&_svg]:w-4", summaryTone(tone))}>{icon}</div>
+      <p className="text-[10px] text-muted-foreground">{label}</p>
+      <p className="mt-0.5 text-sm font-bold tabular-nums">{value}</p>
+    </div>
+  );
+}
+
+function AttendanceHead({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <th className={cn("border-b border-border/80 px-3 py-3 font-medium", className)}>{children}</th>
+  );
+}
+
+function AttendanceCell({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <td className={cn("border-b border-border/55 px-3 py-3 align-middle", className)}>
+      {children}
+    </td>
+  );
+}
+
+function buildGovernmentAttendanceRow(
+  employee: GovernmentEmployee,
+  employeeIndex: number,
+  date: string,
+  departmentName: string,
+): GovernmentAttendanceRow {
+  const today = attendanceLocalIso(new Date());
+  const day = new Date(`${date}T00:00:00`).getDay();
+  const scheduleStart = "09:00";
+  const scheduleEnd = "18:00";
+  const off = day === 0 || day === 6;
+  const future = date > today;
+  const seed = attendanceSeed(`${employee.id}-${date}`) + employeeIndex * 11;
+
+  let status: GovernmentAttendanceStatus = off ? "off" : future ? "pending" : "present";
+  let checkIn: string | undefined;
+  let checkOut: string | undefined;
+
+  if (!off && !future && date === today) {
+    status =
+      employee.attendanceStatus === "remote"
+        ? "remote"
+        : employee.attendanceStatus === "away"
+          ? "away"
+          : employee.attendanceStatus === "offline"
+            ? "absent"
+            : "present";
+    checkIn = employee.checkIn;
+    checkOut = employee.checkOut;
+  } else if (!off && !future) {
+    if (seed % 17 === 0) {
+      status = "absent";
+    } else {
+      checkIn = attendanceClock(8 * 60 + 42 + (seed % 36));
+      checkOut = attendanceClock(17 * 60 + 42 + ((seed * 3) % 55));
+      status =
+        seed % 11 === 0 ? "remote" : attendanceMinutes(checkIn) > 9 * 60 ? "late" : "present";
+    }
+  }
+
+  const plannedMinutes = off ? 0 : 8 * 60;
+  const breakMinutes = checkIn && checkOut ? (seed % 3 === 0 ? 45 : 60) : 0;
+  const workedMinutes = Math.max(0, attendanceBetween(checkIn, checkOut) - breakMinutes);
+  const lateMinutes = checkIn
+    ? Math.max(0, attendanceMinutes(checkIn) - attendanceMinutes(scheduleStart))
+    : 0;
+  const earlyMinutes = checkOut
+    ? Math.max(0, attendanceMinutes(scheduleEnd) - attendanceMinutes(checkOut))
+    : 0;
+  const overtimeMinutes = checkOut
+    ? Math.max(0, attendanceMinutes(checkOut) - attendanceMinutes(scheduleEnd))
+    : 0;
+
+  if (status === "present" && lateMinutes > 0) status = "late";
+
+  return {
+    employee,
+    date,
+    departmentName,
+    status,
+    scheduleStart,
+    scheduleEnd,
+    checkIn,
+    checkOut,
+    plannedMinutes,
+    workedMinutes,
+    lateMinutes,
+    earlyMinutes,
+    overtimeMinutes,
+    breakMinutes,
+    source:
+      status === "remote"
+        ? "VPN / Web бүртгэл"
+        : checkIn
+          ? seed % 2
+            ? "Нүүр танилт"
+            : "Карт уншигч"
+          : "—",
+    location: status === "remote" ? "Зайнаас" : checkIn ? `Төв байр · ${departmentName}` : "—",
+  };
+}
+
+function attendanceLocalIso(date: Date) {
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
+function attendanceAddDays(iso: string, days: number) {
+  const date = new Date(`${iso}T00:00:00`);
+  date.setDate(date.getDate() + days);
+  return attendanceLocalIso(date);
+}
+
+function attendanceInclusiveDates(start: string, end: string) {
+  const dates: string[] = [];
+  let cursor = start;
+  while (cursor <= end) {
+    dates.push(cursor);
+    cursor = attendanceAddDays(cursor, 1);
+  }
+  return dates;
+}
+
+function attendanceSeed(value: string) {
+  return Array.from(value).reduce((total, character) => total + character.charCodeAt(0), 0);
+}
+
+function attendanceClock(totalMinutes: number) {
+  return `${String(Math.floor(totalMinutes / 60)).padStart(2, "0")}:${String(totalMinutes % 60).padStart(2, "0")}`;
+}
+
+function attendanceMinutes(time?: string) {
+  if (!time) return 0;
+  const [hours, minutes] = time.split(":").map(Number);
+  return hours * 60 + minutes;
+}
+
+function attendanceBetween(start?: string, end?: string) {
+  if (!start || !end) return 0;
+  return Math.max(0, attendanceMinutes(end) - attendanceMinutes(start));
+}
+
+function attendanceDuration(totalMinutes: number) {
+  const safeMinutes = Math.max(0, Math.round(totalMinutes));
+  return `${Math.floor(safeMinutes / 60)}ц ${safeMinutes % 60}м`;
 }
 
 function DirectoryView({ query }: { query: string }) {
@@ -1068,16 +1609,6 @@ function formatDate(date: string) {
     month: "2-digit",
     day: "2-digit",
   });
-}
-function attendanceLabel(status: string) {
-  return (
-    (
-      { present: "Ирсэн", remote: "Зайнаас", away: "Түр гарсан", offline: "Ирээгүй" } as Record<
-        string,
-        string
-      >
-    )[status] ?? status
-  );
 }
 function structureLabel(level: string) {
   return (

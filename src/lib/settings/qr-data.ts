@@ -64,7 +64,7 @@ export function createInitialQrRecords(
       description: government ? "Иргэдийн хүсэлт, өргөдөл" : "Үйлчилгээний дараах үнэлгээ",
       foregroundColor: "#175CD3",
       backgroundColor: "#FFFFFF",
-      logoEnabled: false,
+      logoEnabled: true,
       frameStyle: "scan",
       cta: government ? "Хүсэлт илгээх" : "Санал өгөх",
       status: "active",

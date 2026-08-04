@@ -319,6 +319,7 @@ function BusinessPanel() {
       org: account.org,
       organizationType: account.organizationType,
       permissionPreset: account.permissionPreset,
+      memberships: account.memberships,
     };
     login(session, remember);
     setTimeout(() => navigate({ to: "/business/dashboard" }), 550);

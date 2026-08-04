@@ -5,6 +5,7 @@ import { isGovernmentModule } from "@/components/government/government-nav";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
 import { normalizeOrganizationType } from "@/lib/organization";
+import { useOrganization } from "@/lib/organization-context";
 
 export const Route = createFileRoute("/business/dashboard/government/$module")({
   component: GovernmentModuleRoute,
@@ -13,8 +14,10 @@ export const Route = createFileRoute("/business/dashboard/government/$module")({
 function GovernmentModuleRoute() {
   const { module } = Route.useParams();
   const { session } = useAuth();
+  const { businessType } = useOrganization();
 
-  if (normalizeOrganizationType(session?.organizationType) !== "government") {
+  if (businessType !== "government") {
+    void normalizeOrganizationType(session?.organizationType);
     return (
       <div className="grid min-h-[55vh] place-items-center">
         <div className="max-w-md rounded-2xl border border-border/80 bg-surface/80 p-8 text-center shadow-sm">

@@ -10,7 +10,7 @@ function LegacyChatRedirect() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate({ to: "/business/chat", replace: true });
+    navigate({ to: "/business/chat", search: { conversation: undefined }, replace: true });
   }, [navigate]);
 
   return null;

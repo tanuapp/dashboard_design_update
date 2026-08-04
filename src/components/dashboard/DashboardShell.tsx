@@ -28,7 +28,7 @@ import { useAuth, type AuthSession } from "@/lib/auth-context";
 import { useDashboardData } from "@/lib/dashboard/store";
 import { CHAT_UNREAD_EVENT, INITIAL_CHAT_UNREAD_COUNT } from "@/lib/dashboard/chat-state";
 import type { BusinessRole } from "@/lib/dashboard/types";
-import { DASHBOARD_NAV, roleLabel } from "./nav-config";
+import { roleLabel } from "./nav-config";
 import { TanuBusinessLogo, TanuMark } from "@/components/brand/Logo";
 import { MessengerMenu } from "@/components/dashboard/MessengerMenu";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
@@ -56,8 +56,25 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+import { useOrganization } from "@/lib/organization-context";
+import { resolveBusinessModules, type ResolvedBusinessModule } from "@/lib/module-registry";
+import { OrganizationSwitcher } from "@/components/dashboard/OrganizationSwitcher";
+import { useTicketData } from "@/features/ticket/data/TicketDataProvider";
 
 const SIDEBAR_KEY = "tanu-dashboard-sidebar-collapsed";
+
+function ticketRoleLabel(role: string) {
+  const labels: Record<string, string> = {
+    owner: "Эзэмшигч",
+    admin: "Админ",
+    event_manager: "Арга хэмжээний менежер",
+    venue_manager: "Байршлын менежер",
+    gate_staff: "Хаалганы ажилтан",
+    scanner_staff: "QR шалгагч",
+    report_viewer: "Тайлан харах эрх",
+  };
+  return labels[role] ?? role;
+}
 
 export function DashboardShell({ session }: { session: AuthSession }) {
   const { theme, toggleTheme } = useApp();
@@ -74,6 +91,7 @@ export function DashboardShell({ session }: { session: AuthSession }) {
   } = useDashboardData();
   const navigate = useNavigate();
   const location = useLocation();
+  const { selectedOrganization, businessType, currentMembership } = useOrganization();
 
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -124,7 +142,16 @@ export function DashboardShell({ session }: { session: AuthSession }) {
     return () => window.removeEventListener(CHAT_UNREAD_EVENT, updateChatUnreadCount);
   }, []);
 
-  const items = useMemo(() => DASHBOARD_NAV.filter((i) => i.roles.includes(viewRole)), [viewRole]);
+  const items = useMemo(
+    () =>
+      resolveBusinessModules({
+        businessType,
+        organizationId: selectedOrganization.id,
+        membership: currentMembership,
+        serviceRole: viewRole,
+      }),
+    [businessType, currentMembership, selectedOrganization.id, viewRole],
+  );
   const activeItem =
     items.find((i) =>
       i.to === "/business/dashboard"
@@ -212,103 +239,119 @@ export function DashboardShell({ session }: { session: AuthSession }) {
               >
                 <Menu className="h-4 w-4" />
               </button>
+              <div className="hidden sm:block">
+                <OrganizationSwitcher />
+              </div>
+              <div className="sm:hidden">
+                <OrganizationSwitcher compact />
+              </div>
               <button
                 type="button"
                 onClick={() => setSearchOpen(true)}
-                aria-label="Захиалга, хэрэглэгч, ажилтан, үйлчилгээ хайх"
+                aria-label={
+                  businessType === "ticket"
+                    ? "Захиалга, арга хэмжээ, байршил хайх"
+                    : "Захиалга, хэрэглэгч, ажилтан, үйлчилгээ хайх"
+                }
                 className="group flex h-9 w-9 shrink-0 items-center gap-2.5 rounded-lg border border-border bg-surface/75 px-2.5 text-left text-xs text-muted-foreground shadow-sm transition hover:border-[var(--brand)]/30 hover:bg-surface sm:w-full sm:max-w-xs sm:flex-1 sm:px-3"
               >
                 <Search className="h-4 w-4 shrink-0 transition group-hover:text-foreground" />
                 <span className="hidden min-w-0 flex-1 truncate sm:block">
-                  Захиалга, хэрэглэгч, ажилтан, үйлчилгээ хайх...
+                  {businessType === "ticket"
+                    ? "Захиалга, арга хэмжээ, байршил хайх..."
+                    : "Захиалга, хэрэглэгч, ажилтан, үйлчилгээ хайх..."}
                 </span>
               </button>
             </div>
 
             <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
               {/* Branch selector — hidden on narrow screens, folded into overflow menu */}
-              <div className="hidden md:block">
-                <Select value={selectedBranchId} onValueChange={setSelectedBranchId}>
-                  <SelectTrigger
-                    className="h-9 w-44 gap-1.5 rounded-lg text-xs"
-                    aria-label="Салбар сонгох"
-                  >
-                    <SelectValue placeholder="Бүх салбар" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Бүх салбар</SelectItem>
-                    {branches.map((b) => (
-                      <SelectItem key={b.id} value={b.id}>
-                        {b.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              {businessType === "service" && (
+                <div className="hidden md:block">
+                  <Select value={selectedBranchId} onValueChange={setSelectedBranchId}>
+                    <SelectTrigger
+                      className="h-9 w-44 gap-1.5 rounded-lg text-xs"
+                      aria-label="Салбар сонгох"
+                    >
+                      <SelectValue placeholder="Бүх салбар" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Бүх салбар</SelectItem>
+                      {branches.map((b) => (
+                        <SelectItem key={b.id} value={b.id}>
+                          {b.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
 
-              <MessengerMenu unreadCount={chatUnreadCount} />
+              {businessType === "service" && <MessengerMenu unreadCount={chatUnreadCount} />}
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    aria-label={`Мэдэгдэл (${unreadCount} уншаагүй)`}
-                    className="relative grid h-9 w-9 place-items-center rounded-lg border border-border bg-surface/70 transition hover:bg-secondary"
-                  >
-                    <Bell className="h-4 w-4" />
-                    {unreadCount > 0 && (
-                      <span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-destructive px-1 text-[9px] font-bold text-white">
-                        {unreadCount}
-                      </span>
-                    )}
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-80 p-0">
-                  <div className="flex items-center justify-between px-3 py-2.5">
-                    <p className="text-sm font-semibold">Мэдэгдэл</p>
-                    {unreadCount > 0 && (
-                      <button
-                        className="text-xs font-medium text-[var(--brand)] hover:underline"
-                        onClick={markAllNotificationsRead}
-                      >
-                        Бүгдийг уншсан
-                      </button>
-                    )}
-                  </div>
-                  <DropdownMenuSeparator className="m-0" />
-                  <div className="max-h-80 overflow-y-auto">
-                    {notifications.length === 0 && (
-                      <p className="px-3 py-6 text-center text-xs text-muted-foreground">
-                        Мэдэгдэл алга байна
-                      </p>
-                    )}
-                    {notifications.slice(0, 6).map((n) => (
-                      <DropdownMenuItem
-                        key={n.id}
-                        className="flex flex-col items-start gap-0.5 whitespace-normal px-3 py-2.5"
-                        onClick={() => {
-                          markNotificationRead(n.id);
-                          if (n.link) navigate({ to: n.link });
-                        }}
-                      >
-                        <span className="flex w-full items-center gap-1.5 text-xs font-semibold">
-                          {!n.read && (
-                            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--brand)]" />
-                          )}
-                          {n.title}
+              {businessType === "service" && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      aria-label={`Мэдэгдэл (${unreadCount} уншаагүй)`}
+                      className="relative grid h-9 w-9 place-items-center rounded-lg border border-border bg-surface/70 transition hover:bg-secondary"
+                    >
+                      <Bell className="h-4 w-4" />
+                      {unreadCount > 0 && (
+                        <span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-destructive px-1 text-[9px] font-bold text-white">
+                          {unreadCount}
                         </span>
-                        <span className="text-xs text-muted-foreground">{n.body}</span>
-                      </DropdownMenuItem>
-                    ))}
-                  </div>
-                  <DropdownMenuSeparator className="m-0" />
-                  <DropdownMenuItem
-                    asChild
-                    className="justify-center py-2.5 text-xs font-medium text-[var(--brand)]"
-                  >
-                    <Link to="/business/dashboard/notifications">Бүгдийг харах</Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                      )}
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-80 p-0">
+                    <div className="flex items-center justify-between px-3 py-2.5">
+                      <p className="text-sm font-semibold">Мэдэгдэл</p>
+                      {unreadCount > 0 && (
+                        <button
+                          className="text-xs font-medium text-[var(--brand)] hover:underline"
+                          onClick={markAllNotificationsRead}
+                        >
+                          Бүгдийг уншсан
+                        </button>
+                      )}
+                    </div>
+                    <DropdownMenuSeparator className="m-0" />
+                    <div className="max-h-80 overflow-y-auto">
+                      {notifications.length === 0 && (
+                        <p className="px-3 py-6 text-center text-xs text-muted-foreground">
+                          Мэдэгдэл алга байна
+                        </p>
+                      )}
+                      {notifications.slice(0, 6).map((n) => (
+                        <DropdownMenuItem
+                          key={n.id}
+                          className="flex flex-col items-start gap-0.5 whitespace-normal px-3 py-2.5"
+                          onClick={() => {
+                            markNotificationRead(n.id);
+                            if (n.link) navigate({ to: n.link });
+                          }}
+                        >
+                          <span className="flex w-full items-center gap-1.5 text-xs font-semibold">
+                            {!n.read && (
+                              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--brand)]" />
+                            )}
+                            {n.title}
+                          </span>
+                          <span className="text-xs text-muted-foreground">{n.body}</span>
+                        </DropdownMenuItem>
+                      ))}
+                    </div>
+                    <DropdownMenuSeparator className="m-0" />
+                    <DropdownMenuItem
+                      asChild
+                      className="justify-center py-2.5 text-xs font-medium text-[var(--brand)]"
+                    >
+                      <Link to="/business/dashboard/notifications">Бүгдийг харах</Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
 
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -326,34 +369,36 @@ export function DashboardShell({ session }: { session: AuthSession }) {
               </Tooltip>
 
               {/* Overflow menu for the branch selector on narrow screens */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    aria-label="Нэмэлт үйлдэл"
-                    className="grid h-9 w-9 place-items-center rounded-lg border border-border bg-surface/70 transition hover:bg-secondary md:hidden"
-                  >
-                    <MoreHorizontal className="h-4 w-4" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <div className="px-2 py-1.5">
-                    <p className="mb-1 text-xs text-muted-foreground">Салбар</p>
-                    <Select value={selectedBranchId} onValueChange={setSelectedBranchId}>
-                      <SelectTrigger className="h-8 text-xs">
-                        <SelectValue placeholder="Бүх салбар" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Бүх салбар</SelectItem>
-                        {branches.map((b) => (
-                          <SelectItem key={b.id} value={b.id}>
-                            {b.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {businessType === "service" && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      aria-label="Нэмэлт үйлдэл"
+                      className="grid h-9 w-9 place-items-center rounded-lg border border-border bg-surface/70 transition hover:bg-secondary md:hidden"
+                    >
+                      <MoreHorizontal className="h-4 w-4" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <div className="px-2 py-1.5">
+                      <p className="mb-1 text-xs text-muted-foreground">Салбар</p>
+                      <Select value={selectedBranchId} onValueChange={setSelectedBranchId}>
+                        <SelectTrigger className="h-8 text-xs">
+                          <SelectValue placeholder="Бүх салбар" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Бүх салбар</SelectItem>
+                          {branches.map((b) => (
+                            <SelectItem key={b.id} value={b.id}>
+                              {b.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -368,7 +413,10 @@ export function DashboardShell({ session }: { session: AuthSession }) {
                   <DropdownMenuLabel className="font-normal">
                     <p className="text-sm font-semibold">{session.name}</p>
                     <p className="text-xs text-muted-foreground">
-                      {session.org} · {roleLabel[viewRole]}
+                      {selectedOrganization.name} ·{" "}
+                      {businessType === "service"
+                        ? roleLabel[viewRole]
+                        : ticketRoleLabel(currentMembership.role)}
                     </p>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -377,31 +425,35 @@ export function DashboardShell({ session }: { session: AuthSession }) {
                       <User className="h-4 w-4" /> Миний профайл
                     </Link>
                   </DropdownMenuItem>
-                  {(viewRole === "owner" || viewRole === "admin") && (
+                  {businessType === "service" && (viewRole === "owner" || viewRole === "admin") && (
                     <DropdownMenuItem asChild className="gap-2">
                       <Link to="/business/dashboard/org-profile">
                         <Building className="h-4 w-4" /> Байгууллагын профайл
                       </Link>
                     </DropdownMenuItem>
                   )}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuLabel className="text-[11px] font-normal uppercase tracking-wide text-muted-foreground">
-                    Демо: харах эрх сэлгэх
-                  </DropdownMenuLabel>
-                  {(["owner", "admin", "employee"] as BusinessRole[]).map((r) => (
-                    <DropdownMenuItem
-                      key={r}
-                      className="justify-between gap-2"
-                      onClick={() => {
-                        setViewRole(r);
-                        navigate({ to: "/business/dashboard" });
-                        toast.info(`Одоо "${roleLabel[r]}" эрхээр харж байна`);
-                      }}
-                    >
-                      {roleLabel[r]}
-                      {viewRole === r && <Check className="h-3.5 w-3.5 text-[var(--brand)]" />}
-                    </DropdownMenuItem>
-                  ))}
+                  {businessType === "service" && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuLabel className="text-[11px] font-normal uppercase tracking-wide text-muted-foreground">
+                        Демо: харах эрх сэлгэх
+                      </DropdownMenuLabel>
+                      {(["owner", "admin", "employee"] as BusinessRole[]).map((r) => (
+                        <DropdownMenuItem
+                          key={r}
+                          className="justify-between gap-2"
+                          onClick={() => {
+                            setViewRole(r);
+                            navigate({ to: "/business/dashboard" });
+                            toast.info(`Одоо "${roleLabel[r]}" эрхээр харж байна`);
+                          }}
+                        >
+                          {roleLabel[r]}
+                          {viewRole === r && <Check className="h-3.5 w-3.5 text-[var(--brand)]" />}
+                        </DropdownMenuItem>
+                      ))}
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={handleLogout}
@@ -420,7 +472,12 @@ export function DashboardShell({ session }: { session: AuthSession }) {
         </div>
       </div>
 
-      <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} />
+      <GlobalSearch
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        businessType={businessType}
+        items={items}
+      />
     </TooltipProvider>
   );
 }
@@ -434,7 +491,7 @@ function SidebarContent({
   onLogout,
   onSelect,
 }: {
-  items: typeof DASHBOARD_NAV;
+  items: ResolvedBusinessModule[];
   activeKey?: string;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
@@ -444,6 +501,7 @@ function SidebarContent({
 }) {
   const { theme } = useApp();
   const { viewRole } = useDashboardData();
+  const { selectedOrganization, businessType, currentMembership } = useOrganization();
 
   return (
     <div className="flex h-full flex-col p-3">
@@ -461,9 +519,12 @@ function SidebarContent({
           collapsed ? "max-h-0 border-transparent p-0 opacity-0" : "max-h-28 p-3 opacity-100",
         )}
       >
-        <p className="truncate text-sm font-semibold">{session.org}</p>
+        <p className="truncate text-sm font-semibold">{selectedOrganization.name}</p>
         <p className="mt-0.5 text-xs text-muted-foreground">
-          {session.name} · {roleLabel[viewRole]}
+          {session.name} ·{" "}
+          {businessType === "service"
+            ? roleLabel[viewRole]
+            : ticketRoleLabel(currentMembership.role)}
         </p>
       </div>
 
@@ -570,11 +631,16 @@ function SidebarContent({
 function GlobalSearch({
   open,
   onOpenChange,
+  businessType,
+  items,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
+  businessType: "service" | "ticket" | "government" | "other";
+  items: ResolvedBusinessModule[];
 }) {
   const { bookings, customers, employees, services } = useDashboardData();
+  const ticketData = useTicketData();
   const navigate = useNavigate();
 
   const go = (to: string) => {
@@ -584,37 +650,84 @@ function GlobalSearch({
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
-      <CommandInput placeholder="Захиалга, хэрэглэгч, ажилтан, үйлчилгээ хайх..." />
+      <CommandInput
+        placeholder={
+          businessType === "ticket"
+            ? "Захиалга, арга хэмжээ, байршил хайх..."
+            : "Захиалга, хэрэглэгч, ажилтан, үйлчилгээ хайх..."
+        }
+      />
       <CommandList>
         <CommandEmpty>Илэрц олдсонгүй.</CommandEmpty>
-        <CommandGroup heading="Захиалга">
-          {bookings.slice(0, 5).map((b) => (
-            <CommandItem key={b.id} onSelect={() => go("/business/dashboard/bookings")}>
-              <ClipboardList /> {b.code} · {b.customerName} — {b.serviceName}
-            </CommandItem>
-          ))}
-        </CommandGroup>
-        <CommandGroup heading="Хэрэглэгч">
-          {customers.slice(0, 5).map((c) => (
-            <CommandItem key={c.id} onSelect={() => go("/business/dashboard/customers")}>
-              <Users /> {c.name} · {c.phone}
-            </CommandItem>
-          ))}
-        </CommandGroup>
-        <CommandGroup heading="Ажилтан">
-          {employees.slice(0, 5).map((e) => (
-            <CommandItem key={e.id} onSelect={() => go(`/business/dashboard/employees/${e.id}`)}>
-              <CalendarClock /> {e.name} · {e.position}
-            </CommandItem>
-          ))}
-        </CommandGroup>
-        <CommandGroup heading="Үйлчилгээ">
-          {services.slice(0, 5).map((s) => (
-            <CommandItem key={s.id} onSelect={() => go("/business/dashboard/services")}>
-              <LayoutList /> {s.name}
-            </CommandItem>
-          ))}
-        </CommandGroup>
+        {businessType === "ticket" ? (
+          <>
+            <CommandGroup heading="Тасалбарын захиалга">
+              {ticketData.orders.slice(0, 5).map((order) => {
+                const event = ticketData.events.find((item) => item.id === order.eventId);
+                const orderRoute = items.find((item) => item.id === "ticket-orders")?.to;
+                return (
+                  <CommandItem key={order.id} onSelect={() => orderRoute && go(orderRoute)}>
+                    <ClipboardList /> {order.orderNumber} · {order.customer.name} — {event?.name}
+                  </CommandItem>
+                );
+              })}
+            </CommandGroup>
+            <CommandGroup heading="Арга хэмжээ">
+              {ticketData.events.slice(0, 5).map((event) => {
+                const eventRoute = items.find((item) => item.id === "ticket-events")?.to;
+                return (
+                  <CommandItem key={event.id} onSelect={() => eventRoute && go(eventRoute)}>
+                    <CalendarClock /> {event.name} · {event.category}
+                  </CommandItem>
+                );
+              })}
+            </CommandGroup>
+            <CommandGroup heading="Байршил">
+              {ticketData.venues.slice(0, 5).map((venue) => {
+                const venueRoute = items.find((item) => item.id === "ticket-venues")?.to;
+                return (
+                  <CommandItem key={venue.id} onSelect={() => venueRoute && go(venueRoute)}>
+                    <Building /> {venue.name} · {venue.address}
+                  </CommandItem>
+                );
+              })}
+            </CommandGroup>
+          </>
+        ) : (
+          <>
+            <CommandGroup heading="Захиалга">
+              {bookings.slice(0, 5).map((b) => (
+                <CommandItem key={b.id} onSelect={() => go("/business/dashboard/bookings")}>
+                  <ClipboardList /> {b.code} · {b.customerName} — {b.serviceName}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+            <CommandGroup heading="Хэрэглэгч">
+              {customers.slice(0, 5).map((c) => (
+                <CommandItem key={c.id} onSelect={() => go("/business/dashboard/customers")}>
+                  <Users /> {c.name} · {c.phone}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+            <CommandGroup heading="Ажилтан">
+              {employees.slice(0, 5).map((e) => (
+                <CommandItem
+                  key={e.id}
+                  onSelect={() => go(`/business/dashboard/employees/${e.id}`)}
+                >
+                  <CalendarClock /> {e.name} · {e.position}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+            <CommandGroup heading="Үйлчилгээ">
+              {services.slice(0, 5).map((s) => (
+                <CommandItem key={s.id} onSelect={() => go("/business/dashboard/services")}>
+                  <LayoutList /> {s.name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </>
+        )}
       </CommandList>
     </CommandDialog>
   );

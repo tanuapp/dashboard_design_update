@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import type { BusinessRole } from "@/lib/mock-data";
 import type { GovernmentPermissionPreset } from "@/lib/government/types";
 import type { OrganizationType } from "@/lib/organization";
+import type { OrganizationMembership } from "@/lib/organization";
 
 export interface AuthSession {
   role: BusinessRole;
@@ -10,6 +11,7 @@ export interface AuthSession {
   org: string;
   organizationType?: OrganizationType;
   permissionPreset?: GovernmentPermissionPreset;
+  memberships?: OrganizationMembership[];
 }
 
 interface AuthState {

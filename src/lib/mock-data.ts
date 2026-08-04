@@ -212,7 +212,8 @@ export const bookingSlots = ["10:00", "11:30", "13:00", "14:30", "16:00", "18:00
 export type BusinessRole = "owner" | "admin" | "employee";
 
 import type { GovernmentPermissionPreset } from "@/lib/government/types";
-import type { OrganizationType } from "@/lib/organization";
+import type { OrganizationMembership, OrganizationType } from "@/lib/organization";
+import { ticketPermissionsForRole } from "@/lib/organizations";
 
 export interface MockBusinessAccount {
   role: BusinessRole;
@@ -223,6 +224,7 @@ export interface MockBusinessAccount {
   password: string;
   organizationType: OrganizationType;
   permissionPreset?: GovernmentPermissionPreset;
+  memberships?: OrganizationMembership[];
 }
 
 export const mockBusinessAccounts: MockBusinessAccount[] = [
@@ -234,6 +236,18 @@ export const mockBusinessAccounts: MockBusinessAccount[] = [
     phone: "88010101",
     password: "tanu123",
     organizationType: "private",
+    memberships: [
+      {
+        organizationId: "org-aura-beauty",
+        role: "owner",
+        permissions: ["service.manage"],
+      },
+      {
+        organizationId: "org-tanu-events",
+        role: "owner",
+        permissions: ticketPermissionsForRole("owner"),
+      },
+    ],
   },
   {
     role: "admin",
@@ -243,6 +257,18 @@ export const mockBusinessAccounts: MockBusinessAccount[] = [
     phone: "88020202",
     password: "tanu123",
     organizationType: "private",
+    memberships: [
+      {
+        organizationId: "org-aura-beauty",
+        role: "admin",
+        permissions: ["service.manage"],
+      },
+      {
+        organizationId: "org-tanu-events",
+        role: "admin",
+        permissions: ticketPermissionsForRole("admin"),
+      },
+    ],
   },
   {
     role: "employee",
@@ -252,6 +278,13 @@ export const mockBusinessAccounts: MockBusinessAccount[] = [
     phone: "88010101",
     password: "tanu123",
     organizationType: "private",
+    memberships: [
+      {
+        organizationId: "org-aura-beauty",
+        role: "employee",
+        permissions: ["service.employee"],
+      },
+    ],
   },
   {
     role: "admin",
@@ -262,6 +295,13 @@ export const mockBusinessAccounts: MockBusinessAccount[] = [
     password: "tanu123",
     organizationType: "government",
     permissionPreset: "organization-admin",
+    memberships: [
+      {
+        organizationId: "org-city-digital",
+        role: "organization-admin",
+        permissions: ["government.workspace"],
+      },
+    ],
   },
   {
     role: "employee",
@@ -272,5 +312,45 @@ export const mockBusinessAccounts: MockBusinessAccount[] = [
     password: "tanu123",
     organizationType: "government",
     permissionPreset: "employee",
+    memberships: [
+      {
+        organizationId: "org-city-digital",
+        role: "employee",
+        permissions: ["government.workspace"],
+      },
+    ],
+  },
+  {
+    role: "owner",
+    name: "Б. Тэмүүлэн",
+    org: "Tanu Events Mongolia",
+    email: "events@tanu.mn",
+    phone: "88030303",
+    password: "tanu123",
+    organizationType: "private",
+    memberships: [
+      {
+        organizationId: "org-tanu-events",
+        role: "owner",
+        permissions: ticketPermissionsForRole("owner"),
+      },
+    ],
+  },
+  {
+    role: "employee",
+    name: "Г. Анужин",
+    org: "Tanu Events Mongolia",
+    email: "scanner@tanu.mn",
+    phone: "88040404",
+    password: "tanu123",
+    organizationType: "private",
+    memberships: [
+      {
+        organizationId: "org-tanu-events",
+        role: "scanner_staff",
+        permissions: ticketPermissionsForRole("scanner_staff"),
+        venueIds: ["venue-ub-palace"],
+      },
+    ],
   },
 ];

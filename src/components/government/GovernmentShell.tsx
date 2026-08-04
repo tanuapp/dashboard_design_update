@@ -53,6 +53,8 @@ import {
 } from "@/lib/government/types";
 import { cn } from "@/lib/utils";
 import { GOVERNMENT_GROUPS, GOVERNMENT_NAV, type GovernmentNavItem } from "./government-nav";
+import { OrganizationSwitcher } from "@/components/dashboard/OrganizationSwitcher";
+import { useOrganization } from "@/lib/organization-context";
 
 const SIDEBAR_KEY = "tanu-government-sidebar-collapsed";
 const permissionPresets = Object.keys(governmentPermissionModules) as GovernmentPermissionPreset[];
@@ -171,6 +173,13 @@ export function GovernmentShell({ session }: { session: AuthSession }) {
               <Menu className="h-4 w-4" />
             </button>
 
+            <div className="hidden sm:block">
+              <OrganizationSwitcher />
+            </div>
+            <div className="sm:hidden">
+              <OrganizationSwitcher compact />
+            </div>
+
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
@@ -205,7 +214,8 @@ export function GovernmentShell({ session }: { session: AuthSession }) {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link
-                    to="/business/dashboard/government/notifications"
+                    to="/business/dashboard/government/$module"
+                    params={{ module: "notifications" }}
                     className="relative grid h-9 w-9 place-items-center rounded-lg border border-border bg-surface/80 transition hover:bg-secondary"
                     aria-label="Мэдэгдэл"
                   >
@@ -318,6 +328,7 @@ function GovernmentSidebar({
 }) {
   const { theme } = useApp();
   const { activePermission } = useGovernmentData();
+  const { selectedOrganization } = useOrganization();
 
   return (
     <div className="flex h-full min-h-0 flex-col p-3">
@@ -340,7 +351,9 @@ function GovernmentSidebar({
             <Building2 className="h-4 w-4" />
           </span>
           <div className="min-w-0">
-            <p className="line-clamp-2 text-xs font-semibold leading-4">{session.org}</p>
+            <p className="line-clamp-2 text-xs font-semibold leading-4">
+              {selectedOrganization.name}
+            </p>
             <p className="mt-1 truncate text-[10px] text-muted-foreground">
               {governmentPermissionLabel[activePermission]}
             </p>

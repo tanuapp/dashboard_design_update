@@ -427,7 +427,7 @@ export function EmployeeSchedulePage() {
         }
       />
 
-      <section className="sticky top-[61px] z-20 -mx-1 bg-background/95 px-1 pb-2 backdrop-blur-xl lg:top-0">
+      <section className="-mx-1 px-1 pb-2">
         <div className="rounded-2xl border border-border/80 bg-surface/95 p-4 shadow-sm">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div className="min-w-0 space-y-2.5">
@@ -708,7 +708,7 @@ export function EmployeeSchedulePage() {
         ) : (
           <div className="overflow-x-auto overscroll-x-contain [scrollbar-gutter:stable]">
             <table className="w-full min-w-[1620px] border-separate border-spacing-0 text-xs">
-              <thead className="sticky top-0 z-30 bg-surface">
+              <thead className="bg-surface">
                 <tr className="text-left text-[11px] text-muted-foreground">
                   <TableHead className="sticky left-0 z-40 w-[132px] min-w-[132px] bg-surface">
                     Огноо

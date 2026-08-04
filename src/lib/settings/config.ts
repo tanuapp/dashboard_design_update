@@ -12,7 +12,6 @@ export type SettingsSectionKey =
   | "attendance"
   | "notifications"
   | "qr"
-  | "promotional-materials"
   | "public-links"
   | "security"
   | "billing";
@@ -50,7 +49,7 @@ const sharedGroups = {
   promotion: {
     id: "promotion",
     label: "СУРТАЛЧИЛГАА БА ХОЛБООС",
-    items: ["qr", "promotional-materials", "public-links"],
+    items: ["qr", "public-links"],
   },
   system: {
     id: "system",

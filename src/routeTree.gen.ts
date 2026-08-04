@@ -39,6 +39,26 @@ import { Route as BusinessDashboardBranchesBranchIdRouteImport } from './routes/
 import { Route as BusinessDashboardEmployeesIndexRouteImport } from './routes/business.dashboard.employees.index'
 import { Route as BusinessDashboardEmployeesEmployeeIdRouteImport } from './routes/business.dashboard.employees.$employeeId'
 import { Route as BusinessDashboardGovernmentModuleRouteImport } from './routes/business.dashboard.government.$module'
+import { Route as BusinessDashboardTicketOrganizationIdRouteImport } from './routes/business.dashboard.ticket.$organizationId'
+import { Route as BusinessDashboardTicketOrganizationIdIndexRouteImport } from './routes/business.dashboard.ticket.$organizationId.index'
+import { Route as BusinessDashboardTicketOrganizationIdDashboardRouteImport } from './routes/business.dashboard.ticket.$organizationId.dashboard'
+import { Route as BusinessDashboardTicketOrganizationIdEventsRouteImport } from './routes/business.dashboard.ticket.$organizationId.events'
+import { Route as BusinessDashboardTicketOrganizationIdGatesRouteImport } from './routes/business.dashboard.ticket.$organizationId.gates'
+import { Route as BusinessDashboardTicketOrganizationIdHelpRouteImport } from './routes/business.dashboard.ticket.$organizationId.help'
+import { Route as BusinessDashboardTicketOrganizationIdOrdersRouteImport } from './routes/business.dashboard.ticket.$organizationId.orders'
+import { Route as BusinessDashboardTicketOrganizationIdReportsRouteImport } from './routes/business.dashboard.ticket.$organizationId.reports'
+import { Route as BusinessDashboardTicketOrganizationIdScannerRouteImport } from './routes/business.dashboard.ticket.$organizationId.scanner'
+import { Route as BusinessDashboardTicketOrganizationIdSchedulesRouteImport } from './routes/business.dashboard.ticket.$organizationId.schedules'
+import { Route as BusinessDashboardTicketOrganizationIdSettingsRouteImport } from './routes/business.dashboard.ticket.$organizationId.settings'
+import { Route as BusinessDashboardTicketOrganizationIdTicketTypesRouteImport } from './routes/business.dashboard.ticket.$organizationId.ticket-types'
+import { Route as BusinessDashboardTicketOrganizationIdVenuesRouteImport } from './routes/business.dashboard.ticket.$organizationId.venues'
+import { Route as BusinessDashboardTicketOrganizationIdEventsIndexRouteImport } from './routes/business.dashboard.ticket.$organizationId.events.index'
+import { Route as BusinessDashboardTicketOrganizationIdEventsEventIdRouteImport } from './routes/business.dashboard.ticket.$organizationId.events.$eventId'
+import { Route as BusinessDashboardTicketOrganizationIdEventsNewRouteImport } from './routes/business.dashboard.ticket.$organizationId.events.new'
+import { Route as BusinessDashboardTicketOrganizationIdHallsHallIdRouteImport } from './routes/business.dashboard.ticket.$organizationId.halls.$hallId'
+import { Route as BusinessDashboardTicketOrganizationIdSeatMapsLayoutIdRouteImport } from './routes/business.dashboard.ticket.$organizationId.seat-maps.$layoutId'
+import { Route as BusinessDashboardTicketOrganizationIdVenuesIndexRouteImport } from './routes/business.dashboard.ticket.$organizationId.venues.index'
+import { Route as BusinessDashboardTicketOrganizationIdVenuesVenueIdRouteImport } from './routes/business.dashboard.ticket.$organizationId.venues.$venueId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -213,6 +233,126 @@ const BusinessDashboardGovernmentModuleRoute =
     path: '/government/$module',
     getParentRoute: () => BusinessDashboardRoute,
   } as any)
+const BusinessDashboardTicketOrganizationIdRoute =
+  BusinessDashboardTicketOrganizationIdRouteImport.update({
+    id: '/ticket/$organizationId',
+    path: '/ticket/$organizationId',
+    getParentRoute: () => BusinessDashboardRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdIndexRoute =
+  BusinessDashboardTicketOrganizationIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdDashboardRoute =
+  BusinessDashboardTicketOrganizationIdDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdEventsRoute =
+  BusinessDashboardTicketOrganizationIdEventsRouteImport.update({
+    id: '/events',
+    path: '/events',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdGatesRoute =
+  BusinessDashboardTicketOrganizationIdGatesRouteImport.update({
+    id: '/gates',
+    path: '/gates',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdHelpRoute =
+  BusinessDashboardTicketOrganizationIdHelpRouteImport.update({
+    id: '/help',
+    path: '/help',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdOrdersRoute =
+  BusinessDashboardTicketOrganizationIdOrdersRouteImport.update({
+    id: '/orders',
+    path: '/orders',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdReportsRoute =
+  BusinessDashboardTicketOrganizationIdReportsRouteImport.update({
+    id: '/reports',
+    path: '/reports',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdScannerRoute =
+  BusinessDashboardTicketOrganizationIdScannerRouteImport.update({
+    id: '/scanner',
+    path: '/scanner',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdSchedulesRoute =
+  BusinessDashboardTicketOrganizationIdSchedulesRouteImport.update({
+    id: '/schedules',
+    path: '/schedules',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdSettingsRoute =
+  BusinessDashboardTicketOrganizationIdSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdTicketTypesRoute =
+  BusinessDashboardTicketOrganizationIdTicketTypesRouteImport.update({
+    id: '/ticket-types',
+    path: '/ticket-types',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdVenuesRoute =
+  BusinessDashboardTicketOrganizationIdVenuesRouteImport.update({
+    id: '/venues',
+    path: '/venues',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdEventsIndexRoute =
+  BusinessDashboardTicketOrganizationIdEventsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdEventsRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdEventsEventIdRoute =
+  BusinessDashboardTicketOrganizationIdEventsEventIdRouteImport.update({
+    id: '/$eventId',
+    path: '/$eventId',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdEventsRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdEventsNewRoute =
+  BusinessDashboardTicketOrganizationIdEventsNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdEventsRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdHallsHallIdRoute =
+  BusinessDashboardTicketOrganizationIdHallsHallIdRouteImport.update({
+    id: '/halls/$hallId',
+    path: '/halls/$hallId',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdSeatMapsLayoutIdRoute =
+  BusinessDashboardTicketOrganizationIdSeatMapsLayoutIdRouteImport.update({
+    id: '/seat-maps/$layoutId',
+    path: '/seat-maps/$layoutId',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdVenuesIndexRoute =
+  BusinessDashboardTicketOrganizationIdVenuesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdVenuesRoute,
+  } as any)
+const BusinessDashboardTicketOrganizationIdVenuesVenueIdRoute =
+  BusinessDashboardTicketOrganizationIdVenuesVenueIdRouteImport.update({
+    id: '/$venueId',
+    path: '/$venueId',
+    getParentRoute: () => BusinessDashboardTicketOrganizationIdVenuesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -243,8 +383,28 @@ export interface FileRoutesByFullPath {
   '/business/dashboard/branches/$branchId': typeof BusinessDashboardBranchesBranchIdRoute
   '/business/dashboard/employees/$employeeId': typeof BusinessDashboardEmployeesEmployeeIdRoute
   '/business/dashboard/government/$module': typeof BusinessDashboardGovernmentModuleRoute
+  '/business/dashboard/ticket/$organizationId': typeof BusinessDashboardTicketOrganizationIdRouteWithChildren
   '/business/dashboard/branches/': typeof BusinessDashboardBranchesIndexRoute
   '/business/dashboard/employees/': typeof BusinessDashboardEmployeesIndexRoute
+  '/business/dashboard/ticket/$organizationId/dashboard': typeof BusinessDashboardTicketOrganizationIdDashboardRoute
+  '/business/dashboard/ticket/$organizationId/events': typeof BusinessDashboardTicketOrganizationIdEventsRouteWithChildren
+  '/business/dashboard/ticket/$organizationId/gates': typeof BusinessDashboardTicketOrganizationIdGatesRoute
+  '/business/dashboard/ticket/$organizationId/help': typeof BusinessDashboardTicketOrganizationIdHelpRoute
+  '/business/dashboard/ticket/$organizationId/orders': typeof BusinessDashboardTicketOrganizationIdOrdersRoute
+  '/business/dashboard/ticket/$organizationId/reports': typeof BusinessDashboardTicketOrganizationIdReportsRoute
+  '/business/dashboard/ticket/$organizationId/scanner': typeof BusinessDashboardTicketOrganizationIdScannerRoute
+  '/business/dashboard/ticket/$organizationId/schedules': typeof BusinessDashboardTicketOrganizationIdSchedulesRoute
+  '/business/dashboard/ticket/$organizationId/settings': typeof BusinessDashboardTicketOrganizationIdSettingsRoute
+  '/business/dashboard/ticket/$organizationId/ticket-types': typeof BusinessDashboardTicketOrganizationIdTicketTypesRoute
+  '/business/dashboard/ticket/$organizationId/venues': typeof BusinessDashboardTicketOrganizationIdVenuesRouteWithChildren
+  '/business/dashboard/ticket/$organizationId/': typeof BusinessDashboardTicketOrganizationIdIndexRoute
+  '/business/dashboard/ticket/$organizationId/events/$eventId': typeof BusinessDashboardTicketOrganizationIdEventsEventIdRoute
+  '/business/dashboard/ticket/$organizationId/events/new': typeof BusinessDashboardTicketOrganizationIdEventsNewRoute
+  '/business/dashboard/ticket/$organizationId/halls/$hallId': typeof BusinessDashboardTicketOrganizationIdHallsHallIdRoute
+  '/business/dashboard/ticket/$organizationId/seat-maps/$layoutId': typeof BusinessDashboardTicketOrganizationIdSeatMapsLayoutIdRoute
+  '/business/dashboard/ticket/$organizationId/venues/$venueId': typeof BusinessDashboardTicketOrganizationIdVenuesVenueIdRoute
+  '/business/dashboard/ticket/$organizationId/events/': typeof BusinessDashboardTicketOrganizationIdEventsIndexRoute
+  '/business/dashboard/ticket/$organizationId/venues/': typeof BusinessDashboardTicketOrganizationIdVenuesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -274,6 +434,23 @@ export interface FileRoutesByTo {
   '/business/dashboard/government/$module': typeof BusinessDashboardGovernmentModuleRoute
   '/business/dashboard/branches': typeof BusinessDashboardBranchesIndexRoute
   '/business/dashboard/employees': typeof BusinessDashboardEmployeesIndexRoute
+  '/business/dashboard/ticket/$organizationId/dashboard': typeof BusinessDashboardTicketOrganizationIdDashboardRoute
+  '/business/dashboard/ticket/$organizationId/gates': typeof BusinessDashboardTicketOrganizationIdGatesRoute
+  '/business/dashboard/ticket/$organizationId/help': typeof BusinessDashboardTicketOrganizationIdHelpRoute
+  '/business/dashboard/ticket/$organizationId/orders': typeof BusinessDashboardTicketOrganizationIdOrdersRoute
+  '/business/dashboard/ticket/$organizationId/reports': typeof BusinessDashboardTicketOrganizationIdReportsRoute
+  '/business/dashboard/ticket/$organizationId/scanner': typeof BusinessDashboardTicketOrganizationIdScannerRoute
+  '/business/dashboard/ticket/$organizationId/schedules': typeof BusinessDashboardTicketOrganizationIdSchedulesRoute
+  '/business/dashboard/ticket/$organizationId/settings': typeof BusinessDashboardTicketOrganizationIdSettingsRoute
+  '/business/dashboard/ticket/$organizationId/ticket-types': typeof BusinessDashboardTicketOrganizationIdTicketTypesRoute
+  '/business/dashboard/ticket/$organizationId': typeof BusinessDashboardTicketOrganizationIdIndexRoute
+  '/business/dashboard/ticket/$organizationId/events/$eventId': typeof BusinessDashboardTicketOrganizationIdEventsEventIdRoute
+  '/business/dashboard/ticket/$organizationId/events/new': typeof BusinessDashboardTicketOrganizationIdEventsNewRoute
+  '/business/dashboard/ticket/$organizationId/halls/$hallId': typeof BusinessDashboardTicketOrganizationIdHallsHallIdRoute
+  '/business/dashboard/ticket/$organizationId/seat-maps/$layoutId': typeof BusinessDashboardTicketOrganizationIdSeatMapsLayoutIdRoute
+  '/business/dashboard/ticket/$organizationId/venues/$venueId': typeof BusinessDashboardTicketOrganizationIdVenuesVenueIdRoute
+  '/business/dashboard/ticket/$organizationId/events': typeof BusinessDashboardTicketOrganizationIdEventsIndexRoute
+  '/business/dashboard/ticket/$organizationId/venues': typeof BusinessDashboardTicketOrganizationIdVenuesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -305,8 +482,28 @@ export interface FileRoutesById {
   '/business/dashboard/branches/$branchId': typeof BusinessDashboardBranchesBranchIdRoute
   '/business/dashboard/employees/$employeeId': typeof BusinessDashboardEmployeesEmployeeIdRoute
   '/business/dashboard/government/$module': typeof BusinessDashboardGovernmentModuleRoute
+  '/business/dashboard/ticket/$organizationId': typeof BusinessDashboardTicketOrganizationIdRouteWithChildren
   '/business/dashboard/branches/': typeof BusinessDashboardBranchesIndexRoute
   '/business/dashboard/employees/': typeof BusinessDashboardEmployeesIndexRoute
+  '/business/dashboard/ticket/$organizationId/dashboard': typeof BusinessDashboardTicketOrganizationIdDashboardRoute
+  '/business/dashboard/ticket/$organizationId/events': typeof BusinessDashboardTicketOrganizationIdEventsRouteWithChildren
+  '/business/dashboard/ticket/$organizationId/gates': typeof BusinessDashboardTicketOrganizationIdGatesRoute
+  '/business/dashboard/ticket/$organizationId/help': typeof BusinessDashboardTicketOrganizationIdHelpRoute
+  '/business/dashboard/ticket/$organizationId/orders': typeof BusinessDashboardTicketOrganizationIdOrdersRoute
+  '/business/dashboard/ticket/$organizationId/reports': typeof BusinessDashboardTicketOrganizationIdReportsRoute
+  '/business/dashboard/ticket/$organizationId/scanner': typeof BusinessDashboardTicketOrganizationIdScannerRoute
+  '/business/dashboard/ticket/$organizationId/schedules': typeof BusinessDashboardTicketOrganizationIdSchedulesRoute
+  '/business/dashboard/ticket/$organizationId/settings': typeof BusinessDashboardTicketOrganizationIdSettingsRoute
+  '/business/dashboard/ticket/$organizationId/ticket-types': typeof BusinessDashboardTicketOrganizationIdTicketTypesRoute
+  '/business/dashboard/ticket/$organizationId/venues': typeof BusinessDashboardTicketOrganizationIdVenuesRouteWithChildren
+  '/business/dashboard/ticket/$organizationId/': typeof BusinessDashboardTicketOrganizationIdIndexRoute
+  '/business/dashboard/ticket/$organizationId/events/$eventId': typeof BusinessDashboardTicketOrganizationIdEventsEventIdRoute
+  '/business/dashboard/ticket/$organizationId/events/new': typeof BusinessDashboardTicketOrganizationIdEventsNewRoute
+  '/business/dashboard/ticket/$organizationId/halls/$hallId': typeof BusinessDashboardTicketOrganizationIdHallsHallIdRoute
+  '/business/dashboard/ticket/$organizationId/seat-maps/$layoutId': typeof BusinessDashboardTicketOrganizationIdSeatMapsLayoutIdRoute
+  '/business/dashboard/ticket/$organizationId/venues/$venueId': typeof BusinessDashboardTicketOrganizationIdVenuesVenueIdRoute
+  '/business/dashboard/ticket/$organizationId/events/': typeof BusinessDashboardTicketOrganizationIdEventsIndexRoute
+  '/business/dashboard/ticket/$organizationId/venues/': typeof BusinessDashboardTicketOrganizationIdVenuesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -339,8 +536,28 @@ export interface FileRouteTypes {
     | '/business/dashboard/branches/$branchId'
     | '/business/dashboard/employees/$employeeId'
     | '/business/dashboard/government/$module'
+    | '/business/dashboard/ticket/$organizationId'
     | '/business/dashboard/branches/'
     | '/business/dashboard/employees/'
+    | '/business/dashboard/ticket/$organizationId/dashboard'
+    | '/business/dashboard/ticket/$organizationId/events'
+    | '/business/dashboard/ticket/$organizationId/gates'
+    | '/business/dashboard/ticket/$organizationId/help'
+    | '/business/dashboard/ticket/$organizationId/orders'
+    | '/business/dashboard/ticket/$organizationId/reports'
+    | '/business/dashboard/ticket/$organizationId/scanner'
+    | '/business/dashboard/ticket/$organizationId/schedules'
+    | '/business/dashboard/ticket/$organizationId/settings'
+    | '/business/dashboard/ticket/$organizationId/ticket-types'
+    | '/business/dashboard/ticket/$organizationId/venues'
+    | '/business/dashboard/ticket/$organizationId/'
+    | '/business/dashboard/ticket/$organizationId/events/$eventId'
+    | '/business/dashboard/ticket/$organizationId/events/new'
+    | '/business/dashboard/ticket/$organizationId/halls/$hallId'
+    | '/business/dashboard/ticket/$organizationId/seat-maps/$layoutId'
+    | '/business/dashboard/ticket/$organizationId/venues/$venueId'
+    | '/business/dashboard/ticket/$organizationId/events/'
+    | '/business/dashboard/ticket/$organizationId/venues/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -370,6 +587,23 @@ export interface FileRouteTypes {
     | '/business/dashboard/government/$module'
     | '/business/dashboard/branches'
     | '/business/dashboard/employees'
+    | '/business/dashboard/ticket/$organizationId/dashboard'
+    | '/business/dashboard/ticket/$organizationId/gates'
+    | '/business/dashboard/ticket/$organizationId/help'
+    | '/business/dashboard/ticket/$organizationId/orders'
+    | '/business/dashboard/ticket/$organizationId/reports'
+    | '/business/dashboard/ticket/$organizationId/scanner'
+    | '/business/dashboard/ticket/$organizationId/schedules'
+    | '/business/dashboard/ticket/$organizationId/settings'
+    | '/business/dashboard/ticket/$organizationId/ticket-types'
+    | '/business/dashboard/ticket/$organizationId'
+    | '/business/dashboard/ticket/$organizationId/events/$eventId'
+    | '/business/dashboard/ticket/$organizationId/events/new'
+    | '/business/dashboard/ticket/$organizationId/halls/$hallId'
+    | '/business/dashboard/ticket/$organizationId/seat-maps/$layoutId'
+    | '/business/dashboard/ticket/$organizationId/venues/$venueId'
+    | '/business/dashboard/ticket/$organizationId/events'
+    | '/business/dashboard/ticket/$organizationId/venues'
   id:
     | '__root__'
     | '/'
@@ -400,8 +634,28 @@ export interface FileRouteTypes {
     | '/business/dashboard/branches/$branchId'
     | '/business/dashboard/employees/$employeeId'
     | '/business/dashboard/government/$module'
+    | '/business/dashboard/ticket/$organizationId'
     | '/business/dashboard/branches/'
     | '/business/dashboard/employees/'
+    | '/business/dashboard/ticket/$organizationId/dashboard'
+    | '/business/dashboard/ticket/$organizationId/events'
+    | '/business/dashboard/ticket/$organizationId/gates'
+    | '/business/dashboard/ticket/$organizationId/help'
+    | '/business/dashboard/ticket/$organizationId/orders'
+    | '/business/dashboard/ticket/$organizationId/reports'
+    | '/business/dashboard/ticket/$organizationId/scanner'
+    | '/business/dashboard/ticket/$organizationId/schedules'
+    | '/business/dashboard/ticket/$organizationId/settings'
+    | '/business/dashboard/ticket/$organizationId/ticket-types'
+    | '/business/dashboard/ticket/$organizationId/venues'
+    | '/business/dashboard/ticket/$organizationId/'
+    | '/business/dashboard/ticket/$organizationId/events/$eventId'
+    | '/business/dashboard/ticket/$organizationId/events/new'
+    | '/business/dashboard/ticket/$organizationId/halls/$hallId'
+    | '/business/dashboard/ticket/$organizationId/seat-maps/$layoutId'
+    | '/business/dashboard/ticket/$organizationId/venues/$venueId'
+    | '/business/dashboard/ticket/$organizationId/events/'
+    | '/business/dashboard/ticket/$organizationId/venues/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -624,6 +878,146 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BusinessDashboardGovernmentModuleRouteImport
       parentRoute: typeof BusinessDashboardRoute
     }
+    '/business/dashboard/ticket/$organizationId': {
+      id: '/business/dashboard/ticket/$organizationId'
+      path: '/ticket/$organizationId'
+      fullPath: '/business/dashboard/ticket/$organizationId'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdRouteImport
+      parentRoute: typeof BusinessDashboardRoute
+    }
+    '/business/dashboard/ticket/$organizationId/': {
+      id: '/business/dashboard/ticket/$organizationId/'
+      path: '/'
+      fullPath: '/business/dashboard/ticket/$organizationId/'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdIndexRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdRoute
+    }
+    '/business/dashboard/ticket/$organizationId/dashboard': {
+      id: '/business/dashboard/ticket/$organizationId/dashboard'
+      path: '/dashboard'
+      fullPath: '/business/dashboard/ticket/$organizationId/dashboard'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdDashboardRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdRoute
+    }
+    '/business/dashboard/ticket/$organizationId/events': {
+      id: '/business/dashboard/ticket/$organizationId/events'
+      path: '/events'
+      fullPath: '/business/dashboard/ticket/$organizationId/events'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdEventsRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdRoute
+    }
+    '/business/dashboard/ticket/$organizationId/gates': {
+      id: '/business/dashboard/ticket/$organizationId/gates'
+      path: '/gates'
+      fullPath: '/business/dashboard/ticket/$organizationId/gates'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdGatesRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdRoute
+    }
+    '/business/dashboard/ticket/$organizationId/help': {
+      id: '/business/dashboard/ticket/$organizationId/help'
+      path: '/help'
+      fullPath: '/business/dashboard/ticket/$organizationId/help'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdHelpRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdRoute
+    }
+    '/business/dashboard/ticket/$organizationId/orders': {
+      id: '/business/dashboard/ticket/$organizationId/orders'
+      path: '/orders'
+      fullPath: '/business/dashboard/ticket/$organizationId/orders'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdOrdersRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdRoute
+    }
+    '/business/dashboard/ticket/$organizationId/reports': {
+      id: '/business/dashboard/ticket/$organizationId/reports'
+      path: '/reports'
+      fullPath: '/business/dashboard/ticket/$organizationId/reports'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdReportsRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdRoute
+    }
+    '/business/dashboard/ticket/$organizationId/scanner': {
+      id: '/business/dashboard/ticket/$organizationId/scanner'
+      path: '/scanner'
+      fullPath: '/business/dashboard/ticket/$organizationId/scanner'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdScannerRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdRoute
+    }
+    '/business/dashboard/ticket/$organizationId/schedules': {
+      id: '/business/dashboard/ticket/$organizationId/schedules'
+      path: '/schedules'
+      fullPath: '/business/dashboard/ticket/$organizationId/schedules'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdSchedulesRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdRoute
+    }
+    '/business/dashboard/ticket/$organizationId/settings': {
+      id: '/business/dashboard/ticket/$organizationId/settings'
+      path: '/settings'
+      fullPath: '/business/dashboard/ticket/$organizationId/settings'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdSettingsRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdRoute
+    }
+    '/business/dashboard/ticket/$organizationId/ticket-types': {
+      id: '/business/dashboard/ticket/$organizationId/ticket-types'
+      path: '/ticket-types'
+      fullPath: '/business/dashboard/ticket/$organizationId/ticket-types'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdTicketTypesRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdRoute
+    }
+    '/business/dashboard/ticket/$organizationId/venues': {
+      id: '/business/dashboard/ticket/$organizationId/venues'
+      path: '/venues'
+      fullPath: '/business/dashboard/ticket/$organizationId/venues'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdVenuesRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdRoute
+    }
+    '/business/dashboard/ticket/$organizationId/events/': {
+      id: '/business/dashboard/ticket/$organizationId/events/'
+      path: '/'
+      fullPath: '/business/dashboard/ticket/$organizationId/events/'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdEventsIndexRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdEventsRoute
+    }
+    '/business/dashboard/ticket/$organizationId/events/$eventId': {
+      id: '/business/dashboard/ticket/$organizationId/events/$eventId'
+      path: '/$eventId'
+      fullPath: '/business/dashboard/ticket/$organizationId/events/$eventId'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdEventsEventIdRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdEventsRoute
+    }
+    '/business/dashboard/ticket/$organizationId/events/new': {
+      id: '/business/dashboard/ticket/$organizationId/events/new'
+      path: '/new'
+      fullPath: '/business/dashboard/ticket/$organizationId/events/new'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdEventsNewRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdEventsRoute
+    }
+    '/business/dashboard/ticket/$organizationId/halls/$hallId': {
+      id: '/business/dashboard/ticket/$organizationId/halls/$hallId'
+      path: '/halls/$hallId'
+      fullPath: '/business/dashboard/ticket/$organizationId/halls/$hallId'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdHallsHallIdRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdRoute
+    }
+    '/business/dashboard/ticket/$organizationId/seat-maps/$layoutId': {
+      id: '/business/dashboard/ticket/$organizationId/seat-maps/$layoutId'
+      path: '/seat-maps/$layoutId'
+      fullPath: '/business/dashboard/ticket/$organizationId/seat-maps/$layoutId'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdSeatMapsLayoutIdRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdRoute
+    }
+    '/business/dashboard/ticket/$organizationId/venues/': {
+      id: '/business/dashboard/ticket/$organizationId/venues/'
+      path: '/'
+      fullPath: '/business/dashboard/ticket/$organizationId/venues/'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdVenuesIndexRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdVenuesRoute
+    }
+    '/business/dashboard/ticket/$organizationId/venues/$venueId': {
+      id: '/business/dashboard/ticket/$organizationId/venues/$venueId'
+      path: '/$venueId'
+      fullPath: '/business/dashboard/ticket/$organizationId/venues/$venueId'
+      preLoaderRoute: typeof BusinessDashboardTicketOrganizationIdVenuesVenueIdRouteImport
+      parentRoute: typeof BusinessDashboardTicketOrganizationIdVenuesRoute
+    }
   }
 }
 
@@ -661,6 +1055,99 @@ const BusinessDashboardEmployeesRouteWithChildren =
     BusinessDashboardEmployeesRouteChildren,
   )
 
+interface BusinessDashboardTicketOrganizationIdEventsRouteChildren {
+  BusinessDashboardTicketOrganizationIdEventsEventIdRoute: typeof BusinessDashboardTicketOrganizationIdEventsEventIdRoute
+  BusinessDashboardTicketOrganizationIdEventsNewRoute: typeof BusinessDashboardTicketOrganizationIdEventsNewRoute
+  BusinessDashboardTicketOrganizationIdEventsIndexRoute: typeof BusinessDashboardTicketOrganizationIdEventsIndexRoute
+}
+
+const BusinessDashboardTicketOrganizationIdEventsRouteChildren: BusinessDashboardTicketOrganizationIdEventsRouteChildren =
+  {
+    BusinessDashboardTicketOrganizationIdEventsEventIdRoute:
+      BusinessDashboardTicketOrganizationIdEventsEventIdRoute,
+    BusinessDashboardTicketOrganizationIdEventsNewRoute:
+      BusinessDashboardTicketOrganizationIdEventsNewRoute,
+    BusinessDashboardTicketOrganizationIdEventsIndexRoute:
+      BusinessDashboardTicketOrganizationIdEventsIndexRoute,
+  }
+
+const BusinessDashboardTicketOrganizationIdEventsRouteWithChildren =
+  BusinessDashboardTicketOrganizationIdEventsRoute._addFileChildren(
+    BusinessDashboardTicketOrganizationIdEventsRouteChildren,
+  )
+
+interface BusinessDashboardTicketOrganizationIdVenuesRouteChildren {
+  BusinessDashboardTicketOrganizationIdVenuesVenueIdRoute: typeof BusinessDashboardTicketOrganizationIdVenuesVenueIdRoute
+  BusinessDashboardTicketOrganizationIdVenuesIndexRoute: typeof BusinessDashboardTicketOrganizationIdVenuesIndexRoute
+}
+
+const BusinessDashboardTicketOrganizationIdVenuesRouteChildren: BusinessDashboardTicketOrganizationIdVenuesRouteChildren =
+  {
+    BusinessDashboardTicketOrganizationIdVenuesVenueIdRoute:
+      BusinessDashboardTicketOrganizationIdVenuesVenueIdRoute,
+    BusinessDashboardTicketOrganizationIdVenuesIndexRoute:
+      BusinessDashboardTicketOrganizationIdVenuesIndexRoute,
+  }
+
+const BusinessDashboardTicketOrganizationIdVenuesRouteWithChildren =
+  BusinessDashboardTicketOrganizationIdVenuesRoute._addFileChildren(
+    BusinessDashboardTicketOrganizationIdVenuesRouteChildren,
+  )
+
+interface BusinessDashboardTicketOrganizationIdRouteChildren {
+  BusinessDashboardTicketOrganizationIdDashboardRoute: typeof BusinessDashboardTicketOrganizationIdDashboardRoute
+  BusinessDashboardTicketOrganizationIdEventsRoute: typeof BusinessDashboardTicketOrganizationIdEventsRouteWithChildren
+  BusinessDashboardTicketOrganizationIdGatesRoute: typeof BusinessDashboardTicketOrganizationIdGatesRoute
+  BusinessDashboardTicketOrganizationIdHelpRoute: typeof BusinessDashboardTicketOrganizationIdHelpRoute
+  BusinessDashboardTicketOrganizationIdOrdersRoute: typeof BusinessDashboardTicketOrganizationIdOrdersRoute
+  BusinessDashboardTicketOrganizationIdReportsRoute: typeof BusinessDashboardTicketOrganizationIdReportsRoute
+  BusinessDashboardTicketOrganizationIdScannerRoute: typeof BusinessDashboardTicketOrganizationIdScannerRoute
+  BusinessDashboardTicketOrganizationIdSchedulesRoute: typeof BusinessDashboardTicketOrganizationIdSchedulesRoute
+  BusinessDashboardTicketOrganizationIdSettingsRoute: typeof BusinessDashboardTicketOrganizationIdSettingsRoute
+  BusinessDashboardTicketOrganizationIdTicketTypesRoute: typeof BusinessDashboardTicketOrganizationIdTicketTypesRoute
+  BusinessDashboardTicketOrganizationIdVenuesRoute: typeof BusinessDashboardTicketOrganizationIdVenuesRouteWithChildren
+  BusinessDashboardTicketOrganizationIdIndexRoute: typeof BusinessDashboardTicketOrganizationIdIndexRoute
+  BusinessDashboardTicketOrganizationIdHallsHallIdRoute: typeof BusinessDashboardTicketOrganizationIdHallsHallIdRoute
+  BusinessDashboardTicketOrganizationIdSeatMapsLayoutIdRoute: typeof BusinessDashboardTicketOrganizationIdSeatMapsLayoutIdRoute
+}
+
+const BusinessDashboardTicketOrganizationIdRouteChildren: BusinessDashboardTicketOrganizationIdRouteChildren =
+  {
+    BusinessDashboardTicketOrganizationIdDashboardRoute:
+      BusinessDashboardTicketOrganizationIdDashboardRoute,
+    BusinessDashboardTicketOrganizationIdEventsRoute:
+      BusinessDashboardTicketOrganizationIdEventsRouteWithChildren,
+    BusinessDashboardTicketOrganizationIdGatesRoute:
+      BusinessDashboardTicketOrganizationIdGatesRoute,
+    BusinessDashboardTicketOrganizationIdHelpRoute:
+      BusinessDashboardTicketOrganizationIdHelpRoute,
+    BusinessDashboardTicketOrganizationIdOrdersRoute:
+      BusinessDashboardTicketOrganizationIdOrdersRoute,
+    BusinessDashboardTicketOrganizationIdReportsRoute:
+      BusinessDashboardTicketOrganizationIdReportsRoute,
+    BusinessDashboardTicketOrganizationIdScannerRoute:
+      BusinessDashboardTicketOrganizationIdScannerRoute,
+    BusinessDashboardTicketOrganizationIdSchedulesRoute:
+      BusinessDashboardTicketOrganizationIdSchedulesRoute,
+    BusinessDashboardTicketOrganizationIdSettingsRoute:
+      BusinessDashboardTicketOrganizationIdSettingsRoute,
+    BusinessDashboardTicketOrganizationIdTicketTypesRoute:
+      BusinessDashboardTicketOrganizationIdTicketTypesRoute,
+    BusinessDashboardTicketOrganizationIdVenuesRoute:
+      BusinessDashboardTicketOrganizationIdVenuesRouteWithChildren,
+    BusinessDashboardTicketOrganizationIdIndexRoute:
+      BusinessDashboardTicketOrganizationIdIndexRoute,
+    BusinessDashboardTicketOrganizationIdHallsHallIdRoute:
+      BusinessDashboardTicketOrganizationIdHallsHallIdRoute,
+    BusinessDashboardTicketOrganizationIdSeatMapsLayoutIdRoute:
+      BusinessDashboardTicketOrganizationIdSeatMapsLayoutIdRoute,
+  }
+
+const BusinessDashboardTicketOrganizationIdRouteWithChildren =
+  BusinessDashboardTicketOrganizationIdRoute._addFileChildren(
+    BusinessDashboardTicketOrganizationIdRouteChildren,
+  )
+
 interface BusinessDashboardRouteChildren {
   BusinessDashboardBillingRoute: typeof BusinessDashboardBillingRoute
   BusinessDashboardBookingsRoute: typeof BusinessDashboardBookingsRoute
@@ -683,6 +1170,7 @@ interface BusinessDashboardRouteChildren {
   BusinessDashboardTodayClientsRoute: typeof BusinessDashboardTodayClientsRoute
   BusinessDashboardIndexRoute: typeof BusinessDashboardIndexRoute
   BusinessDashboardGovernmentModuleRoute: typeof BusinessDashboardGovernmentModuleRoute
+  BusinessDashboardTicketOrganizationIdRoute: typeof BusinessDashboardTicketOrganizationIdRouteWithChildren
 }
 
 const BusinessDashboardRouteChildren: BusinessDashboardRouteChildren = {
@@ -709,6 +1197,8 @@ const BusinessDashboardRouteChildren: BusinessDashboardRouteChildren = {
   BusinessDashboardIndexRoute: BusinessDashboardIndexRoute,
   BusinessDashboardGovernmentModuleRoute:
     BusinessDashboardGovernmentModuleRoute,
+  BusinessDashboardTicketOrganizationIdRoute:
+    BusinessDashboardTicketOrganizationIdRouteWithChildren,
 }
 
 const BusinessDashboardRouteWithChildren =

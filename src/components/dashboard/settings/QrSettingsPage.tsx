@@ -93,7 +93,7 @@ function emptyQrForm(organizationType: OrganizationType): QrFormState {
     serviceId: "none",
     foregroundColor: "#071B3D",
     backgroundColor: "#FFFFFF",
-    logoEnabled: false,
+    logoEnabled: true,
     frameStyle: "label",
     cta: organizationType === "government" ? "Мэдээлэл авах" : "Цаг захиалах",
     expiresAt: "",
@@ -118,11 +118,13 @@ export function QrSettingsPage({
   organizationType,
   records,
   onRecordsChange,
+  logoSrc = "",
   publicLinks = [],
 }: {
   organizationType: OrganizationType;
   records: SettingsQrRecord[];
   onRecordsChange: (records: SettingsQrRecord[]) => void;
+  logoSrc?: string;
   publicLinks?: Array<{ label: string; url: string }>;
 }) {
   const { orgProfile, branches, employees, services } = useDashboardData();
@@ -296,6 +298,7 @@ export function QrSettingsPage({
             record={record}
             typeLabel={typeLabel(record.type)}
             organizationName={orgProfile.name}
+            logoSrc={logoSrc}
             branchName={branches.find((branch) => branch.id === record.branchId)?.name}
             downloadPixels={downloadSizes[downloadSize].pixels}
             onEdit={() => openEdit(record)}
@@ -538,9 +541,9 @@ export function QrSettingsPage({
             </FormRow>
             <div className="flex items-center justify-between rounded-xl border border-border px-3 py-2.5">
               <div>
-                <p className="text-xs font-semibold">Байгууллагын лого оруулах</p>
+                <p className="text-xs font-semibold">QR-ийн голд лого оруулах</p>
                 <p className="text-[10px] text-muted-foreground">
-                  Жижиг хэмжээ, error correction H
+                  Байгууллагын лого эсвэл нэрийн эхний үсгийг харуулна
                 </p>
               </div>
               <Switch
@@ -581,6 +584,7 @@ function QrRecordCard({
   record,
   typeLabel,
   organizationName,
+  logoSrc,
   branchName,
   downloadPixels,
   onEdit,
@@ -590,6 +594,7 @@ function QrRecordCard({
   record: SettingsQrRecord;
   typeLabel: string;
   organizationName: string;
+  logoSrc: string;
   branchName?: string;
   downloadPixels: number;
   onEdit: () => void;
@@ -602,7 +607,7 @@ function QrRecordCard({
   useEffect(() => {
     let active = true;
     setGenerating(true);
-    void createQrPng(record, 420).then((dataUrl) => {
+    void createQrPng(record, 420, logoSrc, organizationName).then((dataUrl) => {
       if (!active) return;
       setPreview(dataUrl);
       setGenerating(false);
@@ -610,7 +615,7 @@ function QrRecordCard({
     return () => {
       active = false;
     };
-  }, [record]);
+  }, [logoSrc, organizationName, record]);
 
   const copy = async () => {
     try {
@@ -622,13 +627,13 @@ function QrRecordCard({
   };
 
   const downloadPng = async () => {
-    const dataUrl = await createQrPng(record, downloadPixels);
+    const dataUrl = await createQrPng(record, downloadPixels, logoSrc, organizationName);
     downloadUrl(dataUrl, `${safeFilename(record.name)}.png`);
     toast.success(`PNG · ${downloadPixels}px татагдлаа`);
   };
 
   const downloadSvg = async () => {
-    const svg = await createQrSvg(record, downloadPixels);
+    const svg = await createQrSvg(record, downloadPixels, logoSrc, organizationName);
     const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
     downloadUrl(url, `${safeFilename(record.name)}.svg`);
     URL.revokeObjectURL(url);
@@ -753,7 +758,12 @@ function downloadUrl(url: string, filename: string) {
   anchor.click();
 }
 
-async function createQrPng(record: SettingsQrRecord, pixels: number) {
+async function createQrPng(
+  record: SettingsQrRecord,
+  pixels: number,
+  logoSrc = "",
+  organizationName = "Tanu",
+) {
   const raw = await QRCode.toDataURL(record.destinationUrl, {
     width: pixels,
     margin: 4,
@@ -769,25 +779,55 @@ async function createQrPng(record: SettingsQrRecord, pixels: number) {
   const context = canvas.getContext("2d");
   if (!context) return raw;
   context.drawImage(image, 0, 0, pixels, pixels);
-  const logoSize = Math.round(pixels * 0.14);
+  const logoSize = Math.round(pixels * 0.18);
   const start = Math.round((pixels - logoSize) / 2);
+  const padding = Math.max(4, Math.round(pixels * 0.012));
   context.fillStyle = "#FFFFFF";
   context.beginPath();
-  context.roundRect(start - 5, start - 5, logoSize + 10, logoSize + 10, logoSize * 0.22);
+  context.roundRect(
+    start - padding,
+    start - padding,
+    logoSize + padding * 2,
+    logoSize + padding * 2,
+    logoSize * 0.24,
+  );
   context.fill();
-  context.fillStyle = "#071B3D";
-  context.beginPath();
-  context.roundRect(start, start, logoSize, logoSize, logoSize * 0.22);
-  context.fill();
-  context.fillStyle = "#FFFFFF";
-  context.font = `800 ${Math.round(logoSize * 0.52)}px Manrope, sans-serif`;
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  context.fillText("T", pixels / 2, pixels / 2 + 1);
+
+  if (logoSrc) {
+    try {
+      const logo = await loadImage(logoSrc);
+      context.save();
+      context.beginPath();
+      context.roundRect(start, start, logoSize, logoSize, logoSize * 0.2);
+      context.clip();
+      context.fillStyle = "#FFFFFF";
+      context.fillRect(start, start, logoSize, logoSize);
+      const scale = Math.min(logoSize / logo.naturalWidth, logoSize / logo.naturalHeight);
+      const width = logo.naturalWidth * scale;
+      const height = logo.naturalHeight * scale;
+      context.drawImage(
+        logo,
+        start + (logoSize - width) / 2,
+        start + (logoSize - height) / 2,
+        width,
+        height,
+      );
+      context.restore();
+    } catch {
+      drawLogoFallback(context, pixels, start, logoSize, organizationName);
+    }
+  } else {
+    drawLogoFallback(context, pixels, start, logoSize, organizationName);
+  }
   return canvas.toDataURL("image/png");
 }
 
-async function createQrSvg(record: SettingsQrRecord, pixels: number) {
+async function createQrSvg(
+  record: SettingsQrRecord,
+  pixels: number,
+  logoSrc = "",
+  organizationName = "Tanu",
+) {
   const svg = await QRCode.toString(record.destinationUrl, {
     type: "svg",
     width: pixels,
@@ -796,10 +836,43 @@ async function createQrSvg(record: SettingsQrRecord, pixels: number) {
     color: { dark: record.foregroundColor, light: record.backgroundColor },
   });
   if (!record.logoEnabled) return svg;
+  const centerContent = logoSrc
+    ? `<image x="42%" y="42%" width="16%" height="16%" href="${escapeXml(logoSrc)}" preserveAspectRatio="xMidYMid meet"/>`
+    : `<rect x="42%" y="42%" width="16%" height="16%" rx="3%" fill="#071B3D"/><text x="50%" y="51%" fill="#fff" font-family="Manrope, sans-serif" font-size="9%" font-weight="800" text-anchor="middle" dominant-baseline="middle">${escapeXml(logoInitial(organizationName))}</text>`;
   return svg.replace(
     "</svg>",
-    '<rect x="42%" y="42%" width="16%" height="16%" rx="2%" fill="#fff"/><rect x="43%" y="43%" width="14%" height="14%" rx="2%" fill="#071B3D"/><text x="50%" y="51%" fill="#fff" font-family="Manrope, sans-serif" font-size="8%" font-weight="800" text-anchor="middle" dominant-baseline="middle">T</text></svg>',
+    `<rect x="40.8%" y="40.8%" width="18.4%" height="18.4%" rx="3%" fill="#fff"/>${centerContent}</svg>`,
   );
+}
+
+function drawLogoFallback(
+  context: CanvasRenderingContext2D,
+  pixels: number,
+  start: number,
+  logoSize: number,
+  organizationName: string,
+) {
+  context.fillStyle = "#071B3D";
+  context.beginPath();
+  context.roundRect(start, start, logoSize, logoSize, logoSize * 0.2);
+  context.fill();
+  context.fillStyle = "#FFFFFF";
+  context.font = `800 ${Math.round(logoSize * 0.52)}px Manrope, sans-serif`;
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.fillText(logoInitial(organizationName), pixels / 2, pixels / 2 + 1);
+}
+
+function logoInitial(organizationName: string) {
+  return Array.from(organizationName.trim())[0]?.toUpperCase() ?? "T";
+}
+
+function escapeXml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
 function loadImage(source: string) {

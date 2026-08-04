@@ -245,7 +245,8 @@ export function GovernmentDashboard({ session }: { session: AuthSession }) {
                   ))}
                 </div>
                 <Link
-                  to="/business/dashboard/government/notifications"
+                  to="/business/dashboard/government/$module"
+                  params={{ module: "notifications" }}
                   className="flex items-center justify-center gap-1 border-t border-border px-4 py-3 text-xs font-medium text-[var(--brand)] hover:bg-surface-muted/40"
                 >
                   Бүх үйл ажиллагааг харах <ArrowRight className="h-3.5 w-3.5" />
@@ -373,7 +374,8 @@ export function GovernmentDashboard({ session }: { session: AuthSession }) {
                   <p className="mt-1 text-xs text-muted-foreground">Энэ сарын шийдвэрлэлтийн явц</p>
                 </div>
                 <Link
-                  to="/business/dashboard/government/petitions"
+                  to="/business/dashboard/government/$module"
+                  params={{ module: "petitions" }}
                   className="text-xs font-medium text-[var(--brand)] hover:underline"
                 >
                   Дэлгэрэнгүй

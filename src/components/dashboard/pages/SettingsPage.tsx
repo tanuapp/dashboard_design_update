@@ -53,7 +53,7 @@ import {
 import { SaveBar } from "../settings/SaveBar";
 import { QrSettingsPage } from "../settings/QrSettingsPage";
 import { createInitialQrRecords, type SettingsQrRecord } from "@/lib/settings/qr-data";
-import { QrPromotionPage } from "./QrPromotionPage";
+import { useOrganization } from "@/lib/organization-context";
 
 interface SettingsPageProps {
   activeSection?: SettingsSectionKey;
@@ -85,7 +85,10 @@ export function SettingsPage({
   onSectionChange,
 }: SettingsPageProps) {
   const { session } = useAuth();
-  const organizationType = normalizeOrganizationType(session?.organizationType);
+  const { businessType } = useOrganization();
+  const organizationType = normalizeOrganizationType(
+    businessType === "government" ? "government" : session?.organizationType,
+  );
   const config = settingsOrganizationConfig[organizationType];
   const section = normalizeSettingsSection(activeSection, organizationType);
   const {
@@ -358,7 +361,10 @@ export function SettingsPage({
             description="Ажилтны мэдээлэл, нэвтрэх эрх, хуваарь болон хүсэлтийг удирдана."
             stats={[
               { label: "Нийт ажилтан", value: `${employees.length}` },
-              { label: "Идэвхтэй", value: `${employees.filter((item) => item.active).length}` },
+              {
+                label: "Идэвхтэй",
+                value: `${employees.filter((item) => item.accessEnabled).length}`,
+              },
               { label: "Салбар", value: `${branches.length}` },
             ]}
             action={
@@ -381,7 +387,10 @@ export function SettingsPage({
             stats={[
               { label: "Нийт үйлчилгээ", value: `${services.length}` },
               { label: "Идэвхтэй", value: `${services.filter((item) => item.active).length}` },
-              { label: "Ангилал", value: `${new Set(services.map((item) => item.category)).size}` },
+              {
+                label: "Ангилал",
+                value: `${new Set(services.map((item) => item.categoryId)).size}`,
+              },
             ]}
             action={
               <Button asChild>
@@ -494,6 +503,7 @@ export function SettingsPage({
             organizationType={organizationType}
             records={qrRecords}
             onRecordsChange={setQrRecords}
+            logoSrc={logoData}
             publicLinks={[
               { label: "Нийтийн хуудас", url: publicLinks.publicUrl },
               {
@@ -502,30 +512,6 @@ export function SettingsPage({
               },
             ]}
           />
-        );
-      case "promotional-materials":
-        return (
-          <div className="space-y-6">
-            <SettingsHeader
-              eyebrow="Сурталчилгаа ба холбоос"
-              title="Сурталчилгааны материал"
-              description="Үүсгэсэн QR кодоо A5 stand, brochure болон бусад controlled template-д байрлуулна."
-            />
-            <QrPromotionPage
-              embedded
-              organizationType={organizationType}
-              availableQrCodes={qrRecords
-                .filter(
-                  (record) =>
-                    record.organizationId === config.organizationId && record.status === "active",
-                )
-                .map((record) => ({
-                  id: record.id,
-                  name: record.name,
-                  destinationUrl: record.destinationUrl,
-                }))}
-            />
-          </div>
         );
       case "public-links":
         return (
@@ -1184,7 +1170,7 @@ function AccessSettings({ organizationType }: { organizationType: OrganizationTy
                   <td className="py-2.5 pr-4 font-semibold">{item.label}</td>
                   {(["owner", "admin", "employee"] as BusinessRole[]).map((role) => (
                     <td key={role} className="py-2.5 pr-4">
-                      {item.roles.includes(role) ? (
+                      {item.roles?.includes(role) ? (
                         <Check className="h-3.5 w-3.5 text-[var(--success)]" />
                       ) : (
                         <span className="text-muted-foreground/35">—</span>
