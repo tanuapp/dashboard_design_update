@@ -5,7 +5,6 @@ import {
   BOOKING_SETTINGS_SEED,
   CUSTOMERS,
   EMPLOYEES,
-  NOTIFICATIONS,
   ORG_PROFILE_SEED,
   REVENUE_HISTORY,
   SERVICES,
@@ -159,7 +158,7 @@ export function DashboardDataProvider({
   const [employees, setEmployees] = useState<Employee[]>(() => initialEmployees(setup));
   const [customers, setCustomers] = useState<Customer[]>(CUSTOMERS);
   const [bookings, setBookings] = useState<Booking[]>(BOOKINGS);
-  const [notifications, setNotifications] = useState<AppNotification[]>(NOTIFICATIONS);
+  const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [selectedBranchId, setSelectedBranchId] = useState<string | "all">("all");
   const [orgProfile, setOrgProfile] = useState(() =>
     setup

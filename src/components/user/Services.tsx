@@ -1,7 +1,13 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
 import { Heart, MapPin, Star, Clock, Smartphone } from "lucide-react";
-import { services } from "@/lib/mock-data";
+import { services as fallbackServices } from "@/lib/mock-data";
+import {
+  APP_STORE_URL,
+  buildLandingServices,
+  fetchLandingCompanies,
+  type LandingService,
+} from "@/lib/company-api";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "./Categories";
@@ -17,13 +23,31 @@ const TAB_KEYS = [
 export function Services({ categoryFilter }: { categoryFilter: string | null }) {
   const [tab, setTab] = useState("featured");
   const [favs, setFavs] = useState<Set<string>>(new Set());
+  const [services, setServices] = useState<LandingService[]>(fallbackServices);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetchLandingCompanies()
+      .then((companies) => {
+        if (!cancelled) setServices(buildLandingServices(companies));
+      })
+      .catch(() => {
+        if (!cancelled) setServices(fallbackServices);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const list = useMemo(() => {
     return services.filter((s) => {
       if (categoryFilter && s.category !== categoryFilter) return false;
       if (tab === "featured") return true;
       return s.tag === tab;
     });
-  }, [tab, categoryFilter]);
+  }, [services, tab, categoryFilter]);
 
   const toggleFav = (id: string) => {
     setFavs((prev) => {
@@ -89,15 +113,13 @@ export function Services({ categoryFilter }: { categoryFilter: string | null }) 
   );
 }
 
-type Service = (typeof services)[number];
-
 function ServiceCard({
   s,
   i,
   fav,
   onFav,
 }: {
-  s: Service;
+  s: LandingService;
   i: number;
   fav: boolean;
   onFav: () => void;
@@ -116,6 +138,14 @@ function ServiceCard({
           background: `linear-gradient(135deg, oklch(0.7 0.18 ${s.hue}), oklch(0.5 0.22 ${s.hue + 30}))`,
         }}
       >
+        {s.image && (
+          <img
+            src={s.image}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover opacity-85 transition duration-500 group-hover:scale-105"
+            loading="lazy"
+          />
+        )}
         <div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,.18),transparent_46%,rgba(5,16,42,.22))]" />
         <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full border border-white/25 bg-white/10 backdrop-blur-sm transition-transform duration-700 group-hover:scale-110" />
         <div className="absolute bottom-0 right-5 font-display text-[7rem] font-black leading-none tracking-[-.09em] text-white/[0.13]">
@@ -152,17 +182,17 @@ function ServiceCard({
         <div className="mt-4 flex items-center justify-between">
           <div>
             <p className="text-[10px] text-muted-foreground">Эхлэх үнэ</p>
-            <p className="font-bold">{s.price.toLocaleString()}₮</p>
+            <p className="font-bold">{s.price > 0 ? `${s.price.toLocaleString()}₮` : "Аппаас харах"}</p>
           </div>
           <Button
             size="sm"
-            onClick={() =>
-              document.getElementById("app")?.scrollIntoView({ behavior: "smooth", block: "start" })
-            }
+            asChild
             className="rounded-xl bg-gradient-brand px-4 text-white hover:opacity-90"
           >
-            <Smartphone className="mr-1.5 h-3.5 w-3.5" />
-            Аппаар захиалах
+            <a href={APP_STORE_URL}>
+              <Smartphone className="mr-1.5 h-3.5 w-3.5" />
+              Аппаар захиалах
+            </a>
           </Button>
         </div>
       </div>

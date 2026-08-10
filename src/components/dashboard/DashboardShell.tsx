@@ -27,6 +27,12 @@ import { useApp } from "@/lib/app-context";
 import { useAuth, type AuthSession } from "@/lib/auth-context";
 import { useDashboardData } from "@/lib/dashboard/store";
 import { CHAT_UNREAD_EVENT, INITIAL_CHAT_UNREAD_COUNT } from "@/lib/dashboard/chat-state";
+import {
+  fetchNotifications,
+  markAllNotificationsRead as markAllServerNotificationsRead,
+  markNotificationRead as markServerNotificationRead,
+  type ServerNotification,
+} from "@/lib/dashboard/notification-api";
 import type { BusinessRole } from "@/lib/dashboard/types";
 import { roleLabel } from "./nav-config";
 import { TanuBusinessLogo, TanuMark } from "@/components/brand/Logo";
@@ -85,9 +91,6 @@ export function DashboardShell({ session }: { session: AuthSession }) {
     branches,
     selectedBranchId,
     setSelectedBranchId,
-    notifications,
-    markNotificationRead,
-    markAllNotificationsRead,
   } = useDashboardData();
   const navigate = useNavigate();
   const location = useLocation();
@@ -97,6 +100,7 @@ export function DashboardShell({ session }: { session: AuthSession }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [chatUnreadCount, setChatUnreadCount] = useState(INITIAL_CHAT_UNREAD_COUNT);
+  const [notifications, setNotifications] = useState<ServerNotification[]>([]);
 
   useEffect(() => {
     try {
@@ -142,6 +146,25 @@ export function DashboardShell({ session }: { session: AuthSession }) {
     return () => window.removeEventListener(CHAT_UNREAD_EVENT, updateChatUnreadCount);
   }, []);
 
+  useEffect(() => {
+    if (businessType !== "service") return;
+    let cancelled = false;
+    const loadNotifications = async () => {
+      try {
+        const items = await fetchNotifications();
+        if (!cancelled) setNotifications(items);
+      } catch {
+        if (!cancelled) setNotifications([]);
+      }
+    };
+    void loadNotifications();
+    const interval = window.setInterval(loadNotifications, 30000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+    };
+  }, [businessType]);
+
   const items = useMemo(
     () =>
       resolveBusinessModules({
@@ -160,6 +183,15 @@ export function DashboardShell({ session }: { session: AuthSession }) {
     ) ?? items[0];
 
   const unreadCount = notifications.filter((n) => !n.read).length;
+  const markNotificationRead = (id: string) => {
+    setNotifications((prev) => prev.map((item) => (item._id === id ? { ...item, read: true } : item)));
+    void markServerNotificationRead(id).catch(() => fetchNotifications().then(setNotifications).catch(() => setNotifications([])));
+  };
+  const markAllNotificationsRead = () => {
+    if (unreadCount === 0) return;
+    setNotifications((prev) => prev.map((item) => ({ ...item, read: true })));
+    void markAllServerNotificationsRead().catch(() => fetchNotifications().then(setNotifications).catch(() => setNotifications([])));
+  };
   const handleLogout = () => {
     logout();
     navigate({ to: "/login" });
@@ -325,11 +357,13 @@ export function DashboardShell({ session }: { session: AuthSession }) {
                       )}
                       {notifications.slice(0, 6).map((n) => (
                         <DropdownMenuItem
-                          key={n.id}
+                          key={n._id}
                           className="flex flex-col items-start gap-0.5 whitespace-normal px-3 py-2.5"
                           onClick={() => {
-                            markNotificationRead(n.id);
-                            if (n.link) navigate({ to: n.link });
+                            markNotificationRead(n._id);
+                            if (n.data?.type === "attendanceRequest") {
+                              navigate({ to: "/business/dashboard/notifications" });
+                            }
                           }}
                         >
                           <span className="flex w-full items-center gap-1.5 text-xs font-semibold">

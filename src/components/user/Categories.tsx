@@ -1,7 +1,12 @@
-import type { ComponentType } from "react";
+import { useEffect, useState, type ComponentType } from "react";
 import { motion } from "motion/react";
 import * as Icons from "lucide-react";
-import { categories } from "@/lib/mock-data";
+import { categories as fallbackCategories } from "@/lib/mock-data";
+import {
+  buildLandingCategories,
+  fetchLandingCompanies,
+  type LandingCategory,
+} from "@/lib/company-api";
 import { cn } from "@/lib/utils";
 
 const iconSet = Icons as unknown as Record<string, ComponentType<{ className?: string }>>;
@@ -13,6 +18,24 @@ export function Categories({
   selected: string | null;
   onSelect: (name: string | null) => void;
 }) {
+  const [categories, setCategories] = useState<LandingCategory[]>(fallbackCategories);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetchLandingCompanies()
+      .then((companies) => {
+        if (!cancelled) setCategories(buildLandingCategories(companies));
+      })
+      .catch(() => {
+        if (!cancelled) setCategories(fallbackCategories);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <section id="categories" className="relative py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-5">

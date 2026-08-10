@@ -10,19 +10,19 @@ export const businessNav = [
   { label: "Нүүр", href: "#top" },
   { label: "Боломжууд", href: "#features" },
   { label: "Шийдлүүд", href: "#solutions" },
-  { label: "Үнийн мэдээлэл", href: "#pricing" },
+  { label: "Багц", href: "#packages" },
   { label: "Tanu Business", href: "#biz-cta" },
 ];
 
 export const categories = [
-  { name: "Гоо сайхан", icon: "Sparkles", count: 248 },
-  { name: "Эрүүл мэнд", icon: "HeartPulse", count: 132 },
-  { name: "Сургалт", icon: "GraduationCap", count: 89 },
-  { name: "Спорт", icon: "Dumbbell", count: 76 },
-  { name: "Авто үйлчилгээ", icon: "Car", count: 54 },
-  { name: "Энтертайнмент", icon: "Ticket", count: 41 },
-  { name: "Мэргэжлийн үйлчилгээ", icon: "Briefcase", count: 118 },
-  { name: "Бусад", icon: "MoreHorizontal", count: 63 },
+  { name: "Гоо сайхан", icon: "Sparkles", count: 21 },
+  { name: "Эмнэлэг", icon: "HeartPulse", count: 13 },
+  { name: "Тасалбар", icon: "Ticket", count: 1 },
+  { name: "Сургалт", icon: "GraduationCap", count: 0 },
+  { name: "Хуульч", icon: "Briefcase", count: 0 },
+  { name: "Буудал", icon: "Building2", count: 0 },
+  { name: "Төрийн алба", icon: "Landmark", count: 0 },
+  { name: "Бусад", icon: "MoreHorizontal", count: 0 },
 ];
 
 export const services = [
@@ -49,7 +49,7 @@ export const services = [
     price: 45000,
     time: "10:00",
     tag: "today",
-    category: "Эрүүл мэнд",
+    category: "Эмнэлэг",
     hue: 200,
   },
   {
@@ -62,7 +62,7 @@ export const services = [
     price: 35000,
     time: "18:00",
     tag: "nearby",
-    category: "Спорт",
+    category: "Гоо сайхан",
     hue: 180,
   },
   {
@@ -101,7 +101,7 @@ export const services = [
     price: 85000,
     time: "11:30",
     tag: "today",
-    category: "Авто үйлчилгээ",
+    category: "Бусад",
     hue: 220,
   },
 ];
@@ -135,19 +135,19 @@ export const testimonials = [
     name: "Түвшинбаяр Д.",
     rating: 5,
     text: "Эмнэлэгт очих цагаа маргаашгүй захиалдаг болсон. Сануулга нь маш тохиромжтой.",
-    category: "Эрүүл мэнд",
+    category: "Эмнэлэг",
   },
   {
     name: "Мөнхзул Ц.",
     rating: 5,
     text: "Дасгалжуулагчийн хичээлийн хуваарийг нэг дороос харах боломж супер.",
-    category: "Спорт",
+    category: "Гоо сайхан",
   },
   {
     name: "Батбаяр Х.",
     rating: 4,
     text: "Авто үйлчилгээний цагаа урьдчилан авах нь маш их цаг хэмнэсэн.",
-    category: "Авто үйлчилгээ",
+    category: "Бусад",
   },
 ];
 
@@ -188,13 +188,13 @@ export const bizFeatures = [
 
 export const bizTypes = [
   { name: "Гоо сайхны салон", icon: "Scissors" },
-  { name: "Эмнэлэг, эрүүл мэнд", icon: "Stethoscope" },
+  { name: "Эмнэлэг", icon: "Stethoscope" },
   { name: "Сургалтын төв", icon: "BookOpen" },
-  { name: "Фитнес, спорт", icon: "Dumbbell" },
-  { name: "Авто үйлчилгээ", icon: "Wrench" },
-  { name: "Зөвлөх үйлчилгээ", icon: "Briefcase" },
   { name: "Тасалбар, арга хэмжээ", icon: "Ticket" },
-  { name: "Бусад үйлчилгээ", icon: "Sparkles" },
+  { name: "Хуульч", icon: "Briefcase" },
+  { name: "Буудал", icon: "Building2" },
+  { name: "Төрийн алба", icon: "Landmark" },
+  { name: "Бусад", icon: "Sparkles" },
 ];
 
 export const bizStats = [

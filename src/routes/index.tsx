@@ -21,6 +21,7 @@ import {
   BusinessTypes,
   BusinessCta,
 } from "@/components/business/BusinessSections";
+import { BusinessPackages } from "@/components/business/BusinessPackages";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -99,6 +100,7 @@ function Shell() {
               <BusinessFeatures />
               <BookingCalendar />
               <BusinessAnalytics />
+              <BusinessPackages />
               <BusinessWorkflow />
               <BusinessTypes />
               <BusinessCta onOpenSignup={openBusinessSignup} />

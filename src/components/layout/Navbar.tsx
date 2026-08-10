@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Link } from "@tanstack/react-router";
 import { Download, Menu, Moon, Sun, X, LogIn } from "lucide-react";
 import { useApp } from "@/lib/app-context";
 import { BrandLogo } from "@/components/brand/Logo";
@@ -27,6 +26,9 @@ export function Navbar({ onOpenBusinessSignup }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const nav = mode === "business" ? businessNav : userNav;
+  const isUser = mode === "user";
+  const signinUrl = "https://admin.tanu.mn/auth/boxed-signin";
+  const signupUrl = "https://admin.tanu.mn/auth/boxed-signup";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -73,8 +75,18 @@ export function Navbar({ onOpenBusinessSignup }: NavbarProps) {
         scrolled
           ? "border-border/70 bg-[color-mix(in_oklch,var(--background)_88%,transparent)] shadow-[0_10px_30px_-26px_rgba(8,20,55,.5)] backdrop-blur-xl"
           : "border-border/35 bg-[color-mix(in_oklch,var(--background)_68%,transparent)] backdrop-blur-md",
+        isUser &&
+          (scrolled
+            ? "border-[color-mix(in_oklch,var(--brand)_18%,var(--border))] shadow-[0_18px_44px_-34px_color-mix(in_oklch,var(--brand)_75%,transparent)]"
+            : "border-[color-mix(in_oklch,var(--brand)_12%,transparent)]"),
       )}
     >
+      {isUser && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--brand-2)]/55 to-transparent"
+        />
+      )}
       <div
         className={cn(
           "mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 transition-all duration-300 sm:px-5",
@@ -106,12 +118,15 @@ export function Navbar({ onOpenBusinessSignup }: NavbarProps) {
         </a>
 
         <nav className="hidden items-center gap-1 lg:flex">
-          {nav.slice(0, 4).map((n) => (
+          {nav.map((n) => (
             <a
               key={n.href}
               href={n.href}
               onClick={(e) => handleNav(e, n.href)}
-              className="rounded-lg px-2.5 py-2 text-[13px] font-medium text-muted-foreground transition hover:text-foreground"
+              className={cn(
+                "rounded-lg px-2.5 py-2 text-[13px] font-medium text-muted-foreground transition hover:text-foreground",
+                isUser && "hover:bg-brand-soft/55 hover:text-[var(--brand)]",
+              )}
             >
               {n.label}
             </a>
@@ -121,17 +136,17 @@ export function Navbar({ onOpenBusinessSignup }: NavbarProps) {
         <div className="flex items-center gap-1.5 sm:gap-2">
           <ModeSwitch />
           <ThemeToggle theme={theme} toggle={toggleTheme} />
-          <Link
-            to="/login"
+          <a
+            href={signinUrl}
             className="hidden items-center gap-1.5 rounded-lg border border-border bg-surface/70 px-3.5 py-2 text-[13px] font-medium text-foreground transition hover:bg-secondary lg:inline-flex"
           >
             <LogIn className="h-3.5 w-3.5" /> Нэвтрэх
-          </Link>
+          </a>
           {mode === "user" ? (
             <Button
               size="sm"
               onClick={openAppSection}
-              className="hidden rounded-lg bg-primary px-3.5 text-primary-foreground shadow-sm hover:opacity-90 xl:inline-flex"
+              className="hidden rounded-lg bg-gradient-brand px-3.5 text-white shadow-glow hover:opacity-90 xl:inline-flex"
             >
               <Download className="h-3.5 w-3.5" />
               Апп татах
@@ -139,10 +154,10 @@ export function Navbar({ onOpenBusinessSignup }: NavbarProps) {
           ) : (
             <Button
               size="sm"
-              onClick={onOpenBusinessSignup}
+              asChild
               className="hidden rounded-lg bg-primary px-3.5 text-primary-foreground shadow-sm hover:opacity-90 xl:inline-flex"
             >
-              Бүртгүүлэх
+              <a href={signupUrl}>Бүртгүүлэх</a>
             </Button>
           )}
           <button
@@ -200,29 +215,28 @@ export function Navbar({ onOpenBusinessSignup }: NavbarProps) {
               </nav>
               <div className="mt-auto grid gap-2 pt-6">
                 <Button variant="outline" className="w-full gap-2" asChild onClick={() => setOpen(false)}>
-                  <Link to="/login">
+                  <a href={signinUrl}>
                     <LogIn className="h-4 w-4" /> Нэвтрэх
-                  </Link>
+                  </a>
                 </Button>
                 {mode === "user" ? (
                   <Button
                     onClick={() => {
                       openAppSection();
                     }}
-                    className="w-full bg-primary text-primary-foreground"
+                    className="w-full bg-gradient-brand text-white shadow-glow"
                   >
                     <Download className="mr-1.5 h-4 w-4" />
                     Апп татах
                   </Button>
                 ) : (
                   <Button
-                    onClick={() => {
-                      setOpen(false);
-                      onOpenBusinessSignup();
-                    }}
+                    asChild
                     className="w-full"
                   >
-                    Байгууллага бүртгүүлэх
+                    <a href={signupUrl} onClick={() => setOpen(false)}>
+                      Байгууллага бүртгүүлэх
+                    </a>
                   </Button>
                 )}
               </div>
@@ -244,7 +258,7 @@ function ModeSwitch() {
     >
       <span
         className={cn(
-          "absolute bottom-1 left-1 top-1 w-[calc(50%-4px)] rounded-lg bg-primary shadow-sm transition-transform duration-300",
+          "absolute bottom-1 left-1 top-1 w-[calc(50%-4px)] rounded-lg bg-gradient-brand shadow-sm transition-transform duration-300",
           mode === "business" ? "translate-x-full" : "translate-x-0",
         )}
       />
@@ -278,7 +292,7 @@ function ThemeToggle({ theme, toggle }: { theme: "light" | "dark"; toggle: () =>
   return (
     <button
       onClick={toggle}
-      className="relative inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface/65 backdrop-blur transition hover:bg-secondary"
+      className="relative inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface/65 text-[var(--brand)] backdrop-blur transition hover:border-[var(--brand)]/30 hover:bg-secondary"
       aria-label={theme === "dark" ? "Гэрэлтэй горим" : "Харанхуй горим"}
     >
       <AnimatePresence mode="wait" initial={false}>
