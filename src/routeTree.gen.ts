@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as BusinessChatRouteImport } from './routes/business.chat'
 import { Route as BusinessDashboardRouteImport } from './routes/business.dashboard'
 import { Route as BusinessRegisterRouteImport } from './routes/business.register'
@@ -68,6 +69,11 @@ const IndexRoute = IndexRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BusinessChatRoute = BusinessChatRouteImport.update({
@@ -357,6 +363,7 @@ const BusinessDashboardTicketOrganizationIdVenuesVenueIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
   '/business/chat': typeof BusinessChatRoute
   '/business/dashboard': typeof BusinessDashboardRouteWithChildren
   '/business/register': typeof BusinessRegisterRoute
@@ -409,6 +416,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
   '/business/chat': typeof BusinessChatRoute
   '/business/register': typeof BusinessRegisterRoute
   '/business/dashboard/billing': typeof BusinessDashboardBillingRoute
@@ -456,6 +464,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
   '/business/chat': typeof BusinessChatRoute
   '/business/dashboard': typeof BusinessDashboardRouteWithChildren
   '/business/register': typeof BusinessRegisterRoute
@@ -510,6 +519,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/privacy'
     | '/business/chat'
     | '/business/dashboard'
     | '/business/register'
@@ -562,6 +572,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/privacy'
     | '/business/chat'
     | '/business/register'
     | '/business/dashboard/billing'
@@ -608,6 +619,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/login'
+    | '/privacy'
     | '/business/chat'
     | '/business/dashboard'
     | '/business/register'
@@ -661,6 +673,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
+  PrivacyRoute: typeof PrivacyRoute
   BusinessChatRoute: typeof BusinessChatRoute
   BusinessDashboardRoute: typeof BusinessDashboardRouteWithChildren
   BusinessRegisterRoute: typeof BusinessRegisterRoute
@@ -680,6 +693,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/business/chat': {
@@ -1207,6 +1227,7 @@ const BusinessDashboardRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
+  PrivacyRoute: PrivacyRoute,
   BusinessChatRoute: BusinessChatRoute,
   BusinessDashboardRoute: BusinessDashboardRouteWithChildren,
   BusinessRegisterRoute: BusinessRegisterRoute,
