@@ -203,7 +203,7 @@ function footerHref(label: string) {
     "Tanu Business": "https://admin.tanu.mn/auth/boxed-signup",
     "Системийн бүтэц": "https://www.tanu.mn/",
     "Үйлчилгээний нөхцөл": "https://www.tanu.mn/terms",
-    "Нууцлалын бодлого": "https://www.tanu.mn/privacy",
+    "Нууцлалын бодлого": "/privacy",
     "Бидний тухай": "https://www.tanu.mn/about",
     "Холбоо барих": "https://www.tanu.mn/contact",
   };
