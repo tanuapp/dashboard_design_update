@@ -24,7 +24,11 @@ function PrivacyPage() {
   return (
     <div className="relative min-h-screen bg-background text-foreground">
       <Background />
-      <Navbar onOpenBusinessSignup={() => window.location.assign("/business/register")} />
+      <Navbar
+        onOpenBusinessSignup={() =>
+          window.location.assign("https://admin.tanu.mn/auth/boxed-signup")
+        }
+      />
 
       <main className="relative mx-auto w-full max-w-5xl px-5 pb-16 pt-28 sm:px-6 lg:px-8">
         <header className="mb-8 text-center">

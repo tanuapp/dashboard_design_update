@@ -21,6 +21,17 @@ function smoothScrollTo(hash: string) {
   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function goToHomeSection(hash: string) {
+  const target = hash === "#top" ? "/" : `/${hash}`;
+
+  if (window.location.pathname === "/") {
+    smoothScrollTo(hash);
+    return;
+  }
+
+  window.location.assign(target);
+}
+
 export function Navbar({ onOpenBusinessSignup }: NavbarProps) {
   const { mode, theme, toggleTheme } = useApp();
   const [scrolled, setScrolled] = useState(false);
@@ -60,12 +71,12 @@ export function Navbar({ onOpenBusinessSignup }: NavbarProps) {
   const handleNav = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setOpen(false);
-    setTimeout(() => smoothScrollTo(href), 50);
+    setTimeout(() => goToHomeSection(href), 50);
   };
 
   const openAppSection = () => {
     setOpen(false);
-    setTimeout(() => smoothScrollTo("#app"), 50);
+    setTimeout(() => goToHomeSection("#app"), 50);
   };
 
   return (
@@ -214,7 +225,12 @@ export function Navbar({ onOpenBusinessSignup }: NavbarProps) {
                 ))}
               </nav>
               <div className="mt-auto grid gap-2 pt-6">
-                <Button variant="outline" className="w-full gap-2" asChild onClick={() => setOpen(false)}>
+                <Button
+                  variant="outline"
+                  className="w-full gap-2"
+                  asChild
+                  onClick={() => setOpen(false)}
+                >
                   <a href={signinUrl}>
                     <LogIn className="h-4 w-4" /> Нэвтрэх
                   </a>
@@ -230,10 +246,7 @@ export function Navbar({ onOpenBusinessSignup }: NavbarProps) {
                     Апп татах
                   </Button>
                 ) : (
-                  <Button
-                    asChild
-                    className="w-full"
-                  >
+                  <Button asChild className="w-full">
                     <a href={signupUrl} onClick={() => setOpen(false)}>
                       Байгууллага бүртгүүлэх
                     </a>

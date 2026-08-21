@@ -205,7 +205,7 @@ function footerHref(label: string) {
     "Үйлчилгээний нөхцөл": "https://www.tanu.mn/terms",
     "Нууцлалын бодлого": "/privacy",
     "Бидний тухай": "https://www.tanu.mn/about",
-    "Холбоо барих": "https://www.tanu.mn/contact",
+    "Холбоо барих": "/contact",
   };
 
   return hrefs[label] ?? "#categories";

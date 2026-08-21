@@ -95,7 +95,7 @@ export function Services({ categoryFilter }: { categoryFilter: string | null }) 
               </p>
             ) : (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {list.map((s, i) => (
+                {list.slice(0, 6).map((s, i) => (
                   <ServiceCard
                     key={s.id}
                     s={s}

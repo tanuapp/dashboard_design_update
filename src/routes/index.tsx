@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useApp } from "@/lib/app-context";
@@ -50,9 +50,10 @@ function Page() {
 
 function Shell() {
   const { mode } = useApp();
-  const navigate = useNavigate();
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
-  const openBusinessSignup = () => navigate({ to: "/business/register" });
+  const openBusinessSignup = () => {
+    window.location.href = "https://admin.tanu.mn/auth/boxed-signup";
+  };
 
   const scrollToServices = () => {
     setTimeout(

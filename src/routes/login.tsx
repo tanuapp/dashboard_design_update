@@ -406,12 +406,12 @@ function BusinessPanel() {
 
         <p className="text-center text-sm text-muted-foreground">
           Шинэ байгууллага уу?{" "}
-          <Link
-            to="/business/register"
+          <a
+            href="https://admin.tanu.mn/auth/boxed-signup"
             className="font-semibold text-[var(--brand)] hover:underline"
           >
             Бүртгүүлэх
-          </Link>
+          </a>
         </p>
       </form>
 
