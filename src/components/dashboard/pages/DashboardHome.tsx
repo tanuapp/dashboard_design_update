@@ -103,8 +103,17 @@ function isOpenNow(workingHours: string) {
 }
 
 export function OwnerDashboardHome({ session }: { session: AuthSession }) {
-  const { bookings, employees, services, customers, branches, revenueHistory, selectedBranchId } =
-    useDashboardData();
+  const {
+    bookings,
+    employees,
+    services,
+    customers,
+    branches,
+    revenueHistory,
+    selectedBranchId,
+    reassignBookingEmployee,
+    rescheduleBooking,
+  } = useDashboardData();
   const navigate = useNavigate();
 
   const [drawerBookingId, setDrawerBookingId] = useState<string | null>(null);
@@ -114,6 +123,7 @@ export function OwnerDashboardHome({ session }: { session: AuthSession }) {
   const [scheduleRange, setScheduleRange] = useState<ScheduleRange>("today");
   const [scheduleView, setScheduleView] = useState<ScheduleView>("list");
   const [scheduleDate, setScheduleDate] = useState(today());
+  const [scheduleDragId, setScheduleDragId] = useState<string | null>(null);
 
   const branch =
     selectedBranchId === "all" ? null : (branches.find((b) => b.id === selectedBranchId) ?? null);
@@ -222,6 +232,16 @@ export function OwnerDashboardHome({ session }: { session: AuthSession }) {
     () => (branch ? employees.filter((e) => e.branchId === branch.id) : employees),
     [employees, branch],
   );
+
+  const handleScheduleDrop = (date: string, time: string, employeeId?: string) => {
+    if (!scheduleDragId) return;
+    rescheduleBooking(scheduleDragId, date, time);
+    if (employeeId) {
+      const employee = employees.find((item) => item.id === employeeId);
+      if (employee) reassignBookingEmployee(scheduleDragId, employee.id, employee.name);
+    }
+    setScheduleDragId(null);
+  };
 
   const attendanceRows = useMemo(
     () =>
@@ -589,9 +609,9 @@ export function OwnerDashboardHome({ session }: { session: AuthSession }) {
                     now={new Date()}
                     onSlotClick={() => setAddBookingOpen(true)}
                     onBookingClick={setDrawerBookingId}
-                    onDragStart={() => undefined}
-                    onDrop={() => undefined}
-                    draggingId={null}
+                    onDragStart={setScheduleDragId}
+                    onDrop={handleScheduleDrop}
+                    draggingId={scheduleDragId}
                   />
                 </div>
               )

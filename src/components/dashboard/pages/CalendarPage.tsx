@@ -412,9 +412,17 @@ export function CalendarTimeGrid({
                   return (
                     <div
                       key={b.id}
+                      role="button"
+                      tabIndex={0}
                       draggable
                       onDragStart={() => onDragStart(b.id)}
                       onClick={() => onBookingClick(b.id)}
+                      onKeyDown={(e) => {
+                        if (e.key !== "Enter" && e.key !== " ") return;
+                        e.preventDefault();
+                        onBookingClick(b.id);
+                      }}
+                      aria-label={`Захиалгын дэлгэрэнгүй: ${b.customerName}`}
                       className={`absolute inset-x-1 cursor-pointer overflow-hidden rounded-lg border-l-4 p-1.5 text-[11px] shadow-sm transition hover:shadow-md ${statusCardTone[b.status]} ${draggingId === b.id ? "opacity-40" : ""}`}
                       style={{ top: `${rowStart * 48 + 2}px`, height: `${span * 48 - 4}px` }}
                     >
@@ -477,8 +485,15 @@ export function CalendarMonthGrid({
           return (
             <div
               key={i}
+              role={iso ? "button" : undefined}
+              tabIndex={iso ? 0 : undefined}
               className={`min-h-28 border-b border-r border-border/60 p-1.5 ${!iso ? "bg-surface-muted/20" : "cursor-pointer hover:bg-surface-muted/40"}`}
               onClick={() => iso && onPickDay(iso)}
+              onKeyDown={(e) => {
+                if (!iso || (e.key !== "Enter" && e.key !== " ")) return;
+                e.preventDefault();
+                onPickDay(iso);
+              }}
             >
               {iso && (
                 <>
@@ -489,16 +504,17 @@ export function CalendarMonthGrid({
                   </span>
                   <div className="mt-1 space-y-1">
                     {dayBookings.slice(0, 3).map((b) => (
-                      <div
+                      <button
                         key={b.id}
+                        type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           onOpenBooking(b.id);
                         }}
-                        className={`truncate rounded border-l-2 px-1 py-0.5 text-[10px] ${statusCardTone[b.status]}`}
+                        className={`block w-full truncate rounded border-l-2 px-1 py-0.5 text-left text-[10px] ${statusCardTone[b.status]}`}
                       >
                         {b.startTime} {b.customerName}
-                      </div>
+                      </button>
                     ))}
                     {dayBookings.length > 3 && (
                       <p className="text-[10px] text-muted-foreground">

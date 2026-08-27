@@ -14,14 +14,33 @@ import {
 } from "lucide-react";
 import { useDashboardData } from "@/lib/dashboard/store";
 import { bookingSourceLabel, bookingStatusLabel, type BookingStatus } from "@/lib/dashboard/types";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BookingStatusBadge, PaymentStateBadge, ConfirmDialog, money, formatDate } from "./ui";
 
-const STATUS_OPTIONS: BookingStatus[] = ["upcoming", "arrived", "in-service", "completed", "cancelled", "no-show"];
+const STATUS_OPTIONS: BookingStatus[] = [
+  "upcoming",
+  "arrived",
+  "in-service",
+  "completed",
+  "cancelled",
+  "no-show",
+];
 
 export function BookingDrawer({
   bookingId,
@@ -30,8 +49,15 @@ export function BookingDrawer({
   bookingId: string | null;
   onOpenChange: (id: string | null) => void;
 }) {
-  const { bookings, employees, changeBookingStatus, reassignBookingEmployee, rescheduleBooking, addBookingInternalNote, cancelBooking } =
-    useDashboardData();
+  const {
+    bookings,
+    employees,
+    changeBookingStatus,
+    reassignBookingEmployee,
+    rescheduleBooking,
+    addBookingInternalNote,
+    cancelBooking,
+  } = useDashboardData();
   const booking = bookings.find((b) => b.id === bookingId) ?? null;
 
   const [noteDraft, setNoteDraft] = useState("");
@@ -48,7 +74,9 @@ export function BookingDrawer({
   }, [booking?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const availableEmployees = booking
-    ? employees.filter((e) => e.serviceIds.includes(booking.serviceId) || e.id === booking.employeeId)
+    ? employees.filter(
+        (e) => e.serviceIds.includes(booking.serviceId) || e.id === booking.employeeId,
+      )
     : [];
 
   return (
@@ -61,7 +89,9 @@ export function BookingDrawer({
                 <SheetTitle>{booking.code}</SheetTitle>
                 <BookingStatusBadge status={booking.status} />
               </div>
-              <SheetDescription>{formatDate(booking.date)} · {booking.startTime}–{booking.endTime}</SheetDescription>
+              <SheetDescription>
+                {formatDate(booking.date)} · {booking.startTime}–{booking.endTime}
+              </SheetDescription>
             </SheetHeader>
 
             <div className="mt-5 space-y-5">
@@ -116,7 +146,10 @@ export function BookingDrawer({
 
               <section>
                 <p className="mb-1.5 text-xs font-medium text-muted-foreground">Төлөв өөрчлөх</p>
-                <Select value={booking.status} onValueChange={(v) => changeBookingStatus(booking.id, v as BookingStatus)}>
+                <Select
+                  value={booking.status}
+                  onValueChange={(v) => changeBookingStatus(booking.id, v as BookingStatus)}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -195,7 +228,8 @@ export function BookingDrawer({
                   </div>
                 ) : (
                   <p className="flex items-center gap-1.5 text-sm">
-                    <Clock className="h-3.5 w-3.5 text-muted-foreground" /> {formatDate(booking.date)}, {booking.startTime}–{booking.endTime}
+                    <Clock className="h-3.5 w-3.5 text-muted-foreground" />{" "}
+                    {formatDate(booking.date)}, {booking.startTime}–{booking.endTime}
                   </p>
                 )}
               </section>
@@ -241,12 +275,7 @@ export function BookingDrawer({
               )}
 
               <section className="flex flex-wrap gap-2 border-t border-border/70 pt-4">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="gap-1.5 rounded-lg"
-                  asChild
-                >
+                <Button size="sm" variant="outline" className="gap-1.5 rounded-lg" asChild>
                   <a href={`tel:${booking.customerPhone.replace(/\s/g, "")}`}>
                     <Phone className="h-3.5 w-3.5" /> Холбогдох
                   </a>
