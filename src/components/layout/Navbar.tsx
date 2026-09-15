@@ -80,108 +80,111 @@ export function Navbar({ onOpenBusinessSignup }: NavbarProps) {
   };
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-40 border-b transition-all duration-300",
-        scrolled
-          ? "border-border/70 bg-[color-mix(in_oklch,var(--background)_88%,transparent)] shadow-[0_10px_30px_-26px_rgba(8,20,55,.5)] backdrop-blur-xl"
-          : "border-border/35 bg-[color-mix(in_oklch,var(--background)_68%,transparent)] backdrop-blur-md",
-        isUser &&
-          (scrolled
-            ? "border-[color-mix(in_oklch,var(--brand)_18%,var(--border))] shadow-[0_18px_44px_-34px_color-mix(in_oklch,var(--brand)_75%,transparent)]"
-            : "border-[color-mix(in_oklch,var(--brand)_12%,transparent)]"),
-      )}
-    >
-      {isUser && (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--brand-2)]/55 to-transparent"
-        />
-      )}
-      <div
+    <>
+      <header
         className={cn(
-          "mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 transition-all duration-300 sm:px-5",
-          scrolled ? "h-14" : "h-16",
+          "fixed inset-x-0 top-0 z-40 border-b pt-[env(safe-area-inset-top)] transition-all duration-300",
+          scrolled
+            ? "border-border/70 bg-[color-mix(in_oklch,var(--background)_88%,transparent)] shadow-[0_10px_30px_-26px_rgba(8,20,55,.5)] backdrop-blur-xl"
+            : "border-border/35 bg-[color-mix(in_oklch,var(--background)_68%,transparent)] backdrop-blur-md",
+          isUser &&
+            (scrolled
+              ? "border-[color-mix(in_oklch,var(--brand)_18%,var(--border))] shadow-[0_18px_44px_-34px_color-mix(in_oklch,var(--brand)_75%,transparent)]"
+              : "border-[color-mix(in_oklch,var(--brand)_12%,transparent)]"),
         )}
       >
-        <a
-          href="#top"
-          onClick={(e) => handleNav(e, "#top")}
-          className="shrink-0 rounded-xl focus-visible:outline-offset-4"
-          aria-label="Tanu home"
-        >
-          <AnimatePresence mode="wait">
-            <motion.span
-              key={mode}
-              initial={{ opacity: 0, y: -6, filter: "blur(6px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: 6, filter: "blur(6px)" }}
-              transition={{ duration: 0.35 }}
-              className="flex items-center"
-            >
-              <BrandLogo
-                mode={mode}
-                className="h-8 [&>span:last-child]:hidden sm:[&>span:last-child]:flex"
-                invert={theme === "dark"}
-              />
-            </motion.span>
-          </AnimatePresence>
-        </a>
-
-        <nav className="hidden items-center gap-1 lg:flex">
-          {nav.map((n) => (
-            <a
-              key={n.href}
-              href={n.href}
-              onClick={(e) => handleNav(e, n.href)}
-              className={cn(
-                "rounded-lg px-2.5 py-2 text-[13px] font-medium text-muted-foreground transition hover:text-foreground",
-                isUser && "hover:bg-brand-soft/55 hover:text-[var(--brand)]",
-              )}
-            >
-              {n.label}
-            </a>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          <ModeSwitch />
-          <ThemeToggle theme={theme} toggle={toggleTheme} />
-          <a
-            href={signinUrl}
-            className="hidden items-center gap-1.5 rounded-lg border border-border bg-surface/70 px-3.5 py-2 text-[13px] font-medium text-foreground transition hover:bg-secondary lg:inline-flex"
-          >
-            <LogIn className="h-3.5 w-3.5" /> Нэвтрэх
-          </a>
-          {mode === "user" ? (
-            <Button
-              size="sm"
-              onClick={openAppSection}
-              className="hidden rounded-lg bg-gradient-brand px-3.5 text-white shadow-glow hover:opacity-90 xl:inline-flex"
-            >
-              <Download className="h-3.5 w-3.5" />
-              Апп татах
-            </Button>
-          ) : (
-            <Button
-              size="sm"
-              asChild
-              className="hidden rounded-lg bg-primary px-3.5 text-primary-foreground shadow-sm hover:opacity-90 xl:inline-flex"
-            >
-              <a href={signupUrl}>Бүртгүүлэх</a>
-            </Button>
+        {isUser && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--brand-2)]/55 to-transparent"
+          />
+        )}
+        <div
+          className={cn(
+            "mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 transition-all duration-300 sm:px-5",
+            scrolled ? "h-14" : "h-16",
           )}
-          <button
-            className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface/70 lg:hidden"
-            onClick={() => setOpen(true)}
-            aria-label="Menu"
+        >
+          <a
+            href="#top"
+            onClick={(e) => handleNav(e, "#top")}
+            className="shrink-0 rounded-xl focus-visible:outline-offset-4"
+            aria-label="Tanu home"
           >
-            <Menu className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={mode}
+                initial={{ opacity: 0, y: -6, filter: "blur(6px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: 6, filter: "blur(6px)" }}
+                transition={{ duration: 0.35 }}
+                className="flex items-center"
+              >
+                <BrandLogo mode={mode} className="h-8" invert={theme === "dark"} />
+              </motion.span>
+            </AnimatePresence>
+          </a>
 
-      {/* Mobile drawer */}
+          <nav className="hidden items-center gap-1 lg:flex">
+            {nav.map((n) => (
+              <a
+                key={n.href}
+                href={n.href}
+                onClick={(e) => handleNav(e, n.href)}
+                className={cn(
+                  "rounded-lg px-2.5 py-2 text-[13px] font-medium text-muted-foreground transition hover:text-foreground",
+                  isUser && "hover:bg-brand-soft/55 hover:text-[var(--brand)]",
+                )}
+              >
+                {n.label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="hidden md:block">
+              <ModeSwitch />
+            </div>
+            <ThemeToggle theme={theme} toggle={toggleTheme} />
+            <a
+              href={signinUrl}
+              className="hidden items-center gap-1.5 rounded-lg border border-border bg-surface/70 px-3.5 py-2 text-[13px] font-medium text-foreground transition hover:bg-secondary lg:inline-flex"
+            >
+              <LogIn className="h-3.5 w-3.5" /> Нэвтрэх
+            </a>
+            {mode === "user" ? (
+              <Button
+                size="sm"
+                onClick={openAppSection}
+                className="hidden rounded-lg bg-gradient-brand px-3.5 text-white shadow-glow hover:opacity-90 xl:inline-flex"
+              >
+                <Download className="h-3.5 w-3.5" />
+                Апп татах
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                asChild
+                className="hidden rounded-lg bg-primary px-3.5 text-primary-foreground shadow-sm hover:opacity-90 xl:inline-flex"
+              >
+                <a href={signupUrl}>Бүртгүүлэх</a>
+              </Button>
+            )}
+            <button
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface/70 lg:hidden"
+              onClick={() => setOpen((current) => !current)}
+              aria-label="Menu"
+              aria-expanded={open}
+              aria-controls="mobile-navigation"
+            >
+              <Menu className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Keep the drawer outside the backdrop-filter header. A filtered ancestor
+          becomes the containing block for fixed children on mobile browsers. */}
       <AnimatePresence>
         {open && (
           <>
@@ -190,14 +193,18 @@ export function Navbar({ onOpenBusinessSignup }: NavbarProps) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setOpen(false)}
-              className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
+              className="fixed inset-0 z-50 bg-[#080b24]/45 backdrop-blur-sm"
             />
             <motion.aside
+              id="mobile-navigation"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile navigation"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 26, stiffness: 240 }}
-              className="fixed inset-y-0 right-0 z-50 w-[86vw] max-w-sm bg-background border-l border-border p-5 flex flex-col overflow-y-auto"
+              className="fixed inset-y-0 right-0 z-[60] flex w-[88vw] max-w-sm flex-col overflow-y-auto border-l border-border bg-background px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[max(1.25rem,env(safe-area-inset-top))] shadow-[-24px_0_70px_-30px_rgba(8,11,36,.55)]"
             >
               <div className="flex items-center justify-between">
                 <BrandLogo mode={mode} invert={theme === "dark"} />
@@ -257,7 +264,7 @@ export function Navbar({ onOpenBusinessSignup }: NavbarProps) {
           </>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
 

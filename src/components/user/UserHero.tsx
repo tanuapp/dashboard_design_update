@@ -18,7 +18,10 @@ const scrollToApp = () =>
 
 export function UserHero({ onSearch }: { onSearch: () => void }) {
   return (
-    <section id="top" className="relative isolate overflow-hidden pb-20 pt-32 md:pb-28 md:pt-40">
+    <section
+      id="top"
+      className="relative isolate overflow-hidden pb-14 pt-24 sm:pb-20 sm:pt-32 md:pb-28 md:pt-40"
+    >
       <div
         aria-hidden
         className="absolute left-[8%] top-24 -z-10 h-72 w-72 rounded-full bg-[var(--brand)]/10 blur-[100px]"
@@ -27,7 +30,7 @@ export function UserHero({ onSearch }: { onSearch: () => void }) {
         aria-hidden
         className="absolute right-[4%] top-36 -z-10 h-[34rem] w-[34rem] rounded-full border border-[var(--brand)]/10 bg-[radial-gradient(circle,color-mix(in_oklch,var(--brand)_18%,transparent),transparent_66%)]"
       />
-      <div className="mx-auto grid max-w-7xl items-center gap-16 px-5 lg:grid-cols-[1.08fr_.92fr]">
+      <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 sm:gap-16 sm:px-5 lg:grid-cols-[1.08fr_.92fr]">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -38,7 +41,7 @@ export function UserHero({ onSearch }: { onSearch: () => void }) {
             <Sparkles className="h-3.5 w-3.5 text-[var(--brand)]" />
             Үйлчилгээгээ web-ээр хялбар олоорой
           </span>
-          <h1 className="mt-6 max-w-3xl text-4xl font-extrabold leading-[1.03] tracking-[-0.045em] sm:text-5xl lg:text-[4.15rem]">
+          <h1 className="mt-5 max-w-3xl text-[2.15rem] font-extrabold leading-[1.06] tracking-[-0.045em] sm:mt-6 sm:text-5xl lg:text-[4.15rem]">
             Өөрт хэрэгтэй үйлчилгээг
             <br />
             <span className="relative text-gradient-brand">
@@ -52,18 +55,18 @@ export function UserHero({ onSearch }: { onSearch: () => void }) {
             харьцуулаад Tanu апп-аар цагаа захиалаарай.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
+          <div className="mt-7 grid gap-3 sm:mt-8 sm:flex sm:flex-wrap sm:items-center">
             <Button
               size="lg"
               onClick={onSearch}
-              className="h-12 rounded-xl bg-gradient-brand px-6 text-white shadow-glow hover:-translate-y-0.5 hover:opacity-95"
+              className="h-12 w-full rounded-xl bg-gradient-brand px-6 text-white shadow-glow hover:-translate-y-0.5 hover:opacity-95 sm:w-auto"
             >
               <Search className="mr-1.5 h-4 w-4" /> Үйлчилгээ хайх
             </Button>
             <Button
               size="lg"
               variant="outline"
-              className="h-12 gap-1.5 rounded-xl border-border/80 bg-surface/60 px-6 backdrop-blur hover:-translate-y-0.5"
+              className="h-12 w-full gap-1.5 rounded-xl border-border/80 bg-surface/60 px-6 backdrop-blur hover:-translate-y-0.5 sm:w-auto"
               onClick={scrollToApp}
             >
               <Download className="h-4 w-4" /> Tanu апп татах
@@ -72,7 +75,7 @@ export function UserHero({ onSearch }: { onSearch: () => void }) {
 
           <SearchBar onSearch={onSearch} />
 
-          <div className="mt-6 grid gap-2 text-sm text-muted-foreground sm:grid-cols-3">
+          <div className="mt-5 flex gap-2 overflow-x-auto pb-1 text-sm text-muted-foreground [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mt-6 sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0">
             <Trust
               icon={<ShieldCheck className="h-4 w-4 text-[var(--brand)]" />}
               text="Баталгаажсан байгууллагууд"
@@ -96,7 +99,7 @@ export function UserHero({ onSearch }: { onSearch: () => void }) {
 
 function Trust({ icon, text }: { icon: React.ReactNode; text: string }) {
   return (
-    <span className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-border/70 bg-surface/55 px-3 py-2 text-xs font-medium shadow-sm backdrop-blur">
+    <span className="inline-flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-xl border border-border/70 bg-surface/55 px-3 py-2 text-xs font-medium shadow-sm backdrop-blur sm:whitespace-normal">
       {icon}
       {text}
     </span>
@@ -105,7 +108,7 @@ function Trust({ icon, text }: { icon: React.ReactNode; text: string }) {
 
 function SearchBar({ onSearch }: { onSearch: () => void }) {
   return (
-    <div className="glass mt-8 flex flex-col gap-2 rounded-2xl p-2 shadow-[0_18px_50px_-30px_rgba(17,82,179,.65)] md:flex-row">
+    <div className="glass mt-6 flex flex-col gap-2 rounded-2xl p-2 shadow-[0_18px_50px_-30px_rgba(17,82,179,.65)] sm:mt-8 md:flex-row">
       <Field icon={<Search className="h-4 w-4" />} placeholder="Үйлчилгээ эсвэл байгууллага" />
       <Field icon={<MapPin className="h-4 w-4" />} placeholder="Байршил" />
       <Field icon={<CalendarDays className="h-4 w-4" />} placeholder="Огноо" />
@@ -138,7 +141,7 @@ function HeroVisual() {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.7, delay: 0.15 }}
-      className="relative mx-auto min-h-[620px] w-full max-w-xl lg:translate-x-4"
+      className="relative mx-auto min-h-[500px] w-full max-w-[390px] sm:min-h-[620px] sm:max-w-xl lg:translate-x-4"
     >
       <div
         aria-hidden
@@ -149,18 +152,18 @@ function HeroVisual() {
         className="absolute inset-x-4 top-20 -z-10 h-[72%] rotate-3 rounded-[4rem] border border-[var(--brand)]/15 bg-gradient-to-b from-[var(--brand)]/10 to-transparent"
       />
 
-      <div className="hero-phone-scene relative h-[620px] w-full">
+      <div className="hero-phone-scene relative h-[500px] w-full sm:h-[620px]">
         <PhoneScreenshot
           src="/detail.PNG"
           alt="Tanu аппын байгууллагын дэлгэрэнгүй дэлгэц"
-          className="absolute left-[54%] top-8 z-0 w-[205px] sm:w-[225px] md:w-[245px]"
+          className="absolute right-0 top-3 z-0 w-[46vw] min-w-[148px] max-w-[178px] sm:left-[54%] sm:right-auto sm:top-8 sm:w-[225px] sm:max-w-none md:w-[245px]"
           delay={0.2}
           variant="detail"
         />
         <PhoneScreenshot
           src="/home.PNG"
           alt="Tanu аппын нүүр дэлгэц"
-          className="absolute left-[5%] top-28 z-10 w-[225px] sm:w-[250px] md:w-[270px]"
+          className="absolute left-0 top-20 z-10 w-[54vw] min-w-[174px] max-w-[205px] sm:left-[5%] sm:top-28 sm:w-[250px] sm:max-w-none md:w-[270px]"
           delay={0}
           variant="home"
         />

@@ -442,6 +442,12 @@
   .hero-phone-glare {
     animation: none;
   }
+  .hero-phone-home {
+    transform: translate3d(0, 0, 28px) rotate(-3deg) !important;
+  }
+  .hero-phone-detail {
+    transform: translate3d(0, 0, 0) rotate(3deg) !important;
+  }
   .marquee-track {
     animation-duration: 60s;
   }
