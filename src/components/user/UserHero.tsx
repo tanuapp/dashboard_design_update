@@ -30,18 +30,18 @@ export function UserHero({ onSearch }: { onSearch: () => void }) {
         aria-hidden
         className="absolute right-[4%] top-36 -z-10 h-[34rem] w-[34rem] rounded-full border border-[var(--brand)]/10 bg-[radial-gradient(circle,color-mix(in_oklch,var(--brand)_18%,transparent),transparent_66%)]"
       />
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 sm:gap-16 sm:px-5 lg:grid-cols-[1.08fr_.92fr]">
+      <div className="mx-auto grid w-full min-w-0 max-w-7xl items-center gap-10 px-4 sm:gap-16 sm:px-5 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,.92fr)]">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="relative z-10"
+          className="relative z-10 min-w-0 max-w-full"
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-[var(--brand)]/20 bg-surface/70 px-3.5 py-1.5 text-xs font-semibold text-muted-foreground shadow-sm backdrop-blur">
+          <span className="inline-flex max-w-full items-center gap-2 rounded-full border border-[var(--brand)]/20 bg-surface/70 px-3.5 py-1.5 text-xs font-semibold text-muted-foreground shadow-sm backdrop-blur">
             <Sparkles className="h-3.5 w-3.5 text-[var(--brand)]" />
             Үйлчилгээгээ web-ээр хялбар олоорой
           </span>
-          <h1 className="mt-5 max-w-3xl text-[2.15rem] font-extrabold leading-[1.06] tracking-[-0.045em] sm:mt-6 sm:text-5xl lg:text-[4.15rem]">
+          <h1 className="mt-5 max-w-3xl text-[clamp(2rem,9.2vw,2.4rem)] font-extrabold leading-[1.06] tracking-[-0.045em] [overflow-wrap:anywhere] sm:mt-6 sm:text-5xl lg:text-[4.15rem]">
             Өөрт хэрэгтэй үйлчилгээг
             <br />
             <span className="relative text-gradient-brand">
@@ -75,7 +75,7 @@ export function UserHero({ onSearch }: { onSearch: () => void }) {
 
           <SearchBar onSearch={onSearch} />
 
-          <div className="mt-5 flex gap-2 overflow-x-auto pb-1 text-sm text-muted-foreground [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mt-6 sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0">
+          <div className="mt-5 grid min-w-0 grid-cols-1 gap-2 text-sm text-muted-foreground min-[430px]:grid-cols-2 sm:mt-6 sm:grid-cols-3">
             <Trust
               icon={<ShieldCheck className="h-4 w-4 text-[var(--brand)]" />}
               text="Баталгаажсан байгууллагууд"
@@ -99,7 +99,7 @@ export function UserHero({ onSearch }: { onSearch: () => void }) {
 
 function Trust({ icon, text }: { icon: React.ReactNode; text: string }) {
   return (
-    <span className="inline-flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-xl border border-border/70 bg-surface/55 px-3 py-2 text-xs font-medium shadow-sm backdrop-blur sm:whitespace-normal">
+    <span className="inline-flex min-h-11 min-w-0 items-center gap-2 rounded-xl border border-border/70 bg-surface/55 px-3 py-2 text-xs font-medium shadow-sm backdrop-blur">
       {icon}
       {text}
     </span>
@@ -108,7 +108,7 @@ function Trust({ icon, text }: { icon: React.ReactNode; text: string }) {
 
 function SearchBar({ onSearch }: { onSearch: () => void }) {
   return (
-    <div className="glass mt-6 flex flex-col gap-2 rounded-2xl p-2 shadow-[0_18px_50px_-30px_rgba(17,82,179,.65)] sm:mt-8 md:flex-row">
+    <div className="glass mt-6 flex w-full min-w-0 max-w-full flex-col gap-2 rounded-2xl p-2 shadow-[0_18px_50px_-30px_rgba(17,82,179,.65)] sm:mt-8 md:flex-row">
       <Field icon={<Search className="h-4 w-4" />} placeholder="Үйлчилгээ эсвэл байгууллага" />
       <Field icon={<MapPin className="h-4 w-4" />} placeholder="Байршил" />
       <Field icon={<CalendarDays className="h-4 w-4" />} placeholder="Огноо" />
@@ -125,7 +125,7 @@ function SearchBar({ onSearch }: { onSearch: () => void }) {
 
 function Field({ icon, placeholder }: { icon: React.ReactNode; placeholder: string }) {
   return (
-    <label className="flex min-w-0 flex-1 items-center gap-2 rounded-xl border border-transparent bg-surface/90 px-3 py-2 transition focus-within:border-[var(--brand)]/35 focus-within:shadow-sm">
+    <label className="flex w-full min-w-0 flex-1 items-center gap-2 rounded-xl border border-transparent bg-surface/90 px-3 py-2 transition focus-within:border-[var(--brand)]/35 focus-within:shadow-sm">
       <span className="text-muted-foreground">{icon}</span>
       <Input
         placeholder={placeholder}
@@ -141,7 +141,7 @@ function HeroVisual() {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.7, delay: 0.15 }}
-      className="relative mx-auto min-h-[500px] w-full max-w-[390px] sm:min-h-[620px] sm:max-w-xl lg:translate-x-4"
+      className="relative mx-auto min-h-[500px] w-full min-w-0 max-w-[390px] sm:min-h-[620px] sm:max-w-xl lg:translate-x-4"
     >
       <div
         aria-hidden
