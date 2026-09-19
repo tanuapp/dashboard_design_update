@@ -6,7 +6,12 @@ import { DashboardDataProvider } from "@/lib/dashboard/store";
 import { ChatPage } from "@/components/dashboard/pages/ChatPage";
 
 export const Route = createFileRoute("/business/chat")({
-  head: () => ({ meta: [{ title: "Messenger — Tanu Business" }] }),
+  head: () => ({
+    meta: [
+      { title: "Messenger — TANU Business" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   validateSearch: (search: Record<string, unknown>) => ({
     conversation: typeof search.conversation === "string" ? search.conversation : undefined,
   }),

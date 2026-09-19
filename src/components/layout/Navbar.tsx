@@ -108,21 +108,10 @@ export function Navbar({ onOpenBusinessSignup }: NavbarProps) {
           <a
             href="#top"
             onClick={(e) => handleNav(e, "#top")}
-            className="shrink-0 rounded-xl focus-visible:outline-offset-4"
+            className="flex shrink-0 items-center rounded-xl focus-visible:outline-offset-4"
             aria-label="Tanu home"
           >
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={mode}
-                initial={{ opacity: 0, y: -6, filter: "blur(6px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: 6, filter: "blur(6px)" }}
-                transition={{ duration: 0.35 }}
-                className="flex items-center"
-              >
-                <BrandLogo mode={mode} className="h-8" invert={theme === "dark"} />
-              </motion.span>
-            </AnimatePresence>
+            <BrandLogo mode={mode} className="h-8" />
           </a>
 
           <nav className="hidden items-center gap-1 lg:flex">
@@ -207,7 +196,7 @@ export function Navbar({ onOpenBusinessSignup }: NavbarProps) {
               className="fixed inset-y-0 right-0 z-[60] flex w-[88vw] max-w-sm flex-col overflow-y-auto border-l border-border bg-background px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[max(1.25rem,env(safe-area-inset-top))] shadow-[-24px_0_70px_-30px_rgba(8,11,36,.55)]"
             >
               <div className="flex items-center justify-between">
-                <BrandLogo mode={mode} invert={theme === "dark"} />
+                <BrandLogo mode={mode} />
                 <button
                   className="h-9 w-9 grid place-items-center rounded-md border border-border"
                   onClick={() => setOpen(false)}

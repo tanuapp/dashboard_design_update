@@ -21,20 +21,28 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Холбоо барих - TanuSoft" },
+      { title: "Холбоо барих — TANU" },
       {
         name: "description",
         content:
-          "TanuSoft ХХК-тай цахим шуудан, утас болон оффисын байршлаар холбогдох албан ёсны мэдээлэл.",
+          "TANU багтай цахим шуудан, утас болон оффисын байршлаар холбогдох албан ёсны мэдээлэл.",
       },
-      { property: "og:title", content: "Холбоо барих - TanuSoft" },
+      { property: "og:title", content: "Холбоо барих — TANU" },
       {
         property: "og:description",
-        content: "TanuSoft багтай холбогдох утас, цахим шуудан болон оффисын байршлын мэдээлэл.",
+        content: "TANU багтай холбогдох утас, цахим шуудан болон оффисын байршлын мэдээлэл.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "TANU" },
+      { property: "og:url", content: "https://www.tanu.mn/contact" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Холбоо барих — TANU" },
+      {
+        name: "twitter:description",
+        content: "TANU багтай холбогдох утас, цахим шуудан болон оффисын байршлын мэдээлэл.",
+      },
     ],
+    links: [{ rel: "canonical", href: "https://www.tanu.mn/contact" }],
   }),
   component: ContactPage,
 });

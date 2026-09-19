@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import { LayoutDashboard, TrendingUp, Users, CalendarClock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { bizStats, revenueSeries } from "@/lib/mock-data";
-import { TanuMark } from "@/components/brand/Logo";
+import { TanuBusinessMark } from "@/components/brand/Logo";
 
 export function BusinessHero({ onOpenSignup }: { onOpenSignup: () => void }) {
   return (
@@ -23,7 +23,7 @@ export function BusinessHero({ onOpenSignup }: { onOpenSignup: () => void }) {
           className="relative z-10"
         >
           <span className="inline-flex items-center gap-2.5 rounded-full border border-border/80 bg-surface/70 py-1.5 pl-1.5 pr-3.5 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground shadow-sm backdrop-blur">
-            <TanuMark variant="navy" className="h-7" />
+            <TanuBusinessMark className="h-7" />
             Tanu Business
           </span>
           <h1 className="mt-6 max-w-3xl text-4xl font-extrabold leading-[1.03] tracking-[-0.045em] sm:text-5xl lg:text-[4rem]">
@@ -106,7 +106,7 @@ function DashboardMockup() {
               <span className="h-2.5 w-2.5 rounded-full bg-green-400/70" />
             </div>
             <span className="ml-2 inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
-              <TanuMark variant="navy" className="h-5" />
+              <TanuBusinessMark className="h-5" />
               Tanu Business · Dashboard
             </span>
           </div>

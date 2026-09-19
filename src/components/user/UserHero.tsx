@@ -42,17 +42,19 @@ export function UserHero({ onSearch }: { onSearch: () => void }) {
             Үйлчилгээгээ web-ээр хялбар олоорой
           </span>
           <h1 className="mt-5 max-w-3xl text-[clamp(2rem,9.2vw,2.4rem)] font-extrabold leading-[1.06] tracking-[-0.045em] [overflow-wrap:anywhere] sm:mt-6 sm:text-5xl lg:text-[4.15rem]">
-            Өөрт хэрэгтэй үйлчилгээг
-            <br />
-            <span className="relative text-gradient-brand">
-              нэг дороос
-              <span className="absolute -bottom-1 left-0 h-px w-full bg-gradient-to-r from-[var(--brand)]/0 via-[var(--brand)]/70 to-[var(--brand-2)]/0" />
-            </span>{" "}
-            олоорой
+            <span className="block">Захиалга</span>
+            <span className="mt-1 flex flex-wrap items-baseline gap-x-[0.22em] sm:mt-2">
+              <span className="relative inline-block pb-1 text-gradient-brand">
+                бүртгэлийн
+                <span className="absolute -bottom-1 left-0 h-px w-full bg-gradient-to-r from-[var(--brand)]/0 via-[var(--brand)]/70 to-[var(--brand-2)]/0" />
+              </span>
+              <span>нэгдсэн платформ</span>
+            </span>
           </h1>
-          <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground md:text-lg md:leading-8">
-            Гоо сайхан, эмнэлэг, сургалт, тасалбар болон өдөр тутмын үйлчилгээг web-ээр хайж,
-            харьцуулаад Tanu апп-аар цагаа захиалаарай.
+          <p className="mt-6 max-w-xl border-l-2 border-[var(--brand)]/35 pl-4 text-base leading-7 text-muted-foreground md:pl-5 md:text-lg md:leading-8">
+            Эмнэлэг, Гоо сайханы салон, Сургалт, Кино тасалбар, гэх мэт үйлчилгээний байгуулгуудын
+            цаг захиалга мөн Тоглолт кино театр үзвэрийн тасалбар зэрэг үйлчилгээг нэг дороос
+            захиалан аваарай
           </p>
 
           <div className="mt-7 grid gap-3 sm:mt-8 sm:flex sm:flex-wrap sm:items-center">

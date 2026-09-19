@@ -12,7 +12,10 @@ import { TicketDataProvider } from "@/features/ticket/data/TicketDataProvider";
 
 export const Route = createFileRoute("/business/dashboard")({
   head: () => ({
-    meta: [{ title: "Tanu Business — Хяналтын самбар" }],
+    meta: [
+      { title: "TANU Business — Хяналтын самбар" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
   }),
   component: BusinessDashboardLayout,
 });

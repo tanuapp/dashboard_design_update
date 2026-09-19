@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
-    meta: [{ title: "Нэвтрэх — Tanu" }],
+    meta: [{ title: "Нэвтрэх — TANU" }, { name: "robots", content: "noindex, nofollow" }],
   }),
   component: LoginPage,
 });

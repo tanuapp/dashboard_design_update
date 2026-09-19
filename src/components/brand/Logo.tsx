@@ -9,85 +9,45 @@ type MarkProps = LogoProps & {
   variant?: "gradient" | "navy" | "light";
 };
 
-/**
- * The supplied Tanu mark, cleaned onto a transparent canvas.
- * `variant` only changes its presentation; the logo geometry stays untouched.
- */
-export function TanuMark({ className, invert = false, variant = "navy" }: MarkProps) {
-  const whiteMark = variant === "gradient" || variant === "light" || invert;
+const officialTanuLogo = "/brand/logowhite.png";
+const businessTanuMark = "/brand/tanu-mark-navy.png";
 
+/** The supplied TANU mark is the single public-facing logo source. */
+function OfficialTanuLogo({ className, alt }: { className?: string; alt: string }) {
+  return (
+    <img
+      src={officialTanuLogo}
+      alt={alt}
+      className={cn("aspect-square w-auto shrink-0 object-contain rounded-md", className)}
+    />
+  );
+}
+
+/** Decorative use of the official TANU mark. */
+export function TanuMark({ className }: MarkProps) {
+  return <OfficialTanuLogo className={className} alt="" />;
+}
+
+export function TanuUserLogo({ className }: LogoProps) {
+  return <OfficialTanuLogo className={className} alt="TANU" />;
+}
+
+/** The established navy mark used throughout the Business product. */
+export function TanuBusinessMark({ className, invert = false }: LogoProps) {
   return (
     <span
       aria-hidden="true"
       className={cn(
-        "pointer-events-none relative inline-grid aspect-square shrink-0 select-none place-items-center overflow-hidden rounded-[28%]",
-        variant === "gradient" &&
-          "bg-[linear-gradient(145deg,#3455a9_0%,#2d7fc5_50%,#42c8e9_100%)] shadow-[0_10px_28px_-10px_rgba(35,137,214,.85)]",
-        variant === "navy" &&
-          (invert
-            ? "bg-[#0b1935] shadow-[0_10px_28px_-12px_rgba(2,9,26,.9)]"
-            : "border border-[#0b1935]/10 bg-white shadow-[0_8px_24px_-14px_rgba(11,25,53,.55)]"),
-        variant === "light" && "bg-white/10 ring-1 ring-white/15",
+        "inline-grid aspect-square shrink-0 place-items-center overflow-hidden rounded-[28%]",
+        invert ? "bg-[#0b1935]" : "border border-[#0b1935]/10 bg-white",
         className,
       )}
     >
       <img
-        src="/brand/tanu-mark-navy.png"
+        src={businessTanuMark}
         alt=""
-        className={cn(
-          "h-full w-full scale-[1.18] object-contain",
-          whiteMark && "brightness-0 invert",
-        )}
+        className={cn("h-full w-full scale-[1.18] object-contain", invert && "brightness-0 invert")}
       />
-      {variant === "gradient" && (
-        <span className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(94,224,247,.42),transparent_52%)]" />
-      )}
-    </span>
-  );
-}
-
-export function TanuUserLogo({ className, invert }: LogoProps) {
-  return <TanuUserLogoContent className={className} invert={invert} />;
-}
-
-function TanuUserBrandMark({ invert = false }: Pick<LogoProps, "invert">) {
-  return (
-    <span
-      aria-hidden="true"
-      className={cn(
-        "relative inline-grid aspect-square h-full shrink-0 place-items-center overflow-hidden rounded-[28%] shadow-[0_10px_28px_-14px_rgba(22,22,120,.55)]",
-        invert ? "bg-[#080936]" : "border border-[#211a86]/10 bg-white",
-      )}
-    >
-      <img
-        src={invert ? "/brand/logowhite.png" : "/brand/tanu-mark-navy.png"}
-        alt=""
-        className={cn(
-          "h-full w-full object-contain",
-          invert ? "scale-100" : "scale-[1.18]",
-        )}
-      />
-      {!invert && (
-        <span className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_65%_12%,rgba(137,72,238,.16),transparent_48%)]" />
-      )}
-    </span>
-  );
-}
-
-function TanuUserLogoContent({ className, invert = false }: LogoProps) {
-  return (
-    <span
-      className={cn(
-        "inline-flex h-10 w-auto items-center gap-2.5",
-        invert ? "text-white" : "text-[#100f5f]",
-        className,
-      )}
-      aria-label="Tanu"
-    >
-      <TanuUserBrandMark invert={invert} />
-      <span className="font-display text-[1.28em] font-extrabold leading-none tracking-[-0.06em]">
-        tanu
-      </span>
     </span>
   );
 }
@@ -95,10 +55,14 @@ function TanuUserLogoContent({ className, invert = false }: LogoProps) {
 export function TanuBusinessLogo({ className, invert = false }: LogoProps) {
   return (
     <span
-      className={cn("inline-flex h-10 w-auto items-center gap-2.5 text-foreground", className)}
-      aria-label="Tanu Business"
+      className={cn(
+        "inline-flex h-10 w-auto items-center gap-2.5",
+        invert ? "text-white" : "text-foreground",
+        className,
+      )}
+      aria-label="TANU Business"
     >
-      <TanuMark variant="navy" invert={invert} className="h-full" />
+      <TanuBusinessMark className="h-full" invert={invert} />
       <span className="flex flex-col justify-center leading-none">
         <span className="font-display text-[1.08em] font-extrabold tracking-[-0.055em]">tanu</span>
         <span className="mt-1 text-[0.42em] font-bold uppercase tracking-[0.22em] text-muted-foreground">
@@ -109,11 +73,11 @@ export function TanuBusinessLogo({ className, invert = false }: LogoProps) {
   );
 }
 
-/** Auto-switching logo for the current Tanu product mode. */
+/** Auto-switching logo for the current TANU product mode. */
 export function BrandLogo({ mode, className, invert }: LogoProps & { mode: "user" | "business" }) {
   return mode === "business" ? (
     <TanuBusinessLogo className={className} invert={invert} />
   ) : (
-    <TanuUserLogoContent className={className} invert={invert} />
+    <OfficialTanuLogo className={className} alt="TANU" />
   );
 }

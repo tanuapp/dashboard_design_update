@@ -9,13 +9,24 @@ import { privacyData, type PrivacySection } from "@/lib/privacy";
 export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [
-      { title: "Privacy Policy - TanuSoft" },
+      { title: "Нууцлалын бодлого — TANU" },
       {
         name: "description",
         content:
-          "Tanu Job апп болон TanuSoft үйлчилгээний нууцлалын бодлого. Хувийн мэдээллийг хэрхэн цуглуулж, ашиглаж, хамгаалдаг талаарх албан ёсны мэдээлэл.",
+          "TANU үйлчилгээний нууцлалын бодлого. Хувийн мэдээллийг хэрхэн цуглуулж, ашиглаж, хамгаалдаг талаарх албан ёсны мэдээлэл.",
       },
+      { property: "og:title", content: "Нууцлалын бодлого — TANU" },
+      {
+        property: "og:description",
+        content:
+          "TANU үйлчилгээний нууцлалын бодлого. Хувийн мэдээллийг хэрхэн цуглуулж, ашиглаж, хамгаалдаг талаарх албан ёсны мэдээлэл.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "TANU" },
+      { property: "og:url", content: "https://www.tanu.mn/privacy" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://www.tanu.mn/privacy" }],
   }),
   component: PrivacyPage,
 });

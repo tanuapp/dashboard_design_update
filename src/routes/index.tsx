@@ -23,22 +23,49 @@ import {
 } from "@/components/business/BusinessSections";
 import { BusinessPackages } from "@/components/business/BusinessPackages";
 
+const homeTitle = "TANU web Захиалга бүртгэлийн нэгдсэн платформ";
+const homeDescription =
+  "Эмнэлэг Гоо сайхны салон Сургалт гэх мэт үйлчилгээний байгууллагуудын цаг захиалга мөн Тоглолт кино театр үзвэрийн тасалбар зэрэг үйлчилгээг нэг дороос захиалан аваарай";
+const homeUrl = "https://www.tanu.mn/";
+const socialImageUrl = "https://www.tanu.mn/brand/logowhite.png";
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Tanu — Үйлчилгээ хайх болон бизнесээ удирдах платформ" },
-      {
-        name: "description",
-        content:
-          "Гоо сайхан, эрүүл мэнд, сургалт, спорт болон өдөр тутмын үйлчилгээг web-ээр хайж, Tanu апп-аар цаг захиалаарай. Байгууллагууд Tanu Business-ээр үйл ажиллагаагаа удирдана.",
-      },
-      { property: "og:title", content: "Tanu — Үйлчилгээгээ олоод апп-аар захиалаарай" },
-      {
-        property: "og:description",
-        content: "Tanu web-ээр үйлчилгээ хайж, харьцуулаад, мобайл апп-аар цаг захиалах боломжтой.",
-      },
+      { title: homeTitle },
+      { name: "description", content: homeDescription },
+      { property: "og:title", content: homeTitle },
+      { property: "og:description", content: homeDescription },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "TANU" },
+      { property: "og:url", content: homeUrl },
+      { property: "og:image", content: socialImageUrl },
+      { property: "og:image:alt", content: "TANU" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: homeTitle },
+      { name: "twitter:description", content: homeDescription },
+      { name: "twitter:image", content: socialImageUrl },
+    ],
+    links: [{ rel: "canonical", href: homeUrl }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify([
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "TANU",
+            url: homeUrl,
+            logo: socialImageUrl,
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "TANU",
+            url: homeUrl,
+          },
+        ]),
+      },
     ],
   }),
   component: Page,

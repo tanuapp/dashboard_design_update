@@ -41,7 +41,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: { error: unknown; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -84,12 +84,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Tanu — Үйлчилгээ хайх болон бизнесээ удирдах платформ" },
-      {
-        name: "description",
-        content:
-          "Tanu — гоо сайхан, эрүүл мэнд, спорт, сургалт болон өдөр тутмын үйлчилгээг web-ээр хайж, мобайл апп-аар цаг захиалах платформ. Байгууллагууд Tanu Business-ээр удирдана.",
-      },
+      { name: "application-name", content: "TANU" },
+      { name: "apple-mobile-web-app-title", content: "TANU" },
+      { name: "theme-color", content: "#241080" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -99,8 +96,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap",
       },
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/brand/tanu-mark-navy.png", type: "image/png" },
-      { rel: "apple-touch-icon", href: "/brand/tanu-mark-navy.png" },
+      { rel: "icon", href: "/favicon.ico", sizes: "any" },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png" },
+      { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+      { rel: "manifest", href: "/site.webmanifest" },
     ],
     scripts: [{ children: themeBootScript }],
   }),
@@ -112,7 +112,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="mn">
       <head>
         <HeadContent />
       </head>
