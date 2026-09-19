@@ -6,6 +6,7 @@ export const PLAY_STORE_URL =
 export const APP_QR_SRC = "/brand/qr.svg";
 
 const COMPANY_API_URL = "https://api.tanusoft.mn/api/v1/company";
+const BANNER_API_URL = "https://api.tanusoft.mn/api/v1/banner";
 const PACKAGE_API_URL = "https://api.tanusoft.mn/api/v1/option";
 const UPLOAD_BASE_URL = "https://api.tanusoft.mn/uploads";
 
@@ -44,6 +45,18 @@ type CompanyResponse = {
   data?: ApiCompany[];
 };
 
+type ApiBanner = {
+  _id?: string;
+  companyId?: string;
+  photo?: string;
+  createdAt?: string;
+};
+
+type BannerResponse = {
+  success?: boolean;
+  data?: ApiBanner[];
+};
+
 export type LandingCategory = {
   name: string;
   icon: string;
@@ -62,6 +75,7 @@ export type LandingService = {
   tag: string;
   category: string;
   hue: number;
+  bannerImage?: string;
   image?: string;
 };
 
@@ -99,7 +113,10 @@ export type LandingPackage = {
   badge?: string;
 };
 
-const packageFallbacks: Record<string, Pick<LandingPackage, "title" | "description" | "color" | "features">> = {
+const packageFallbacks: Record<
+  string,
+  Pick<LandingPackage, "title" | "description" | "color" | "features">
+> = {
   free: {
     title: "Free багц",
     description: "Эхний хэрэглээнд тохиромжтой үндсэн багц.",
@@ -152,6 +169,13 @@ export async function fetchLandingCompanies() {
   return Array.isArray(payload.data) ? payload.data : [];
 }
 
+export async function fetchLandingBanners() {
+  const response = await fetch(BANNER_API_URL);
+  if (!response.ok) throw new Error(`Banner API failed: ${response.status}`);
+  const payload = (await response.json()) as BannerResponse;
+  return Array.isArray(payload.data) ? payload.data : [];
+}
+
 export async function fetchLandingPackages() {
   const response = await fetch(PACKAGE_API_URL);
   if (!response.ok) throw new Error(`Package API failed: ${response.status}`);
@@ -181,7 +205,12 @@ export function buildLandingPackages(packages: ApiPackage[]): LandingPackage[] {
       description: item.description || fallback.description,
       employeeCount: Number(item.employeeCount || 0),
       features: Array.from(new Set([...fallback.features, ...featureFlags])).slice(0, 7),
-      badge: name === "pro" ? "Санал болгох" : name === "standart" || name === "standard" ? "Идэвхтэй" : undefined,
+      badge:
+        name === "pro"
+          ? "Санал болгох"
+          : name === "standart" || name === "standard"
+            ? "Идэвхтэй"
+            : undefined,
     };
   });
 
@@ -219,11 +248,28 @@ export function buildLandingCategories(companies: ApiCompany[]): LandingCategory
   }));
 }
 
-export function buildLandingServices(companies: ApiCompany[]): LandingService[] {
+export function buildLandingServices(
+  companies: ApiCompany[],
+  banners: ApiBanner[] = [],
+): LandingService[] {
   if (companies.length === 0) return fallbackServices;
+
+  const bannersByCompanyId = new Map<string, ApiBanner>();
+  for (const banner of banners) {
+    if (!banner.companyId || !banner.photo) continue;
+
+    const existing = bannersByCompanyId.get(banner.companyId);
+    if (
+      !existing ||
+      new Date(banner.createdAt ?? 0).getTime() > new Date(existing.createdAt ?? 0).getTime()
+    ) {
+      bannersByCompanyId.set(banner.companyId, banner);
+    }
+  }
 
   return companies.map((company, index) => {
     const category = getPrimaryCategory(company);
+    const companyId = company._id ?? company.id;
     return {
       id: company._id ?? company.id ?? `company-${index}`,
       org: company.name?.trim() || "Tanu байгууллага",
@@ -236,24 +282,28 @@ export function buildLandingServices(companies: ApiCompany[]): LandingService[] 
       tag: index < 6 ? "featured" : index % 3 === 0 ? "today" : index % 3 === 1 ? "nearby" : "new",
       category,
       hue: 185 + ((index * 23) % 90),
-      image: toAssetUrl(company.logo || company.cover || company.photo),
+      bannerImage: toBannerAssetUrl(
+        companyId ? bannersByCompanyId.get(companyId)?.photo : undefined,
+      ),
     };
   });
 }
 
 function getPrimaryCategory(company: ApiCompany) {
   const categories = Array.isArray(company.category) ? company.category : [];
-  return (
-    categories.find((category) => !category.parent)?.name ||
-    categories[0]?.name ||
-    "Бусад"
-  );
+  return categories.find((category) => !category.parent)?.name || categories[0]?.name || "Бусад";
 }
 
 function toAssetUrl(file?: string) {
   if (!file) return undefined;
   if (/^https?:\/\//i.test(file) || file.startsWith("data:")) return file;
   return `${UPLOAD_BASE_URL}/${encodeURIComponent(file)}`;
+}
+
+function toBannerAssetUrl(file?: string) {
+  if (!file) return undefined;
+  if (/^https?:\/\//i.test(file) || file.startsWith("data:")) return file;
+  return `${UPLOAD_BASE_URL}/banner/photo/${encodeURIComponent(file)}`;
 }
 
 function packageOrder(name: string) {

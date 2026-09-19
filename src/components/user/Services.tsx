@@ -4,6 +4,7 @@ import { Heart, MapPin, Star, Clock, Smartphone } from "lucide-react";
 import { services as fallbackServices } from "@/lib/mock-data";
 import {
   APP_STORE_URL,
+  fetchLandingBanners,
   buildLandingServices,
   fetchLandingCompanies,
   type LandingService,
@@ -29,8 +30,9 @@ export function Services({ categoryFilter }: { categoryFilter: string | null }) 
     let cancelled = false;
 
     fetchLandingCompanies()
-      .then((companies) => {
-        if (!cancelled) setServices(buildLandingServices(companies));
+      .then(async (companies) => {
+        const banners = await fetchLandingBanners().catch(() => []);
+        if (!cancelled) setServices(buildLandingServices(companies, banners));
       })
       .catch(() => {
         if (!cancelled) setServices(fallbackServices);
@@ -138,9 +140,9 @@ function ServiceCard({
           background: `linear-gradient(135deg, oklch(0.7 0.18 ${s.hue}), oklch(0.5 0.22 ${s.hue + 30}))`,
         }}
       >
-        {s.image && (
+        {(s.bannerImage ?? s.image) && (
           <img
-            src={s.image}
+            src={s.bannerImage ?? s.image}
             alt=""
             className="absolute inset-0 h-full w-full object-cover opacity-85 transition duration-500 group-hover:scale-105"
             loading="lazy"
@@ -182,7 +184,9 @@ function ServiceCard({
         <div className="mt-4 flex items-center justify-between">
           <div>
             <p className="text-[10px] text-muted-foreground">Эхлэх үнэ</p>
-            <p className="font-bold">{s.price > 0 ? `${s.price.toLocaleString()}₮` : "Аппаас харах"}</p>
+            <p className="font-bold">
+              {s.price > 0 ? `${s.price.toLocaleString()}₮` : "Аппаас харах"}
+            </p>
           </div>
           <Button
             size="sm"
