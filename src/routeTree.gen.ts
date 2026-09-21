@@ -16,6 +16,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as BusinessChatRouteImport } from './routes/business.chat'
 import { Route as BusinessDashboardRouteImport } from './routes/business.dashboard'
 import { Route as BusinessRegisterRouteImport } from './routes/business.register'
+import { Route as EventEventIdRouteImport } from './routes/event.$eventId'
 import { Route as BusinessDashboardIndexRouteImport } from './routes/business.dashboard.index'
 import { Route as BusinessDashboardBillingRouteImport } from './routes/business.dashboard.billing'
 import { Route as BusinessDashboardBookingsRouteImport } from './routes/business.dashboard.bookings'
@@ -95,6 +96,11 @@ const BusinessDashboardRoute = BusinessDashboardRouteImport.update({
 const BusinessRegisterRoute = BusinessRegisterRouteImport.update({
   id: '/business/register',
   path: '/business/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventEventIdRoute = EventEventIdRouteImport.update({
+  id: '/event/$eventId',
+  path: '/event/$eventId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BusinessDashboardIndexRoute = BusinessDashboardIndexRouteImport.update({
@@ -374,6 +380,7 @@ export interface FileRoutesByFullPath {
   '/business/chat': typeof BusinessChatRoute
   '/business/dashboard': typeof BusinessDashboardRouteWithChildren
   '/business/register': typeof BusinessRegisterRoute
+  '/event/$eventId': typeof EventEventIdRoute
   '/business/dashboard/billing': typeof BusinessDashboardBillingRoute
   '/business/dashboard/bookings': typeof BusinessDashboardBookingsRoute
   '/business/dashboard/branches': typeof BusinessDashboardBranchesRouteWithChildren
@@ -427,6 +434,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/business/chat': typeof BusinessChatRoute
   '/business/register': typeof BusinessRegisterRoute
+  '/event/$eventId': typeof EventEventIdRoute
   '/business/dashboard/billing': typeof BusinessDashboardBillingRoute
   '/business/dashboard/bookings': typeof BusinessDashboardBookingsRoute
   '/business/dashboard/calendar': typeof BusinessDashboardCalendarRoute
@@ -477,6 +485,7 @@ export interface FileRoutesById {
   '/business/chat': typeof BusinessChatRoute
   '/business/dashboard': typeof BusinessDashboardRouteWithChildren
   '/business/register': typeof BusinessRegisterRoute
+  '/event/$eventId': typeof EventEventIdRoute
   '/business/dashboard/billing': typeof BusinessDashboardBillingRoute
   '/business/dashboard/bookings': typeof BusinessDashboardBookingsRoute
   '/business/dashboard/branches': typeof BusinessDashboardBranchesRouteWithChildren
@@ -533,6 +542,7 @@ export interface FileRouteTypes {
     | '/business/chat'
     | '/business/dashboard'
     | '/business/register'
+    | '/event/$eventId'
     | '/business/dashboard/billing'
     | '/business/dashboard/bookings'
     | '/business/dashboard/branches'
@@ -586,6 +596,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/business/chat'
     | '/business/register'
+    | '/event/$eventId'
     | '/business/dashboard/billing'
     | '/business/dashboard/bookings'
     | '/business/dashboard/calendar'
@@ -635,6 +646,7 @@ export interface FileRouteTypes {
     | '/business/chat'
     | '/business/dashboard'
     | '/business/register'
+    | '/event/$eventId'
     | '/business/dashboard/billing'
     | '/business/dashboard/bookings'
     | '/business/dashboard/branches'
@@ -690,6 +702,7 @@ export interface RootRouteChildren {
   BusinessChatRoute: typeof BusinessChatRoute
   BusinessDashboardRoute: typeof BusinessDashboardRouteWithChildren
   BusinessRegisterRoute: typeof BusinessRegisterRoute
+  EventEventIdRoute: typeof EventEventIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -741,6 +754,13 @@ declare module '@tanstack/react-router' {
       path: '/business/register'
       fullPath: '/business/register'
       preLoaderRoute: typeof BusinessRegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/event/$eventId': {
+      id: '/event/$eventId'
+      path: '/event/$eventId'
+      fullPath: '/event/$eventId'
+      preLoaderRoute: typeof EventEventIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/business/dashboard/': {
@@ -1252,6 +1272,7 @@ const rootRouteChildren: RootRouteChildren = {
   BusinessChatRoute: BusinessChatRoute,
   BusinessDashboardRoute: BusinessDashboardRouteWithChildren,
   BusinessRegisterRoute: BusinessRegisterRoute,
+  EventEventIdRoute: EventEventIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
