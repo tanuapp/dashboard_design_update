@@ -16,7 +16,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { APP_STORE_URL, PLAY_STORE_URL } from "@/lib/company-api";
 import {
-  EVENT_APP_LINK_BASE_URL,
+  EVENT_ANDROID_DEEP_LINK_BASE_URL,
   eventImageUrl,
   fetchPublicEvent,
   formatEventDate,
@@ -28,7 +28,7 @@ import {
 } from "@/lib/event-api";
 
 export const Route = createFileRoute("/event/$eventId")({
-  head: () => ({
+  head: ({ params }) => ({
     meta: [
       { title: "Арга хэмжээ — TANU" },
       {
@@ -43,6 +43,10 @@ export const Route = createFileRoute("/event/$eventId")({
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "TANU" },
       { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "apple-itunes-app",
+        content: `app-id=6737768604, app-argument=https://www.tanu.mn/event/${encodeURIComponent(params.eventId)}`,
+      },
     ],
   }),
   component: EventLandingPage,
@@ -57,11 +61,6 @@ function isMobile(): boolean {
 function isIos(): boolean {
   if (typeof navigator === "undefined") return false;
   return /iphone|ipad|ipod/i.test(navigator.userAgent);
-}
-
-function isCustomerAppLinkPage(): boolean {
-  if (typeof window === "undefined") return false;
-  return window.location.hostname.toLowerCase() === "deeplink.tanu.mn";
 }
 
 function EventLandingPage() {
@@ -89,14 +88,15 @@ function EventLandingPage() {
     return () => controller.abort();
   }, [eventId]);
 
-  // Cross from the public website to the customer-only Universal Link. If the
-  // app is absent, that domain renders this page too; do not redirect again or
-  // the two web hosts would reload forever.
+  // Android has no scheme collision, so retain the fast automatic handoff.
+  // iOS deliberately stays on this page and shows Apple's native Smart App
+  // Banner: its App Store ID selects TANU Customer even while an old Business
+  // release still has the legacy `tanu://` scheme registered.
   useEffect(() => {
-    if (autoOpenAttempted.current || !isMobile() || isCustomerAppLinkPage()) return;
+    if (autoOpenAttempted.current || !isMobile() || isIos()) return;
     autoOpenAttempted.current = true;
     const timer = window.setTimeout(() => {
-      window.location.replace(`${EVENT_APP_LINK_BASE_URL}/${encodeURIComponent(eventId)}`);
+      window.location.href = `${EVENT_ANDROID_DEEP_LINK_BASE_URL}/${encodeURIComponent(eventId)}`;
     }, 900);
     return () => window.clearTimeout(timer);
   }, [eventId]);
@@ -105,7 +105,13 @@ function EventLandingPage() {
   const pricing = useMemo(() => sessionPricing(session), [session]);
 
   const openInApp = () => {
-    window.location.assign(`${EVENT_APP_LINK_BASE_URL}/${encodeURIComponent(eventId)}`);
+    if (isIos()) {
+      // Opens the exact customer App Store listing. When installed, iOS shows
+      // OPEN; the Smart App Banner above remains the context-preserving path.
+      window.location.assign(APP_STORE_URL);
+      return;
+    }
+    window.location.href = `${EVENT_ANDROID_DEEP_LINK_BASE_URL}/${encodeURIComponent(eventId)}`;
   };
 
   const storeUrl = isIos() ? APP_STORE_URL : PLAY_STORE_URL;
