@@ -67,6 +67,7 @@ function EventLandingPage() {
   const { eventId } = Route.useParams();
   const [event, setEvent] = useState<PublicEvent | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "missing" | "error">("loading");
+  const [showIosOpenHint, setShowIosOpenHint] = useState(false);
   const autoOpenAttempted = useRef(false);
 
   useEffect(() => {
@@ -106,9 +107,12 @@ function EventLandingPage() {
 
   const openInApp = () => {
     if (isIos()) {
-      // Opens the exact customer App Store listing. When installed, iOS shows
-      // OPEN; the Smart App Banner above remains the context-preserving path.
-      window.location.assign(APP_STORE_URL);
+      // Safari does not expose a JavaScript API that can press its native
+      // Smart App Banner. Avoid the App Store redirect (and never use the
+      // collision-prone legacy scheme); guide the user to the customer-only
+      // OPEN control that is already visible at the top of the page.
+      setShowIosOpenHint(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
     window.location.href = `${EVENT_ANDROID_DEEP_LINK_BASE_URL}/${encodeURIComponent(eventId)}`;
@@ -251,6 +255,15 @@ function EventLandingPage() {
                     Апп татах
                   </a>
                 </div>
+
+                {showIosOpenHint && (
+                  <p
+                    role="status"
+                    className="mt-3 rounded-xl border border-[var(--brand)]/20 bg-background/80 px-4 py-3 text-center text-sm font-semibold text-foreground"
+                  >
+                    Дэлгэцийн дээд хэсэгт байгаа OPEN товчийг дарж TANU апп руу орно уу.
+                  </p>
+                )}
               </div>
             </div>
           </article>
