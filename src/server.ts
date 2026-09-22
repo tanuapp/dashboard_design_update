@@ -7,6 +7,46 @@ type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
 };
 
+const CUSTOMER_APP_ID = "X773389H5L.com.tanusoft.tanubooking";
+
+/**
+ * Authorizes only the TANU customer app for event Universal Links.
+ *
+ * Serving this in code guarantees the extensionless response has Apple's
+ * required JSON content type and does not redirect. Serving it on tanu.mn as
+ * well as deeplink.tanu.mn revokes the old Business app's server-side link
+ * association when Apple's cache refreshes.
+ */
+function appleAppSiteAssociation(request: Request): Response | null {
+  const { pathname } = new URL(request.url);
+  if (
+    pathname !== "/.well-known/apple-app-site-association" &&
+    pathname !== "/apple-app-site-association"
+  ) {
+    return null;
+  }
+
+  return Response.json(
+    {
+      applinks: {
+        apps: [],
+        details: [
+          {
+            appID: CUSTOMER_APP_ID,
+            paths: ["/event/*"],
+          },
+        ],
+      },
+    },
+    {
+      headers: {
+        "cache-control": "public, max-age=3600",
+        "content-type": "application/json; charset=utf-8",
+      },
+    },
+  );
+}
+
 let serverEntryPromise: Promise<ServerEntry> | undefined;
 
 async function getServerEntry(): Promise<ServerEntry> {
@@ -47,6 +87,9 @@ function isH3SwallowedErrorBody(body: string): boolean {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const association = appleAppSiteAssociation(request);
+      if (association) return association;
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);

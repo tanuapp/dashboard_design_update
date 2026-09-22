@@ -13,7 +13,9 @@
 const TICKET_API_URL = "https://api.tanusoft.mn/api/v1/ticket";
 const UPLOAD_BASE_URL = "https://api.tanusoft.mn/uploads";
 
-export const EVENT_DEEP_LINK_SCHEME = "tanu://tanu.mn/event";
+// Customer-only Universal Link. Do not use the legacy `tanu://` scheme here:
+// an older TANU Business release also registered it and iOS may open that app.
+export const EVENT_APP_LINK_BASE_URL = "https://deeplink.tanu.mn/event";
 
 export type EventTicketType = {
   id: string;

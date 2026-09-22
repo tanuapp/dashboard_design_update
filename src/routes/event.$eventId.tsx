@@ -16,7 +16,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { APP_STORE_URL, PLAY_STORE_URL } from "@/lib/company-api";
 import {
-  EVENT_DEEP_LINK_SCHEME,
+  EVENT_APP_LINK_BASE_URL,
   eventImageUrl,
   fetchPublicEvent,
   formatEventDate,
@@ -59,6 +59,11 @@ function isIos(): boolean {
   return /iphone|ipad|ipod/i.test(navigator.userAgent);
 }
 
+function isCustomerAppLinkPage(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.location.hostname.toLowerCase() === "deeplink.tanu.mn";
+}
+
 function EventLandingPage() {
   const { eventId } = Route.useParams();
   const [event, setEvent] = useState<PublicEvent | null>(null);
@@ -84,15 +89,14 @@ function EventLandingPage() {
     return () => controller.abort();
   }, [eventId]);
 
-  // On a phone, try handing straight over to the app. This only fires where
-  // the App Link did not already take over — if it had, this page would never
-  // have rendered. It runs once, and never on desktop where the scheme would
-  // simply fail and show an error dialog.
+  // Cross from the public website to the customer-only Universal Link. If the
+  // app is absent, that domain renders this page too; do not redirect again or
+  // the two web hosts would reload forever.
   useEffect(() => {
-    if (autoOpenAttempted.current || !isMobile()) return;
+    if (autoOpenAttempted.current || !isMobile() || isCustomerAppLinkPage()) return;
     autoOpenAttempted.current = true;
     const timer = window.setTimeout(() => {
-      window.location.href = `${EVENT_DEEP_LINK_SCHEME}/${encodeURIComponent(eventId)}`;
+      window.location.replace(`${EVENT_APP_LINK_BASE_URL}/${encodeURIComponent(eventId)}`);
     }, 900);
     return () => window.clearTimeout(timer);
   }, [eventId]);
@@ -101,7 +105,7 @@ function EventLandingPage() {
   const pricing = useMemo(() => sessionPricing(session), [session]);
 
   const openInApp = () => {
-    window.location.href = `${EVENT_DEEP_LINK_SCHEME}/${encodeURIComponent(eventId)}`;
+    window.location.assign(`${EVENT_APP_LINK_BASE_URL}/${encodeURIComponent(eventId)}`);
   };
 
   const storeUrl = isIos() ? APP_STORE_URL : PLAY_STORE_URL;

@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "X773389H5L.com.tanusoft.tanubooking",
+        "paths": ["/event/*"]
+      }
+    ]
+  }
+}
