@@ -47,6 +47,25 @@ export type PublicEvent = {
   sessions: EventSession[];
 };
 
+/** The next session a list row carries; only sellable events have one. */
+export type EventSummarySession = {
+  id: string;
+  startsAt: string | null;
+  venueName: string;
+  city: string;
+};
+
+/** One row of the public event list, which is lighter than the detail. */
+export type PublicEventSummary = {
+  id: string;
+  title: string;
+  shortDescription: string;
+  category: string;
+  coverImage: string;
+  organizerName: string;
+  nextSession: EventSummarySession | null;
+};
+
 function text(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
@@ -153,6 +172,68 @@ export async function fetchPublicEvent(
   return parseEvent(body.data ?? body);
 }
 
+function parseEventSummary(raw: unknown): PublicEventSummary | null {
+  if (!raw || typeof raw !== "object") return null;
+  const row = raw as Record<string, unknown>;
+  const id = text(row._id) || text(row.id);
+  if (!id) return null;
+
+  let nextSession: EventSummarySession | null = null;
+  if (row.nextSession && typeof row.nextSession === "object") {
+    const session = row.nextSession as Record<string, unknown>;
+    const sessionId = text(session._id) || text(session.id);
+    if (sessionId) {
+      nextSession = {
+        id: sessionId,
+        startsAt: isoOrNull(session.startsAt),
+        venueName: text(session.venueName),
+        city: text(session.city),
+      };
+    }
+  }
+
+  return {
+    id,
+    title: text(row.title),
+    shortDescription: text(row.shortDescription),
+    category: text(row.category),
+    coverImage: text(row.coverImage),
+    organizerName: text(row.organizerName),
+    nextSession,
+  };
+}
+
+/**
+ * Fetches the public event list.
+ *
+ * The backend already limits it to approved/published public events that
+ * still have an upcoming active session, ordered by that session's start.
+ * The list carries no ticket prices; those come from the detail endpoint.
+ */
+export async function fetchPublicEvents(
+  options: { limit?: number; signal?: AbortSignal } = {},
+): Promise<PublicEventSummary[]> {
+  const params = new URLSearchParams();
+  if (options.limit) params.set("limit", String(options.limit));
+  const query = params.toString();
+
+  const response = await fetch(`${TICKET_API_URL}/discover/events${query ? `?${query}` : ""}`, {
+    signal: options.signal,
+    headers: { Accept: "application/json" },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Event list request failed with status ${response.status}`);
+  }
+
+  const body = (await response.json()) as Record<string, unknown>;
+  return Array.isArray(body.data)
+    ? body.data
+        .map(parseEventSummary)
+        .filter((value): value is PublicEventSummary => value !== null)
+    : [];
+}
+
 /** The next session that has not started, else the first one. */
 export function nextSession(event: PublicEvent): EventSession | null {
   if (event.sessions.length === 0) return null;
@@ -195,6 +276,26 @@ const TIME = new Intl.DateTimeFormat("mn-MN", {
   minute: "2-digit",
   hour12: false,
 });
+
+const WEEKDAYS = ["Ням", "Даваа", "Мягмар", "Лхагва", "Пүрэв", "Баасан", "Бямба"];
+
+/**
+ * Day, month and weekday apart, for a calendar-style date tile. Spelled out
+ * by hand: Chrome ships no Mongolian locale data, so `Intl` would fall back
+ * to English month and weekday names there.
+ */
+export function eventDateParts(
+  iso: string | null,
+): { day: string; month: string; weekday: string } | null {
+  if (!iso) return null;
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return null;
+  return {
+    day: String(date.getDate()).padStart(2, "0"),
+    month: `${date.getMonth() + 1}-р сар`,
+    weekday: WEEKDAYS[date.getDay()],
+  };
+}
 
 export function formatEventDate(iso: string | null): string {
   if (!iso) return "";

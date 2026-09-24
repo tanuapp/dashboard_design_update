@@ -8,7 +8,7 @@ import { Footer } from "@/components/layout/Footer";
 import { BackToTop } from "@/components/layout/BackToTop";
 import { UserHero } from "@/components/user/UserHero";
 import { Categories } from "@/components/user/Categories";
-import { Services } from "@/components/user/Services";
+import { GuysEvents } from "@/components/user/GuysEvents";
 import { HowItWorks, Benefits } from "@/components/user/HowAndBenefits";
 import { MobileAppSection, Testimonials, UserCta } from "@/components/user/AppTestimonialsCta";
 import { PartnerMarquee } from "@/components/shared/PartnerMarquee";
@@ -114,7 +114,7 @@ function Shell() {
                   scrollToServices();
                 }}
               />
-              <Services categoryFilter={categoryFilter} />
+              <GuysEvents />
               <HowItWorks />
               <Benefits />
               <MobileAppSection />
