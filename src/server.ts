@@ -10,7 +10,7 @@ type ServerEntry = {
 const CUSTOMER_APP_ID = "X773389H5L.com.tanusoft.tanubooking";
 
 /**
- * Authorizes only the TANU customer app for event Universal Links.
+ * Authorizes only the TANU customer app for event and company Universal Links.
  *
  * Serving this in code guarantees the extensionless response has Apple's
  * required JSON content type and does not redirect. Serving it on tanu.mn as
@@ -33,7 +33,7 @@ function appleAppSiteAssociation(request: Request): Response | null {
         details: [
           {
             appID: CUSTOMER_APP_ID,
-            paths: ["/event/*"],
+            paths: ["/event/*", "/company/*"],
           },
         ],
       },
