@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LegacyKeyRouteImport } from './routes/$legacyKey'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as GetAppRouteImport } from './routes/get-app'
 import { Route as LoginRouteImport } from './routes/login'
@@ -70,6 +71,11 @@ import { Route as BusinessDashboardTicketOrganizationIdVenuesVenueIdRouteImport 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegacyKeyRoute = LegacyKeyRouteImport.update({
+  id: '/$legacyKey',
+  path: '/$legacyKey',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -398,6 +404,7 @@ const BusinessDashboardTicketOrganizationIdVenuesVenueIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$legacyKey': typeof LegacyKeyRoute
   '/contact': typeof ContactRoute
   '/get-app': typeof GetAppRoute
   '/login': typeof LoginRoute
@@ -457,6 +464,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$legacyKey': typeof LegacyKeyRoute
   '/contact': typeof ContactRoute
   '/get-app': typeof GetAppRoute
   '/login': typeof LoginRoute
@@ -511,6 +519,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$legacyKey': typeof LegacyKeyRoute
   '/contact': typeof ContactRoute
   '/get-app': typeof GetAppRoute
   '/login': typeof LoginRoute
@@ -572,6 +581,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$legacyKey'
     | '/contact'
     | '/get-app'
     | '/login'
@@ -631,6 +641,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/$legacyKey'
     | '/contact'
     | '/get-app'
     | '/login'
@@ -684,6 +695,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/$legacyKey'
     | '/contact'
     | '/get-app'
     | '/login'
@@ -744,6 +756,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LegacyKeyRoute: typeof LegacyKeyRoute
   ContactRoute: typeof ContactRoute
   GetAppRoute: typeof GetAppRoute
   LoginRoute: typeof LoginRoute
@@ -764,6 +777,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$legacyKey': {
+      id: '/$legacyKey'
+      path: '/$legacyKey'
+      fullPath: '/$legacyKey'
+      preLoaderRoute: typeof LegacyKeyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -1346,6 +1366,7 @@ const BusinessDashboardRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LegacyKeyRoute: LegacyKeyRoute,
   ContactRoute: ContactRoute,
   GetAppRoute: GetAppRoute,
   LoginRoute: LoginRoute,

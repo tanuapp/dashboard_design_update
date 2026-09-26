@@ -12,10 +12,11 @@ const CUSTOMER_APP_ID = "X773389H5L.com.tanusoft.tanubooking";
 /**
  * Authorizes only the TANU customer app for event and company Universal Links.
  *
- * Serving this in code guarantees the extensionless response has Apple's
- * required JSON content type and does not redirect. Serving it on tanu.mn as
- * well as deeplink.tanu.mn revokes the old Business app's server-side link
- * association when Apple's cache refreshes.
+ * www.tanu.mn is the deep-link domain: shared company and event links, QR
+ * codes and the app all use it. Serving this in code guarantees the
+ * extensionless response has Apple's required JSON content type and does not
+ * redirect; listing only the customer app also revokes the old Business app's
+ * link association when Apple's cache refreshes.
  */
 function appleAppSiteAssociation(request: Request): Response | null {
   const { pathname } = new URL(request.url);
