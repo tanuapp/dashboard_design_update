@@ -11,13 +11,16 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as GetAppRouteImport } from './routes/get-app'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as BookSlugRouteImport } from './routes/book.$slug'
 import { Route as BusinessChatRouteImport } from './routes/business.chat'
 import { Route as BusinessDashboardRouteImport } from './routes/business.dashboard'
 import { Route as BusinessRegisterRouteImport } from './routes/business.register'
 import { Route as CompanyCompanyIdRouteImport } from './routes/company.$companyId'
 import { Route as EventEventIdRouteImport } from './routes/event.$eventId'
+import { Route as PublicSlugRouteImport } from './routes/public.$slug'
 import { Route as BusinessDashboardIndexRouteImport } from './routes/business.dashboard.index'
 import { Route as BusinessDashboardBillingRouteImport } from './routes/business.dashboard.billing'
 import { Route as BusinessDashboardBookingsRouteImport } from './routes/business.dashboard.bookings'
@@ -74,6 +77,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GetAppRoute = GetAppRouteImport.update({
+  id: '/get-app',
+  path: '/get-app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -82,6 +90,11 @@ const LoginRoute = LoginRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookSlugRoute = BookSlugRouteImport.update({
+  id: '/book/$slug',
+  path: '/book/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BusinessChatRoute = BusinessChatRouteImport.update({
@@ -107,6 +120,11 @@ const CompanyCompanyIdRoute = CompanyCompanyIdRouteImport.update({
 const EventEventIdRoute = EventEventIdRouteImport.update({
   id: '/event/$eventId',
   path: '/event/$eventId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicSlugRoute = PublicSlugRouteImport.update({
+  id: '/public/$slug',
+  path: '/public/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BusinessDashboardIndexRoute = BusinessDashboardIndexRouteImport.update({
@@ -381,13 +399,16 @@ const BusinessDashboardTicketOrganizationIdVenuesVenueIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/contact': typeof ContactRoute
+  '/get-app': typeof GetAppRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/book/$slug': typeof BookSlugRoute
   '/business/chat': typeof BusinessChatRoute
   '/business/dashboard': typeof BusinessDashboardRouteWithChildren
   '/business/register': typeof BusinessRegisterRoute
   '/company/$companyId': typeof CompanyCompanyIdRoute
   '/event/$eventId': typeof EventEventIdRoute
+  '/public/$slug': typeof PublicSlugRoute
   '/business/dashboard/billing': typeof BusinessDashboardBillingRoute
   '/business/dashboard/bookings': typeof BusinessDashboardBookingsRoute
   '/business/dashboard/branches': typeof BusinessDashboardBranchesRouteWithChildren
@@ -437,12 +458,15 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/contact': typeof ContactRoute
+  '/get-app': typeof GetAppRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/book/$slug': typeof BookSlugRoute
   '/business/chat': typeof BusinessChatRoute
   '/business/register': typeof BusinessRegisterRoute
   '/company/$companyId': typeof CompanyCompanyIdRoute
   '/event/$eventId': typeof EventEventIdRoute
+  '/public/$slug': typeof PublicSlugRoute
   '/business/dashboard/billing': typeof BusinessDashboardBillingRoute
   '/business/dashboard/bookings': typeof BusinessDashboardBookingsRoute
   '/business/dashboard/calendar': typeof BusinessDashboardCalendarRoute
@@ -488,13 +512,16 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/contact': typeof ContactRoute
+  '/get-app': typeof GetAppRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/book/$slug': typeof BookSlugRoute
   '/business/chat': typeof BusinessChatRoute
   '/business/dashboard': typeof BusinessDashboardRouteWithChildren
   '/business/register': typeof BusinessRegisterRoute
   '/company/$companyId': typeof CompanyCompanyIdRoute
   '/event/$eventId': typeof EventEventIdRoute
+  '/public/$slug': typeof PublicSlugRoute
   '/business/dashboard/billing': typeof BusinessDashboardBillingRoute
   '/business/dashboard/bookings': typeof BusinessDashboardBookingsRoute
   '/business/dashboard/branches': typeof BusinessDashboardBranchesRouteWithChildren
@@ -546,13 +573,16 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/contact'
+    | '/get-app'
     | '/login'
     | '/privacy'
+    | '/book/$slug'
     | '/business/chat'
     | '/business/dashboard'
     | '/business/register'
     | '/company/$companyId'
     | '/event/$eventId'
+    | '/public/$slug'
     | '/business/dashboard/billing'
     | '/business/dashboard/bookings'
     | '/business/dashboard/branches'
@@ -602,12 +632,15 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/contact'
+    | '/get-app'
     | '/login'
     | '/privacy'
+    | '/book/$slug'
     | '/business/chat'
     | '/business/register'
     | '/company/$companyId'
     | '/event/$eventId'
+    | '/public/$slug'
     | '/business/dashboard/billing'
     | '/business/dashboard/bookings'
     | '/business/dashboard/calendar'
@@ -652,13 +685,16 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/contact'
+    | '/get-app'
     | '/login'
     | '/privacy'
+    | '/book/$slug'
     | '/business/chat'
     | '/business/dashboard'
     | '/business/register'
     | '/company/$companyId'
     | '/event/$eventId'
+    | '/public/$slug'
     | '/business/dashboard/billing'
     | '/business/dashboard/bookings'
     | '/business/dashboard/branches'
@@ -709,13 +745,16 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ContactRoute: typeof ContactRoute
+  GetAppRoute: typeof GetAppRoute
   LoginRoute: typeof LoginRoute
   PrivacyRoute: typeof PrivacyRoute
+  BookSlugRoute: typeof BookSlugRoute
   BusinessChatRoute: typeof BusinessChatRoute
   BusinessDashboardRoute: typeof BusinessDashboardRouteWithChildren
   BusinessRegisterRoute: typeof BusinessRegisterRoute
   CompanyCompanyIdRoute: typeof CompanyCompanyIdRoute
   EventEventIdRoute: typeof EventEventIdRoute
+  PublicSlugRoute: typeof PublicSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -734,6 +773,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/get-app': {
+      id: '/get-app'
+      path: '/get-app'
+      fullPath: '/get-app'
+      preLoaderRoute: typeof GetAppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -746,6 +792,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book/$slug': {
+      id: '/book/$slug'
+      path: '/book/$slug'
+      fullPath: '/book/$slug'
+      preLoaderRoute: typeof BookSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/business/chat': {
@@ -781,6 +834,13 @@ declare module '@tanstack/react-router' {
       path: '/event/$eventId'
       fullPath: '/event/$eventId'
       preLoaderRoute: typeof EventEventIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/public/$slug': {
+      id: '/public/$slug'
+      path: '/public/$slug'
+      fullPath: '/public/$slug'
+      preLoaderRoute: typeof PublicSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/business/dashboard/': {
@@ -1287,13 +1347,16 @@ const BusinessDashboardRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ContactRoute: ContactRoute,
+  GetAppRoute: GetAppRoute,
   LoginRoute: LoginRoute,
   PrivacyRoute: PrivacyRoute,
+  BookSlugRoute: BookSlugRoute,
   BusinessChatRoute: BusinessChatRoute,
   BusinessDashboardRoute: BusinessDashboardRouteWithChildren,
   BusinessRegisterRoute: BusinessRegisterRoute,
   CompanyCompanyIdRoute: CompanyCompanyIdRoute,
   EventEventIdRoute: EventEventIdRoute,
+  PublicSlugRoute: PublicSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

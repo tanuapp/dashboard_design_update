@@ -47,6 +47,24 @@ function appleAppSiteAssociation(request: Request): Response | null {
   );
 }
 
+/**
+ * tanu.mn -> www.tanu.mn, except the app-association files. Apple and Google
+ * never follow a redirect when they fetch those, and the released iOS app
+ * claims the bare tanu.mn, so they must be answered on the apex itself. Takes
+ * effect once the Vercel domain for tanu.mn serves this project instead of
+ * redirecting on its own.
+ */
+function apexRedirect(request: Request): Response | null {
+  const url = new URL(request.url);
+  if (url.hostname !== "tanu.mn") return null;
+  if (url.pathname.startsWith("/.well-known/") || url.pathname === "/apple-app-site-association") {
+    return null;
+  }
+  url.hostname = "www.tanu.mn";
+  url.protocol = "https:";
+  return Response.redirect(url.toString(), 308);
+}
+
 let serverEntryPromise: Promise<ServerEntry> | undefined;
 
 async function getServerEntry(): Promise<ServerEntry> {
@@ -89,6 +107,8 @@ export default {
     try {
       const association = appleAppSiteAssociation(request);
       if (association) return association;
+      const apex = apexRedirect(request);
+      if (apex) return apex;
 
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
