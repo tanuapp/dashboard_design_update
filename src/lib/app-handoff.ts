@@ -12,9 +12,9 @@
  *
  * iOS: the installed app claims tanu.mn links as Universal Links, so this page
  * only loads when the app is missing (or a messenger's in-app browser ignored
- * the link). It forwards to the App Store; the "open" button points at
- * deeplink.tanu.mn because a tap on a link to another claimed domain is the
- * one thing Safari always hands to the app.
+ * the link). It forwards to the App Store; the "open" button points at another
+ * domain the app claims (see universalLink), because a tap across domains is
+ * the one thing Safari always hands to the app.
  */
 
 export const ANDROID_PACKAGE = "com.tanusoft.tanubooking";
@@ -23,6 +23,7 @@ export const APP_STORE_URL = `https://apps.apple.com/mn/app/tanu/id${APP_STORE_I
 export const PLAY_STORE_URL = `https://play.google.com/store/apps/details?id=${ANDROID_PACKAGE}`;
 export const SITE_URL = "https://www.tanu.mn";
 const UNIVERSAL_LINK_ORIGIN = "https://deeplink.tanu.mn";
+const APEX_ORIGIN = "https://tanu.mn";
 const DEFERRED_LINK_URL = "https://api.tanusoft.mn/api/v1/deeplink/deferred";
 const HANDOFF_MEMORY_MS = 10 * 60 * 1000;
 
@@ -85,9 +86,18 @@ function markHandoff(path: string) {
   }
 }
 
-/** Universal Link on the second claimed domain; see the file comment. */
+/**
+ * A link on another domain the app claims, for the iOS "open" button (a tap
+ * across domains is what Safari hands to the app).
+ *
+ * Events use the bare tanu.mn: every released app claims it and Apple already
+ * serves its /event/* association. Companies use deeplink.tanu.mn/<id>, the
+ * shape every deployment of that host understands (older ones included).
+ */
 export function universalLink(path: string): string {
-  return `${UNIVERSAL_LINK_ORIGIN}${path}`;
+  if (path.startsWith("/event/")) return `${APEX_ORIGIN}${path}`;
+  const companyId = path.match(/^\/company\/([a-f\d]{24})$/i)?.[1];
+  return companyId ? `${UNIVERSAL_LINK_ORIGIN}/${companyId}` : `${UNIVERSAL_LINK_ORIGIN}${path}`;
 }
 
 export function storeUrl(platform: MobilePlatform, path?: string): string {
